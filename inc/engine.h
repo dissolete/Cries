@@ -12,6 +12,8 @@
 #include <inputMgr.h>
 #include <EntityMgr.h>
 #include <gameMgr.h>
+#include <Types.h>
+#include <UiMgr.h>
 
 class Engine {
 private:
@@ -24,6 +26,7 @@ public:
 	GfxMgr*         gfxMgr;
 	InputMgr*       inputMgr;
 	GameMgr*        gameMgr;
+	UiMgr *uiMgr;
 	//ControlMgr*   controlMgr;
 
 	void init();
@@ -34,6 +37,10 @@ public:
 
 	//
 	bool keepRunning;
+
+	STATE theState;//Stores the current state that the engine is in
+
+	float timeSinceLastEvent;//Stores the time (usually) since last state change
 
 
 };

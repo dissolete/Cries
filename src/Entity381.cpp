@@ -11,27 +11,30 @@
 
 unsigned int Entity381::nextId = 0;
 
-Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading){
+Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading, Engine eng){
 	entityType = entType;
 	this->pos = pos;
 	this->heading = heading;
 	this->vel = Ogre::Vector3::ZERO;
 	this->speed = 0;
 
-	this->isSelected = false;
 
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
-	UnitAI *ai = new UnitAI(this);
+	aiAsp = new UnitAI(this);
 
 	this->aspects.push_front(r);
 	this->aspects.push_front(p);
-	this->aspects.push_front(ai);
+	this->aspects.push_front(aiAsp);
 
 	this->entityId = Entity381::nextId++;
 
 	DefaultInit();
+
+	engine = eng;
+
+	theStatus = Status::WAITING;
 }
 
 Entity381::~Entity381(){
@@ -58,61 +61,82 @@ void Entity381::Tick(float dt){
 	}
 }
 
-Ddg::Ddg(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
-	this->meshfile = "ddg51.mesh";
+void Entity381::SetStatus(Status newStatus)
+{
+	//If becoming alerted, begin to follow the player
+	if((theStatus == Status::WAITING || theStatus == Status::SEARCHING) && newStatus == Status::ALERTED)
+	{
+		aiAsp->SetCommand(new Pursue(this, engine->gfxMgr->cameraNode));
+	} else if(theStatus == Status::ALERTED && newStatus == Status::SEARCHING)
+	{
+		//^If the monster can't find the player anymore, search last position
+		aiAsp->SetCommand(new Search(this, engine->gfxMgr->cameraNode->getPosition()));
+	} else //Must be transitioning from Searching to waiting
+	{
+		aiAsp->clear();
+		//Stop moving
+		desiredSpeed = 0;
+	}
+}
+
+HearNo::HearNo(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
+	this->meshfile = "cube.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
 	this->maxSpeed = 35;
 }
 
-Ddg::~Ddg(){
+HearNo::~HearNo(){
 
 }
 
-Cigarette::Cigarette(Ogre::Vector3 pos, float heading) : Entity381(EntityType::CIGARETTE, pos, heading){
-	this->meshfile = "cigarette.mesh";
-	this->acceleration = 1.5f;
-	this->turnRate = 0.3f;
-	this->maxSpeed = 30;
+void HearNo::Tick(float dt)
+{
+	Entity381::Tick(dt);
 }
 
-Cigarette::~Cigarette(){
-
+SeeNo::SeeNo(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
+	this->meshfile = "ogrehead.mesh";
+	this->acceleration = 1.0f;
+	this->turnRate = 0.1f;
+	this->maxSpeed = 35;
 }
 
-Alien::Alien(Ogre::Vector3 pos, float heading) : Entity381(EntityType::ALIEN, pos, heading){
-	this->meshfile = "alienship.mesh";
-	this->turnRate = 0.5f;
-	this->acceleration = 1.8f;
-	this->maxSpeed = 40;
-}
-
-Alien::~Alien(){
+SeeNo::~SeeNo()
+{
 
 }
 
-Cvn::Cvn(Ogre::Vector3 pos, float heading) : Entity381(EntityType::CVN, pos, heading){
-	this->meshfile = "cvn68.mesh";
-	this->turnRate = 0.05f;
-	this->acceleration = 0.75f;
-	this->maxSpeed = 40;
+void SeeNo::Tick(float dt)
+{
+	if(theStatus == Status::Alerted)
+	{
+		//If the monster can't hear the player...
+		if(!( engine->inputMgr->isSprinting))
+		{
+			SetStatus(Status::SEARCHING);
+		}
+	}
+
+	Entity381::Tick(dt);
 }
 
-Cvn::~Cvn(){
+SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
+	this->meshfile = "ogrehead.mesh";
+	this->acceleration = 1.0f;
+	this->turnRate = 0.1f;
+	this->maxSpeed = 35;
+}
+
+SpeakNo::~SpeakNo()
+{
 
 }
 
-Frigate::Frigate(Ogre::Vector3 pos, float heading) : Entity381(EntityType::FRIGATE, pos, heading){
-	this->meshfile = "sleek.mesh";
-	this->turnRate = 0.15f;
-	this->acceleration = 1.1f;
-	this->maxSpeed = 25;
+void SpeakNo::Tick(float dt)
+{
+	Entity381::Tick(dt);
 }
-
-Frigate::~Frigate(){
-
-}
-
 
 
 

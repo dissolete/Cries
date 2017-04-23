@@ -10,17 +10,14 @@
 
 
 enum class EntityType {
-	DDG,
-	CVN,
-	FRIGATE,
-	CIGARETTE,
-	ALIEN
+	SEENO,
+	HEARNO,
+	SPEAKNO
 };
 
 enum class COMMAND_TYPE{
-	MOVETO,
-	FOLLOW,
-	INTERCEPT
+	SEARCH,
+	PURSUE
 };
 
 enum class ASPECT_TYPE {
@@ -28,6 +25,18 @@ enum class ASPECT_TYPE {
 	RENDERABLE,
 	AI,
 	NONE
+};
+
+enum class STATE {
+	SPLASH,
+	MAIN_MENU,
+	GAMEPLAY
+};
+
+enum class Status {
+	WAITING,
+	ALERTED,
+	SEARCHING
 };
 
 #endif /* TYPES_H_ */

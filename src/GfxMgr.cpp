@@ -8,6 +8,7 @@
 #include <GfxMgr.h>
 #include <engine.h>
 #include <unistd.h>
+
 GfxMgr::GfxMgr(Engine *eng): Mgr(eng) {
 
 	resources = "resources.cfg";
@@ -19,7 +20,6 @@ GfxMgr::GfxMgr(Engine *eng): Mgr(eng) {
 	loadConfig(cf);
 	configureRenderSystem();
 	ogreRenderWindow = ogreRoot->initialise(true, "381 Game Engine");
-	initResources();
 	createSceneManager();
 	createCamera();
 	createViewport();
@@ -92,6 +92,7 @@ GfxMgr::~GfxMgr() {
 
 void GfxMgr::init(){
 	std::cout << "Initialize gfx" << std::endl;
+	initResources();
 
 	//testScene();
 }

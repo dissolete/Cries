@@ -26,11 +26,11 @@ public:
 
 };
 
-class MoveTo: public Command {
+class Search: public Command {
 
 public:
-	MoveTo(Entity381* ent, Ogre::Vector3 location);
-	~MoveTo();
+	Search(Entity381* ent, Ogre::Vector3 location);
+	~Search();
 
 	void init();
 	void tick(float dt);
@@ -41,36 +41,18 @@ public:
 
 };
 
-class Follow: public Command {
+class Pursue: public Command {
 public:
-	Follow(Entity381* ent, Entity381* targ);
-	~Follow();
+	Pursue(Entity381* ent, Ogre::SceneNode* targ);
+	~Pursue();
 
 	virtual void init();
 	virtual void tick(float dt);
 	virtual bool done();
 
-	virtual Ogre::Vector3 ComputeTargetLocation();
 
-	Entity381* target;
-	float FOLLOW_DISTANCE;
+	Ogre::SceneNode* target;
 
 };
-
-class Intercept: public Follow {
-public:
-	Intercept(Entity381* ent, Entity381* targ);
-	~Intercept();
-
-	virtual void init();
-	virtual void tick(float dt);
-	virtual bool done();
-
-	virtual Ogre::Vector3 ComputeInterceptLocation();
-	void runIntercept();
-
-};
-
-
 
 #endif /* COMMAND_H_ */

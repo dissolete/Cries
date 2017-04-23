@@ -11,6 +11,7 @@
 #include <Command.h>
 #include <Aspect.h>
 #include <UnitAI.h>
+#include <UiMgr.h>
 
 #include <string>
 #include <iostream>
@@ -58,6 +59,8 @@ InputMgr::InputMgr(Engine *engine) : Mgr(engine){
 	windowResized(engine->gfxMgr->ogreRenderWindow);
 	Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 
+	isSprinting = false;
+
 }
 
 InputMgr::~InputMgr(){ // before gfxMgr destructor
@@ -79,8 +82,12 @@ void InputMgr::tick(float dt){
 	if(keyboard->isKeyDown(OIS::KC_ESCAPE))
 		engine->stop();
 
-	UpdateCamera(dt);
-	UpdateDesiredSpeedHeading(dt);
+
+//	if(engine->theState == STATE::GAMEPLAY)
+//	{
+		UpdateCamera(dt);
+		UpdateDesiredSpeedHeading(dt);
+	//}
 	//UpdateSelection(dt);
 
 }
@@ -120,10 +127,14 @@ bool InputMgr::keyReleased(const OIS::KeyEvent &arg){
 	if (arg.key == OIS::KC_TAB){
 		engine->entityMgr->SelectNextEntity();
 	}
+	if(arg.key == OIS::KC_LSHIFT)
+		isSprinting = false;
 	return true;
 }
 
 bool InputMgr::mouseMoved(const OIS::MouseEvent &arg){
+
+	if(engine->uiMgr->mTrayMgr->injectMouseMove(arg)) return true;
 	return true;
 }
 
@@ -134,10 +145,12 @@ bool InputMgr::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
 	} else if (id == OIS::MB_Right){
 		HandleCommand();
 	}
+	if(engine->uiMgr->mTrayMgr->injectMouseDown(arg, id)) return true;
 	return true;
 }
 
 bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
+	if(engine->uiMgr->mTrayMgr->injectMouseUp(arg, id)) return true;
 	return true;
 }
 
@@ -265,6 +278,9 @@ void InputMgr::UpdateCamera(float dt){
 	float rotate = 0.1f;
 
 	 Ogre::Vector3 dirVec = Ogre::Vector3::ZERO;
+
+	 if(keyboard->isKeyDown(OIS::KC_LSHIFT))
+		 isSprinting = true;
 
 	  if (keyboard->isKeyDown(OIS::KC_W))
 	    dirVec.z -= move;

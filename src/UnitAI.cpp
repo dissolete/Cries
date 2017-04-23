@@ -34,4 +34,9 @@ void UnitAI::Tick(float dt){
 	}
 }
 
+void UnitAI::clear()
+{
+	commands.clear();
+}
+
 

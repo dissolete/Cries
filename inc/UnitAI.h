@@ -24,6 +24,7 @@ public:
 	void Tick(float dt);
 	void SetCommand(Command *c);
 	void AddCommand(Command *c);
+	void clear();
 
 };
 

@@ -10,6 +10,8 @@
 
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
+#include <engine.h>
+#include <UnitAI.h>
 
 #include <Types.h>
 
@@ -17,6 +19,8 @@
 #include <list>
 
 class Aspect;
+class Engine;
+class UnitAI;
 
 class Entity381 {
 
@@ -29,10 +33,11 @@ protected:
 
 public:
 
-	Entity381(EntityType entityType, Ogre::Vector3 pos, float heading);
+	Entity381(EntityType entityType, Ogre::Vector3 pos, float heading, Engine eng);
 	~Entity381();
-	void Tick(float dt);
+	virtual void Tick(float dt);
 	void DefaultInit();
+	void SetStatus(Status newStatus);
 
 	//static stuff
 	float maxSpeed, minSpeed;
@@ -50,51 +55,41 @@ public:
 	float speed, heading;
 	float desiredSpeed, desiredHeading;
 
-	//selection
-	bool isSelected;
-
 	unsigned int entityId;
 
 	std::list<Aspect*> aspects;
+	UnitAI *aiAsp;
+
+	Engine *engine;
+
+private:
+	Status theStatus;//Stores whether or not the player has been spotted
 };
 
-class Ddg: public Entity381 {
+class SeeNo: public Entity381 {
 
 public:
-	Ddg(Ogre::Vector3 pos, float heading);
-	~Ddg();
+	SeeNo(Ogre::Vector3 pos, float heading);
+	~SeeNo();
+	void Tick(float dt);
 
 };
 
-class Cigarette: public Entity381 {
+class HearNo: public Entity381 {
 
 public:
-	Cigarette(Ogre::Vector3 pos, float heading);
-	~Cigarette();
+	HearNo(Ogre::Vector3 pos, float heading);
+	~HearNo();
+	void Tick(float dt);
 };
 
-class Alien: public Entity381 {
+class SpeakNo: public Entity381 {
 
 public:
-	Alien(Ogre::Vector3 pos, float heading);
-	~Alien();
+	SpeakNo(Ogre::Vector3 pos, float heading);
+	~SpeakNo();
+	void Tick(float dt);
 };
-
-class Cvn: public Entity381 {
-
-public:
-	Cvn(Ogre::Vector3 pos, float heading);
-	~Cvn();
-};
-
-class Frigate: public Entity381 {
-
-public:
-	Frigate(Ogre::Vector3 pos, float heading);
-	~Frigate();
-};
-
-
 
 
 #endif /* ENTITY381_H_ */

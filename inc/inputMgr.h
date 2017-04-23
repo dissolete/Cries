@@ -60,10 +60,13 @@ public:
 	virtual void loadLevel();
 	virtual void stop();
 
+
 	//OIS Input devices
 	OIS::InputManager* oisInputManager;
     OIS::Mouse*        mouse;
     OIS::Keyboard*     keyboard;
+
+    bool isSprinting;
 
 
 
