@@ -134,11 +134,6 @@ bool InputMgr::keyReleased(const OIS::KeyEvent &arg){
 
 bool InputMgr::mouseMoved(const OIS::MouseEvent &arg){
 
-<<<<<<< HEAD
-	if(engine->uiMgr->mTrayMgr->injectMouseMove(arg)) return true;
-=======
-
-
 	// Rotate the camera based on the movement of the camera
 
 	//engine->gfxMgr->cameraNode->pitch( -Ogre::Radian(arg.state.Y.rel) / 1000.f);
@@ -173,7 +168,8 @@ bool InputMgr::mouseMoved(const OIS::MouseEvent &arg){
 //			engine->gfxMgr->cameraNode->pitch( Ogre::Radian(arg.state.Y.rel + 5) / 1000.f);
 //	}
 
->>>>>>> 011fd764fde35e8968554b81d3eaaf1c58420bbc
+	if(engine->uiMgr->mTrayMgr->injectMouseMove(arg)) return true;
+
 	return true;
 }
 
@@ -316,16 +312,9 @@ void InputMgr::UpdateCamera(float dt){
 	float move = 100.0f;
 	float rotate = 0.1f;
 
-
-<<<<<<< HEAD
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT))
 		 isSprinting = true;
-
-	  if (keyboard->isKeyDown(OIS::KC_W))
-	    dirVec.z -= move;
-=======
 	//Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
->>>>>>> 011fd764fde35e8968554b81d3eaaf1c58420bbc
 
 	//std::cerr << lookVector.x << ", " << lookVector.y << ", " << lookVector.z << std::endl;
 
