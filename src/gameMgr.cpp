@@ -27,7 +27,6 @@ void GameMgr::loadLevel(){
 	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
 	light->setPosition(20.0, 80.0, 50.0);
 
-	createEnts();
 	createSky();
 	createGround();
 }
