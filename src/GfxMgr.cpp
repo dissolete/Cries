@@ -55,14 +55,25 @@ void GfxMgr::createSceneManager(){
 }
 
 void GfxMgr::createCamera(){
+
+	// Set up for first-person camera follows
+
+	// Create main camera
 	ogreCamera = ogreSceneManager->createCamera("MainCam");
-	ogreCamera->setPosition(0, 0, 0);
+	ogreCamera->setPosition(0, 5, 0);
 	ogreCamera->setNearClipDistance(5);
 	cameraNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
-	pitchNode = cameraNode->createChildSceneNode();
+
+	// Create yaw node
+	yawNode = cameraNode->createChildSceneNode();
+
+	// Create pitch node
+	pitchNode = yawNode->createChildSceneNode();
 	pitchNode->attachObject(ogreCamera);
-	cameraNode->setPosition(0, 100, 500);
-	ogreCamera->lookAt(0, 0, 0);
+
+
+	//cameraNode->setPosition(0, 100, 500);
+	//ogreCamera->lookAt(0, 0, 0);
 
 }
 
