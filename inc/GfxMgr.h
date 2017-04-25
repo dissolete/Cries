@@ -49,13 +49,14 @@ public:
 	virtual void loadLevel();
 	virtual void stop();
 
+	void loadMenu();
+
 	Ogre::RenderWindow* ogreRenderWindow;
 	Ogre::SceneManager* ogreSceneManager;
 	Ogre::SceneNode *cameraNode, *pitchNode, *yawNode;
 	Ogre::Camera* ogreCamera;
-
-
-	void testScene();
+	Ogre::Rectangle2D* rect;
+	Ogre::SceneNode* backgroundNode;
 
 };
 

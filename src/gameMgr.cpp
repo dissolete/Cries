@@ -64,6 +64,7 @@ void GameMgr::createGround(){
 	  groundEntity->setMaterialName("Ocean2_Cg");
 	  //groundEntity->setMaterialName("NavyCg");
 
+
 }
 
 void GameMgr::createSky(){

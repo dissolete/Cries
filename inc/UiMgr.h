@@ -20,7 +20,7 @@
 class UiMgr : public Mgr, public Ogre::FrameListener, public OIS::KeyListener, public OIS::MouseListener, public Ogre::WindowEventListener, public OgreBites::SdkTrayListener
 {
 private:
-
+	void loadMenu();
 
 protected:
 	virtual void windowResized(Ogre::RenderWindow *rw);

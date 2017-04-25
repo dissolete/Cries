@@ -84,9 +84,11 @@ void InputMgr::tick(float dt){
 	if(keyboard->isKeyDown(OIS::KC_ESCAPE))
 		engine->stop();
 
-
-
-	UpdateCamera(dt);
+//Only move the camera around if we are in gameplay
+	if(engine->theState == STATE::GAMEPLAY)
+	{
+		UpdateCamera(dt);
+	}
 //	UpdateDesiredSpeedHeading(dt);
 	//UpdateSelection(dt);
 

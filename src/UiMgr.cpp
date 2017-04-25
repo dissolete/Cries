@@ -26,8 +26,6 @@ void UiMgr::init(){
     mInputContext.mKeyboard = engine->inputMgr->keyboard;
     mInputContext.mMouse = engine->inputMgr->mouse;
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", engine->gfxMgr->ogreRenderWindow, mInputContext, this);
-    //mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-    //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     //mTrayMgr->hideCursor();
 }
 
@@ -36,16 +34,23 @@ void UiMgr::stop(){
 }
 
 void UiMgr::loadLevel(){
-	if(engine->timeSinceLastEvent >= 3)
-	{
-
-	}
-	mTrayMgr->createButton(OgreBites::TL_TOPLEFT, "MyButton", "Click Me!");
-	//mTrayMgr->createLongSelectMenu(OgreBites::TL_TOPRIGHT, "MyMenu", "Menu", 100, 20, 10);
+	mTrayMgr->hideCursor();
 }
 
 void UiMgr::tick(float dt){
 	mTrayMgr->refreshCursor();
+	//Update the time since last event if in splash screen
+	if(engine->theState == STATE::SPLASH)
+	{
+		engine->timeSinceLastEvent += dt;
+		//If 3 seconds have passed, go into gameplay
+		if(engine->timeSinceLastEvent >= 3)
+		{
+			engine->theState = STATE::MAIN_MENU;
+			engine->gfxMgr->loadMenu();
+			loadMenu();//Creates the button
+		}
+	}
 }
 
 void UiMgr::windowResized(Ogre::RenderWindow* rw){
@@ -87,9 +92,12 @@ bool UiMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 }
 
 void UiMgr::buttonHit(OgreBites::Button *b){
-    if(b->getName()=="MyButton")
+    if(b->getName()=="NewGame")
     {
-        std::cout <<"Click Me!" << std::endl;
+        std::cout <<"New Game pressed" << std::endl;
+        engine->theState = STATE::GAMEPLAY;
+        engine->loadLevel();
+        mTrayMgr->removeWidgetFromTray(b);
     }
 
 }
@@ -100,4 +108,9 @@ void UiMgr::itemSelected(OgreBites::SelectMenu *m){
         std::cout <<"Menu!" << std::endl;
     }
 
+}
+
+void UiMgr::loadMenu()
+{
+	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
 }
