@@ -11,7 +11,6 @@
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
 #include <engine.h>
-#include <UnitAI.h>
 
 #include <Types.h>
 
@@ -33,7 +32,7 @@ protected:
 
 public:
 
-	Entity381(EntityType entityType, Ogre::Vector3 pos, float heading, Engine eng);
+	Entity381(EntityType entityType, Ogre::Vector3 pos, float heading, Engine *eng);
 	~Entity381();
 	virtual void Tick(float dt);
 	void DefaultInit();
@@ -62,14 +61,13 @@ public:
 
 	Engine *engine;
 
-private:
 	Status theStatus;//Stores whether or not the player has been spotted
 };
 
 class SeeNo: public Entity381 {
 
 public:
-	SeeNo(Ogre::Vector3 pos, float heading);
+	SeeNo(Ogre::Vector3 pos, float heading, Engine *eng);
 	~SeeNo();
 	void Tick(float dt);
 
@@ -78,7 +76,7 @@ public:
 class HearNo: public Entity381 {
 
 public:
-	HearNo(Ogre::Vector3 pos, float heading);
+	HearNo(Ogre::Vector3 pos, float heading, Engine *eng);
 	~HearNo();
 	void Tick(float dt);
 };
@@ -86,7 +84,7 @@ public:
 class SpeakNo: public Entity381 {
 
 public:
-	SpeakNo(Ogre::Vector3 pos, float heading);
+	SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng);
 	~SpeakNo();
 	void Tick(float dt);
 };

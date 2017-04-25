@@ -8,13 +8,16 @@
 #ifndef COMMAND_H_
 #define COMMAND_H_
 
+class Entity381;
+
 #include <Entity381.h>
 #include <OgreVector3.h>
+#include <Types.h>
 
 class Command {
 
 public:
-	Command(Entity381* ent, COMMAND_TYPE ct);
+	Command(Entity381 *ent, COMMAND_TYPE ct);
 	virtual ~Command();
 
 	virtual void init();

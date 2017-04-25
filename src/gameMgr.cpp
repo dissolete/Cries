@@ -40,25 +40,6 @@ void GameMgr::tick(float dt){
 }
 
 void GameMgr::createEnts(){
-	Entity381 * ent;
-	int x = 0;
-	ent = engine->entityMgr->CreateEntity(EntityType::DDG, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x+200;
-	ent = engine->entityMgr->CreateEntity(EntityType::CIGARETTE, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x+200;
-	ent = engine->entityMgr->CreateEntity(EntityType::ALIEN, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x+200;
-	ent = engine->entityMgr->CreateEntity(EntityType::CVN, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-	x = x+300;
-	ent = engine->entityMgr->CreateEntity(EntityType::FRIGATE, Ogre::Vector3(x, 0, 0), 0);
-	std::cout << "Created: " << ent->meshfile << std::endl;
-
-
-	ent->isSelected = true;
 
 }
 

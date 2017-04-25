@@ -22,8 +22,6 @@ EntityMgr::~EntityMgr(){
 void EntityMgr::tick(float dt){
 	for (std::list<Entity381 *>::const_iterator it = entities.begin(); it != entities.end(); ++it){
 		(*it)->Tick(dt);
-		if ((*it)->isSelected)
-			this->selectedEntity = (*it);
 	}
 }
 
@@ -54,50 +52,22 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	Entity381 *ent = 0;// = new Entity381(entityType, position, heading);
 	switch(entityType){
-	case EntityType::ALIEN:
-		ent = new Alien(position, heading);
+	case EntityType::HEARNO :
+		ent = new HearNo(position, heading, engine);
 		break;
-	case EntityType::CIGARETTE:
-		ent = new Cigarette(position, heading);
+	case EntityType::SEENO:
+		ent = new SeeNo(position, heading, engine);
 		break;
-	case EntityType::DDG:
-		ent = new Ddg(position, heading);
-		break;
-	case EntityType::CVN:
-		ent = new Cvn(position, heading);
-		break;
-	case EntityType::FRIGATE:
-		ent = new Frigate(position, heading);
+	case EntityType::SPEAKNO:
+		ent = new SpeakNo(position, heading, engine);
 		break;
 	default:
-		ent = new Ddg(position, heading);
+		ent = new HearNo(position, heading, engine);
 		break;
 	}
 
 	CreateOgreEntityAndNode(ent);
 	entities.push_front(ent);
 	return ent;
-}
-
-void EntityMgr::SelectNextEntity(){
-	int n = 0;
-
-	for (std::list<Entity381 *>::const_iterator it = entities.begin(); it != entities.end(); ++it){
-		n++;
-		if((*it)->isSelected){
-			(*it)->isSelected = false;
-			it++;
-			if(it == entities.end()){
-				std::cout << "End of ents" << std::endl;
-				selectedEntity = *(entities.begin());
-			} else {
-				selectedEntity = *it;
-				std::cout << "End of ents" << std::endl;
-			}
-			selectedEntity->isSelected = true;
-			break;
-		}
-	}
-
 }
 

@@ -9,11 +9,14 @@
 #define ENTITYMGR_H_
 
 
+class Entity381;
+
 #include <list>
 #include <OgreVector3.h>
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
 #include <OgreEntity.h>
+#include <Types.h>
 
 #include <Entity381.h>
 #include <mgr.h>
@@ -41,8 +44,6 @@ public:
 
 	Entity381 *CreateEntity(EntityType entityType, Ogre::Vector3 pos, float yaw = 0);
 	void CreateOgreEntityAndNode(Entity381 *ent);
-
-	void SelectNextEntity();
 
 
 };

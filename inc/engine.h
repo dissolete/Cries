@@ -8,12 +8,16 @@
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
+class InputMgr;
+
 #include <GfxMgr.h>
 #include <inputMgr.h>
 #include <EntityMgr.h>
 #include <gameMgr.h>
 #include <Types.h>
 #include <UiMgr.h>
+
+class EntityMgr;
 
 class Engine {
 private:

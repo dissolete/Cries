@@ -8,10 +8,11 @@
 #include <Entity381.h>
 #include <Aspect.h>
 #include <UnitAI.h>
+#include <Types.h>
 
 unsigned int Entity381::nextId = 0;
 
-Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading, Engine eng){
+Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading, Engine *eng){
 	entityType = entType;
 	this->pos = pos;
 	this->heading = heading;
@@ -79,7 +80,7 @@ void Entity381::SetStatus(Status newStatus)
 	}
 }
 
-HearNo::HearNo(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
+HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
 	this->meshfile = "cube.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
@@ -95,7 +96,7 @@ void HearNo::Tick(float dt)
 	Entity381::Tick(dt);
 }
 
-SeeNo::SeeNo(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
+SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SEENO, pos, heading, eng){
 	this->meshfile = "ogrehead.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
@@ -109,7 +110,7 @@ SeeNo::~SeeNo()
 
 void SeeNo::Tick(float dt)
 {
-	if(theStatus == Status::Alerted)
+	if(theStatus == Status::ALERTED)
 	{
 		//If the monster can't hear the player...
 		if(!( engine->inputMgr->isSprinting))
@@ -121,8 +122,8 @@ void SeeNo::Tick(float dt)
 	Entity381::Tick(dt);
 }
 
-SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading) : Entity381(EntityType::DDG, pos, heading){
-	this->meshfile = "ogrehead.mesh";
+SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
+	this->meshfile = "ninja.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
 	this->maxSpeed = 35;

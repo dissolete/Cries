@@ -33,10 +33,6 @@ void Renderable::Tick(float dt){
 	entity->ogreSceneNode->setPosition(entity->pos);
 	entity->ogreSceneNode->setOrientation(Ogre::Quaternion::IDENTITY);
 	entity->ogreSceneNode->yaw(Ogre::Radian(-entity->heading));
-	if (entity->isSelected)
-		entity->ogreSceneNode->showBoundingBox(true);
-	else
-		entity->ogreSceneNode->showBoundingBox(false);
 }
 
 Physics::Physics(Entity381 * ent): Aspect(ent) {
@@ -77,5 +73,37 @@ void Physics::Tick(float dt){
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
 
+}
+
+UnitAI::UnitAI(Entity381* ent): Aspect(ent){
+	commands.clear();
+	this->aspectType = ASPECT_TYPE::AI;
+}
+
+UnitAI::~UnitAI(){
+
+}
+
+void UnitAI::AddCommand(Command *c){
+	commands.push_back(c);
+}
+
+void UnitAI::SetCommand(Command* c){
+	commands.clear();
+	commands.push_front(c);
+}
+
+void UnitAI::Tick(float dt){
+	if(!commands.empty()){
+		commands.front()->tick(dt);
+		if(commands.front()->done()){
+			commands.pop_front();
+		}
+	}
+}
+
+void UnitAI::clear()
+{
+	commands.clear();
 }
 

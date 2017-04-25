@@ -124,9 +124,6 @@ bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 }
 bool InputMgr::keyReleased(const OIS::KeyEvent &arg){
 	std::cout << "Checking key release" << std::endl;
-	if (arg.key == OIS::KC_TAB){
-		engine->entityMgr->SelectNextEntity();
-	}
 	if(arg.key == OIS::KC_LSHIFT)
 		isSprinting = false;
 	return true;
