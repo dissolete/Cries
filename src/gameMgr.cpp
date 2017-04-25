@@ -22,13 +22,7 @@ void GameMgr::init(){
 }
 
 void GameMgr::loadLevel(){
-//We know graphicsMgr is ready and initialized
-	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
-	light->setPosition(20.0, 80.0, 50.0);
-
-	createSky();
-	createGround();
+   this->loadLevel("level001.txt");
 }
 
 void GameMgr::stop(){
@@ -43,27 +37,26 @@ void GameMgr::createEnts(){
 
 }
 
-void GameMgr::createGround(){
-
-	//Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-
-	  Ogre::MeshManager::getSingleton().createPlane(
+void GameMgr::createGround(int &width, int &heigth, std::string &material)
+{
+	// Create Plane
+	Ogre::MeshManager::getSingleton().createPlane(
 	    "ground",
 	    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 	    ocean,
-	    15000, 15000, 20, 20,
+		width, heigth, 20, 20,
 	    true,
 	    1, 5, 5,
 	    Ogre::Vector3::UNIT_Z);
 
-	  Ogre::Entity* groundEntity = engine->gfxMgr->ogreSceneManager->createEntity("ground");
-	  engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
-	  groundEntity->setCastShadows(false);
-	  //	  groundEntity->setMaterialName("Ocean2_HLSL_GLSL");
-	  //groundEntity->setMaterialName("OceanHLSL_GLSL");
-	  groundEntity->setMaterialName("Ocean2_Cg");
-	  //groundEntity->setMaterialName("NavyCg");
+	// Create Ground Entity
+	Ogre::Entity* groundEntity = engine->gfxMgr->ogreSceneManager->createEntity("ground");
 
+	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
+
+	groundEntity->setCastShadows(false);
+
+	groundEntity->setMaterialName(material);
 }
 
 void GameMgr::createSky(){
@@ -71,6 +64,72 @@ void GameMgr::createSky(){
 	engine->gfxMgr->ogreSceneManager->setSkyBox(true, "Examples/MorningSkyBox");
 
 }
+
+void GameMgr::loadLevel(std::string levelFilename)
+{
+	// Load the environment, objects, and characters
+	this->loadEnvironment(levelFilename);
+	this->setupEnvironment();
+	this->loadObjects();
+	this->loadCharacters();
+}
+
+void GameMgr::loadEnvironment(std::string levelFilename)
+{
+	// Variables
+	std::ifstream fin;
+	int x, z;
+	std::string groundMaterial;
+	std::string buffer;
+
+
+	// Open File
+	fin.open(levelFilename);
+
+	// Check for bad file
+	if(!fin.is_open())
+	{
+		std::cerr << "ERROR, FILE CANNOT BE OPENED" << std::endl;
+		return;
+	}
+
+	// First block is world dimensions and material name
+	fin >> x >> z;
+	fin >> groundMaterial;
+
+	// TESTING FILE READ ////////////////////////////////////////////
+	std::cerr << "Ground Dimensions: " << x << " x " << z << std::endl;
+	std::cerr << "Ground Material: " << groundMaterial << std::endl;
+	/////////////////////////////////////////////////////////////////
+
+	// Create floor mesh with read in dimensions
+	createGround( x, z, groundMaterial);
+
+	// Second block reads in location of you and enemies
+
+
+
+	// Create the Entities
+}
+
+void GameMgr::setupEnvironment()
+{
+	//We know graphicsMgr is ready and initialized
+	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
+	light->setPosition(20.0, 80.0, 50.0);
+}
+
+void GameMgr::loadObjects()
+{
+
+}
+
+void GameMgr::loadCharacters()
+{
+
+}
+
 
 
 
