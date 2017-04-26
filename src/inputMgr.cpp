@@ -315,7 +315,7 @@ void InputMgr::UpdateCamera(float dt){
 
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
 		 isSprinting = true;
-		 move *= 2;
+		 move *= 4;
 	 } else
 	 {
 		 isSprinting = false;
@@ -372,7 +372,7 @@ void InputMgr::UpdateCamera(float dt){
 	}
 
 	Ogre::Vector3 newPos = engine->gfxMgr->cameraNode->getPosition();
-	newPos.y = 5;
+	newPos.y = 50;
 	engine->gfxMgr->cameraNode->setPosition(newPos);
 
 }

@@ -61,6 +61,17 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	case EntityType::SPEAKNO:
 		ent = new SpeakNo(position, heading, engine);
 		break;
+
+	// Set up wall parameters
+	case EntityType::WALL:
+		ent = new Wall(position, heading, engine);
+		//ent->ogreEntity->setMaterialName("Examples/RustySteel");
+		break;
+
+	case EntityType::ARCH:
+		ent = new Arch(position, heading, engine);
+		break;
+
 	default:
 		ent = new HearNo(position, heading, engine);
 		break;

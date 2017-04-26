@@ -21,7 +21,7 @@ GfxMgr::GfxMgr(Engine *eng): Mgr(eng) {
 	cf.load(resources);
 	loadConfig(cf);
 	configureRenderSystem();
-	ogreRenderWindow = ogreRoot->initialise(true, "381 Game Engine");
+	ogreRenderWindow = ogreRoot->initialise(true, "CRIES");
 	createSceneManager();
 	createCamera();
 	createViewport();

@@ -158,6 +158,34 @@ void SpeakNo::Tick(float dt)
 	Entity381::Tick(dt);
 }
 
+Wall::Wall(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::WALL, pos, heading, eng){
+	this->meshfile = "cube.mesh";
+}
+
+Wall::~Wall()
+{
+
+}
+
+void Wall::Tick(float dt)
+{
+	Entity381::Tick(dt);
+}
+
+Arch::Arch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ARCH, pos, heading, eng){
+	this->meshfile = "fish.mesh";
+}
+
+Arch::~Arch()
+{
+//
+}
+
+void Arch::Tick(float dt)
+{
+	Entity381::Tick(dt);
+
+}
 
 
 

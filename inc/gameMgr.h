@@ -10,15 +10,22 @@
 
 #include <mgr.h>
 #include <OgreMeshManager.h>
+#include <OgreMovablePlane.h>
+
+// Constants for Grid Array Size
+const int COL_SIZE = 20;
+const int ROW_SIZE = 17;
 
 
 class GameMgr : public Mgr {
 
 private:
-	void createEnts();
 	void createSky();
-	void createGround();
+	void createGround(int &width, int &heigth, std::string &material);
+	void createCeiling();
 
+	// Loads a level given from file
+	void loadLevel(std::string levelFilename);
 
 public:
 	GameMgr(Engine *engine);
@@ -28,7 +35,15 @@ public:
 	virtual void loadLevel();
 	virtual void stop();
 
-	Ogre::Plane ocean;
+	// Environment Setup
+	void loadEnvironment(std::string levelFilename);
+	void setupEnvironment();
+	void loadObjects();
+	void loadCharacters();
+	std::string getNewName();
+
+	Ogre::Plane floor;
+	Ogre::MovablePlane *ceiling;
 
 };
 

@@ -48,7 +48,7 @@ public:
 	Ogre::Vector3 pos;
 	Ogre::Vector3 vel;
 	Ogre::SceneNode *ogreSceneNode;
-	Ogre::Entity* ogreEntity;
+	Ogre::Entity* ogreEntity, *wallEntity;
 
 	//Engine stuff dynamic
 	float speed, heading;
@@ -89,5 +89,19 @@ public:
 	void Tick(float dt);
 };
 
+// Static Entities
+class Wall: public Entity381 {
+public:
+	Wall(Ogre::Vector3 pos, float heading, Engine *eng);
+	~Wall();
+	void Tick(float dt);
+};
+
+class Arch: public Entity381 {
+public:
+	Arch(Ogre::Vector3 pos, float heading, Engine *eng);
+	~Arch();
+	void Tick(float dt);
+};
 
 #endif /* ENTITY381_H_ */

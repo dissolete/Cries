@@ -53,7 +53,7 @@ public:
 
 	Ogre::RenderWindow* ogreRenderWindow;
 	Ogre::SceneManager* ogreSceneManager;
-	Ogre::SceneNode *cameraNode, *pitchNode, *yawNode;
+	Ogre::SceneNode *cameraNode, *pitchNode, *yawNode, *planeNode, *wallNode;
 	Ogre::Camera* ogreCamera;
 	Ogre::Rectangle2D* rect;
 	Ogre::SceneNode* backgroundNode;

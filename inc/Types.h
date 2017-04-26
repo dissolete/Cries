@@ -12,7 +12,9 @@
 enum class EntityType {
 	SEENO,
 	HEARNO,
-	SPEAKNO
+	SPEAKNO,
+	WALL,
+	ARCH
 };
 
 enum class COMMAND_TYPE{
