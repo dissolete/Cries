@@ -4,5 +4,5 @@
 
 USER_OBJS :=
 
-LIBS := -lOgreMain -lboost_system -lOgreOverlay -lOIS
+LIBS := -lOgreMain -lOgreOverlay -lOIS -lboost_system
 

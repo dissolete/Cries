@@ -1,0 +1,32 @@
+4000 3400
+Examples/BeachStones
+
+Objects
+D cube.mesh 0.0 2.0 0.0   0.0 0.02
+
+
+Characters
+C ninja.mesh 0.0 0.0 0.0  0.0 0.15
+
+World
+WWWWWWWWWWW...WWW
+WWWWWWWWWWWAWAWWE
+WWWW.A....A.A....
+WWW.AWWWWWWW.WWWW
+WW...W.WWW...WWWW
+W.....A.WW...WWWW
+W...AWW.WW...WWWW
+WAWW..A.AWAWWWWWW
+W..WWWW.....WWWWW
+W..W..A..C..WWWWW
+W..A.C.A....WWWWW
+W..W..W.W.W.WWWWW
+W..W..W.W.WAWWWWW
+WWWWWWW.WWW.WWWWW
+...A...A.......A.
+.WWWCWW.W..WWWWWW
+.WWW.WW.WA.WWWWWW
+.WWW.WW.W.WWWWWWW
+.WWWAWWWW..WWWWWW
+SWWW.......WWWWWW
+

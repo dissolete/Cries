@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../src/Entity381.cpp \
 ../src/EntityMgr.cpp \
 ../src/GfxMgr.cpp \
+../src/UiMgr.cpp \
 ../src/UnitAI.cpp \
 ../src/as4.cpp \
 ../src/engine.cpp \
@@ -22,6 +23,7 @@ OBJS += \
 ./src/Entity381.o \
 ./src/EntityMgr.o \
 ./src/GfxMgr.o \
+./src/UiMgr.o \
 ./src/UnitAI.o \
 ./src/as4.o \
 ./src/engine.o \
@@ -35,6 +37,7 @@ CPP_DEPS += \
 ./src/Entity381.d \
 ./src/EntityMgr.d \
 ./src/GfxMgr.d \
+./src/UiMgr.d \
 ./src/UnitAI.d \
 ./src/as4.d \
 ./src/engine.d \
@@ -47,7 +50,7 @@ CPP_DEPS += \
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -std=c++0x -I/usr/local/include/OGRE -I/usr/local/include/OGRE/Overlay -I"/misc/staff2/sushil/workspace/as4/inc" -I/usr/include/ois -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	g++ -std=c++11 -I"/home/hrumjahn/workspace/Cries/inc" -I/usr/local/include/OGRE/Overlay -I/usr/include/ois -I/usr/local/include/OGRE -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
