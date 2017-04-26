@@ -65,7 +65,6 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	// Set up wall parameters
 	case EntityType::WALL:
 		ent = new Wall(position, heading, engine);
-		//ent->ogreEntity->setMaterialName("Examples/RustySteel");
 		break;
 
 	case EntityType::ARCH:
@@ -78,6 +77,13 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	}
 
 	CreateOgreEntityAndNode(ent);
+
+	// Check material name
+	if( entityType == EntityType::WALL )
+	{
+		ent->ogreEntity->setMaterialName("Examples/RustySteel");
+	}
+
 	entities.push_front(ent);
 	return ent;
 }
