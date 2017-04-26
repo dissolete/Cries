@@ -52,7 +52,7 @@ void Entity381::DefaultInit(){
 	this->desiredHeading = 0;
 	this->desiredSpeed = 0;
 
-	this->meshfile = "cube.mesh";
+	this->meshfile = "ogrehead.mesh";
 
 }
 
@@ -65,23 +65,27 @@ void Entity381::Tick(float dt){
 void Entity381::SetStatus(Status newStatus)
 {
 	//If becoming alerted, begin to follow the player
-	if((theStatus == Status::WAITING || theStatus == Status::SEARCHING) && newStatus == Status::ALERTED)
+	if(newStatus == Status::ALERTED)
 	{
 		aiAsp->SetCommand(new Pursue(this, engine->gfxMgr->cameraNode));
-	} else if(theStatus == Status::ALERTED && newStatus == Status::SEARCHING)
+	} else if(newStatus == Status::SEARCHING)
 	{
 		//^If the monster can't find the player anymore, search last position
 		aiAsp->SetCommand(new Search(this, engine->gfxMgr->cameraNode->getPosition()));
-	} else //Must be transitioning from Searching to waiting
+	} else //Must be waiting now, do nothing
 	{
 		aiAsp->clear();
 		//Stop moving
 		desiredSpeed = 0;
+		std::cout << "Made it to the end of waiting block" << std::endl;
 	}
+
+	theStatus = newStatus;
+	std::cout << "Made it to the end of SetStatus" << std::endl;
 }
 
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
-	this->meshfile = "cube.mesh";
+	this->meshfile = "ogrehead.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
 	this->maxSpeed = 35;
@@ -93,6 +97,12 @@ HearNo::~HearNo(){
 
 void HearNo::Tick(float dt)
 {
+	//For now, no matter what this guy sees you and begins following
+	if(theStatus != Status::ALERTED)
+	{
+		SetStatus(Status::ALERTED);
+	}
+
 	Entity381::Tick(dt);
 }
 
@@ -110,10 +120,13 @@ SeeNo::~SeeNo()
 
 void SeeNo::Tick(float dt)
 {
-	if(theStatus == Status::ALERTED)
+	if(engine->inputMgr->isSprinting)
 	{
-		//If the monster can't hear the player...
-		if(!( engine->inputMgr->isSprinting))
+		SetStatus(Status::ALERTED);
+	} else
+	{
+		//If the monster can't hear the player anymore
+		if(theStatus == Status::ALERTED)
 		{
 			SetStatus(Status::SEARCHING);
 		}
@@ -123,7 +136,7 @@ void SeeNo::Tick(float dt)
 }
 
 SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
-	this->meshfile = "ninja.mesh";
+	this->meshfile = "ogrehead.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
 	this->maxSpeed = 35;
@@ -136,6 +149,12 @@ SpeakNo::~SpeakNo()
 
 void SpeakNo::Tick(float dt)
 {
+	//For now, no matter what this guy sees you and begins following
+	if(theStatus != Status::ALERTED)
+	{
+		SetStatus(Status::ALERTED);
+	}
+
 	Entity381::Tick(dt);
 }
 

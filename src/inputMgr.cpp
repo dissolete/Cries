@@ -132,40 +132,42 @@ bool InputMgr::keyReleased(const OIS::KeyEvent &arg){
 }
 
 bool InputMgr::mouseMoved(const OIS::MouseEvent &arg){
+	if(engine->theState == STATE::GAMEPLAY){
 
-	// Rotate the camera based on the movement of the camera
+		// Rotate the camera based on the movement of the camera
 
-	//engine->gfxMgr->cameraNode->pitch( -Ogre::Radian(arg.state.Y.rel) / 1000.f);
-	//engine->gfxMgr->cameraNode->rotate(Ogre::Vector3(0,1,0), -Ogre::Radian(arg.state.X.rel) / 1000.f, Ogre::Node::TS_WORLD);
+		//engine->gfxMgr->cameraNode->pitch( -Ogre::Radian(arg.state.Y.rel) / 1000.f);
+		//engine->gfxMgr->cameraNode->rotate(Ogre::Vector3(0,1,0), -Ogre::Radian(arg.state.X.rel) / 1000.f, Ogre::Node::TS_WORLD);
 
-	//engine->gfxMgr->yawNode->rotate(Ogre::Vector3(0,1,0), -Ogre::Radian(arg.state.X.rel) / 1000.f, Ogre::Node::TS_WORLD);
-	//engine->gfxMgr->pitchNode->rotate(Ogre::Vector3(1,0,0), -Ogre::Radian(arg.state.Y.rel) / 1000.f, Ogre::Node::TS_WORLD);
+		//engine->gfxMgr->yawNode->rotate(Ogre::Vector3(0,1,0), -Ogre::Radian(arg.state.X.rel) / 1000.f, Ogre::Node::TS_WORLD);
+		//engine->gfxMgr->pitchNode->rotate(Ogre::Vector3(1,0,0), -Ogre::Radian(arg.state.Y.rel) / 1000.f, Ogre::Node::TS_WORLD);
 
-	engine->gfxMgr->yawNode->yaw(-Ogre::Radian(arg.state.X.rel) / 1000.f);
-	engine->gfxMgr->pitchNode->pitch(-Ogre::Radian(arg.state.Y.rel) / 1000.f);
+		engine->gfxMgr->yawNode->yaw(-Ogre::Radian(arg.state.X.rel) / 1000.f);
+		engine->gfxMgr->pitchNode->pitch(-Ogre::Radian(arg.state.Y.rel) / 1000.f);
 
-	//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());
+		//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());
 
-//	Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
-//
-//	Ogre::Vector3 lookVectorFloor(lookVector.x, 0, lookVector.z);
-//	Ogre::Real pitchAngleSign;
-//
-//
-//
-//	pitchAngleSign = engine->gfxMgr->cameraNode->getOrientation().x;
-//
-//	Ogre::Real pitchAngle = lookVector.angleBetween(lookVectorFloor).valueDegrees();
-//
-//	std::cerr << pitchAngle << std::endl;
-//
-//	if(pitchAngle > 80.f)
-//	{
-//		if(pitchAngleSign > 0)
-//			engine->gfxMgr->cameraNode->pitch( Ogre::Radian(arg.state.Y.rel - 5) / 1000.f);
-//		else if(pitchAngleSign < 0)
-//			engine->gfxMgr->cameraNode->pitch( Ogre::Radian(arg.state.Y.rel + 5) / 1000.f);
-//	}
+	//	Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
+	//
+	//	Ogre::Vector3 lookVectorFloor(lookVector.x, 0, lookVector.z);
+	//	Ogre::Real pitchAngleSign;
+	//
+	//
+	//
+	//	pitchAngleSign = engine->gfxMgr->cameraNode->getOrientation().x;
+	//
+	//	Ogre::Real pitchAngle = lookVector.angleBetween(lookVectorFloor).valueDegrees();
+	//
+	//	std::cerr << pitchAngle << std::endl;
+	//
+	//	if(pitchAngle > 80.f)
+	//	{
+	//		if(pitchAngleSign > 0)
+	//			engine->gfxMgr->cameraNode->pitch( Ogre::Radian(arg.state.Y.rel - 5) / 1000.f);
+	//		else if(pitchAngleSign < 0)
+	//			engine->gfxMgr->cameraNode->pitch( Ogre::Radian(arg.state.Y.rel + 5) / 1000.f);
+	//	}
+	}
 
 	if(engine->uiMgr->mTrayMgr->injectMouseMove(arg)) return true;
 
@@ -308,11 +310,16 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 
 // Game specific input handling
 void InputMgr::UpdateCamera(float dt){
-	float move = 100.0f;
+	float move = 50.0f;
 	float rotate = 0.1f;
 
-	 if(keyboard->isKeyDown(OIS::KC_LSHIFT))
+	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
 		 isSprinting = true;
+		 move *= 2;
+	 } else
+	 {
+		 isSprinting = false;
+	 }
 	//Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
 
 	//std::cerr << lookVector.x << ", " << lookVector.y << ", " << lookVector.z << std::endl;
@@ -333,17 +340,11 @@ void InputMgr::UpdateCamera(float dt){
 
 	if (keyboard->isKeyDown(OIS::KC_A))
 	{
-		if (keyboard->isKeyDown(OIS::KC_LSHIFT))
-			engine->gfxMgr->cameraNode->yaw(Ogre::Degree(5 * rotate));
-		else
-			dirVec.x -= move;
+		dirVec.x -= move;
 	}
 
 	if (keyboard->isKeyDown(OIS::KC_D))
 	{
-	if (keyboard->isKeyDown(OIS::KC_LSHIFT))
-		engine->gfxMgr->cameraNode->yaw(Ogre::Degree(-5 * rotate));
-	else
 		dirVec.x += move;
 	}
 	//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());

@@ -48,8 +48,9 @@ void Search::init(){
 
 bool Search::done(){
 	Ogre::Vector3 diff = targetLocation - entity->pos;
-	if (diff.length() < MOVE_DISTANCE_THRESHOLD){
+	if (diff.length() < (entity->speed * entity->speed) / (2 * entity->acceleration)){
 		entity->SetStatus(Status::WAITING);
+		std::cout << "Just before return" << std::endl;
 		return true;
 	} else {
 		return false;
@@ -57,13 +58,10 @@ bool Search::done(){
 }
 
 void Search::tick(float dt){
-	if(done()){
-		entity->desiredSpeed = 0;
-	} else {
-		Ogre::Vector3 diff = targetLocation - entity->pos;
-		entity->desiredHeading  = atan2(diff.z, diff.x);
-		entity->desiredSpeed = entity->maxSpeed;
-	}
+
+	Ogre::Vector3 diff = targetLocation - entity->pos;
+	entity->desiredHeading  = atan2(diff.z, diff.x);
+	entity->desiredSpeed = entity->maxSpeed;
 }
 
 Pursue::Pursue(Entity381 *ent, Ogre::SceneNode* targ): Command(ent, COMMAND_TYPE::PURSUE){

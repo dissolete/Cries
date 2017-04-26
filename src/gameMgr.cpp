@@ -22,7 +22,22 @@ void GameMgr::init(){
 }
 
 void GameMgr::loadLevel(){
+<<<<<<< HEAD
    this->loadLevel("level001.txt");
+=======
+//We know graphicsMgr is ready and initialized
+	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
+	light->setPosition(20.0, 80.0, 50.0);
+
+	createSky();
+	createGround();
+
+	//Creating the entities
+	engine->entityMgr->CreateEntity(EntityType::HEARNO, Ogre::Vector3(0, 10, -1000), 0);
+	engine->entityMgr->CreateEntity(EntityType::SEENO, Ogre::Vector3(500, 0, -500), Ogre::Math::HALF_PI / 2);
+	engine->entityMgr->CreateEntity(EntityType::SPEAKNO, Ogre::Vector3(-500, 20, -500), Ogre::Math::HALF_PI / -2);
+>>>>>>> 34af3717c008466a6e28279555e689b3a3cf3fff
 }
 
 void GameMgr::stop(){
