@@ -10,6 +10,8 @@
 #include <unistd.h>
 
 GfxMgr::GfxMgr(Engine *eng): Mgr(eng) {
+	rect = NULL;
+	backgroundNode = NULL;
 
 	resources = "resources.cfg";
 	plugins   = "plugins.cfg";
@@ -82,33 +84,49 @@ void GfxMgr::createViewport(){
 	ogreViewport->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 	ogreCamera->setAspectRatio(Ogre::Real(ogreViewport->getActualWidth()) /
 											Ogre::Real(ogreViewport->getActualHeight()));
+
+	//begin background testing
+	// Create background material
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Background", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("splash.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(true);
+
+	// Create background rectangle covering the whole screen
+	rect = new Ogre::Rectangle2D(true);
+	rect->setCorners(-1.0, 1.0, 1.0, -1.0);
+	rect->setMaterial("Background");
+
+	// Render the background before everything else
+	rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+
+	// Use infinite AAB to always stay visible
+	Ogre::AxisAlignedBox aabInf;
+	aabInf.setInfinite();
+	rect->setBoundingBox(aabInf);
+
+	// Attach background to the scene
+	backgroundNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode("Background");
+	backgroundNode->attachObject(rect);
+
 }
-
-void GfxMgr::testScene(){
-	Ogre::Entity *ent = ogreSceneManager->createEntity("ogrehead.mesh");
-	Ogre::SceneNode* node = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
-	node->attachObject(ent);
-	ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
-	Ogre::Light* light = ogreSceneManager->createLight("MainLight");
-	light->setPosition(20, 80, 50);
-	std::cout << "Test scene done" << std::endl;
-}
-
-
-
 
 GfxMgr::~GfxMgr() {
 	delete ogreRoot; //after inputMgr destructor
+	delete rect;
+	rect = NULL;
 }
 
 void GfxMgr::init(){
 	std::cout << "Initialize gfx" << std::endl;
 	initResources();
 
-	//testScene();
 }
 
 void GfxMgr::loadLevel(){
+
+	backgroundNode->detachObject(rect);//Removes the background so it is no longer rendered
 
 }
 
@@ -117,6 +135,16 @@ void GfxMgr::tick(float dt){
 	Ogre::WindowEventUtilities::messagePump();
 	//if(ogreRenderWindow->isClosed()) engine->stop();
 	if(!ogreRoot->renderOneFrame()) engine->stop();
+
+	if(engine->theState == STATE::SPLASH)
+	{
+		//Sets the lighting to be dim then bright then dim until the level loads according to the formula
+		//lightVal = -0.4222(time^2) + 0.95
+		float lightVal = (-0.4222f * (engine->timeSinceLastEvent - 1.5f) * (engine->timeSinceLastEvent - 1.5f)) + 0.95f;
+		ogreSceneManager->setAmbientLight(Ogre::ColourValue(lightVal, lightVal, lightVal));
+	}
+
+
 	return;
 }
 
@@ -124,4 +152,16 @@ void GfxMgr::stop(){
 	std::cout << "stopping engine and ogre" << std::endl;
 	ogreRoot->shutdown();
 	return;
+}
+
+void GfxMgr::loadMenu()
+{
+	// Create background material
+	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("MenuScreen", "General");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("GameLogoPrototype.png");
+	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
+	rect->setMaterial("MenuScreen");
 }

@@ -44,13 +44,6 @@ void Engine::init(){
 	gameMgr->init();
 	uiMgr->init();
 
-// load level to play
-	gfxMgr->loadLevel();
-	inputMgr->loadLevel();
-	entityMgr->loadLevel();
-	gameMgr->loadLevel();
-	uiMgr->loadLevel();
-
 }
 
 void Engine::tickAll(float dt){
@@ -86,4 +79,15 @@ void Engine::run(){
 	shutdown();
 
 	return;
+}
+
+void Engine::loadLevel()
+{
+
+	// load level to play
+	gfxMgr->loadLevel();
+	inputMgr->loadLevel();
+	entityMgr->loadLevel();
+	gameMgr->loadLevel();
+	uiMgr->loadLevel();
 }

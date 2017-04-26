@@ -54,9 +54,13 @@ void GameMgr::createGround(int &width, int &heigth, std::string &material)
 
 	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
 
+<<<<<<< HEAD
 	groundEntity->setCastShadows(false);
 
 	groundEntity->setMaterialName(material);
+=======
+
+>>>>>>> 9b0c2777de4349ac5b112ecea59e129c1e5edfac
 }
 
 void GameMgr::createSky(){

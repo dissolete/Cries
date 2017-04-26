@@ -38,6 +38,7 @@ public:
 	void tickAll(float dt);
 	void stop();
 	void shutdown();
+	void loadLevel();
 
 	//
 	bool keepRunning;
