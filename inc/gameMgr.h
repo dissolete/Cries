@@ -39,6 +39,7 @@ public:
 	// Environment Setup
 	void loadEnvironment(std::string levelFilename);
 	void setupEnvironment();
+	void setupSounds();
 	void loadObjects();
 	void loadCharacters();
 

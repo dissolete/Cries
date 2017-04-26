@@ -100,6 +100,7 @@ void GameMgr::loadLevel(std::string levelFilename)
 	// Load the environment, objects, and characters
 	this->loadEnvironment(levelFilename);
 	this->setupEnvironment();
+	this->setupSounds();
 	this->loadObjects();
 	this->loadCharacters();
 }
@@ -313,9 +314,27 @@ void GameMgr::setupEnvironment()
 	light->setSpecularColour(Ogre::ColourValue::White);
 }
 
+/*
+ *
+ * Basic Setup for pre-alpha testing
+ * Will be more complex in later phases
+ *
+ */
+void GameMgr::setupSounds()
+{
+	// Load Song from file
+	//load_song(std::string songName, std::string filePath);
+	//load_sound(std::string soundName, std::string filePath);
+
+	//play_sound(std::string soundName);
+	//play_song(std::string songName, bool looped);
+
+	// Play song (.wav)
+}
+
 void GameMgr::loadObjects()
 {
-
+	// Future use to load other non moving objects into the world
 }
 
 void GameMgr::loadCharacters()
