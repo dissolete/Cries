@@ -97,7 +97,7 @@ void UiMgr::buttonHit(OgreBites::Button *b){
         std::cout <<"New Game pressed" << std::endl;
         engine->theState = STATE::GAMEPLAY;
         engine->loadLevel();
-        mTrayMgr->removeWidgetFromTray(b);
+        mTrayMgr->destroyWidget(b);
     }
 
 }
