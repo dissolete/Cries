@@ -27,6 +27,7 @@ private:
 	// Loads a level given from file
 	void loadLevel(std::string levelFilename);
 
+
 public:
 	GameMgr(Engine *engine);
 	~GameMgr();
@@ -40,6 +41,7 @@ public:
 	void setupEnvironment();
 	void loadObjects();
 	void loadCharacters();
+
 	std::string getNewName();
 
 	Ogre::Plane floor;

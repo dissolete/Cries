@@ -26,6 +26,7 @@ void GameMgr::init(){
 
 void GameMgr::loadLevel(){
 	this->loadLevel("level001.txt");
+
 }
 
 void GameMgr::stop(){
@@ -79,6 +80,7 @@ void GameMgr::createCeiling()
 	    1, 5, 5,
 	    Ogre::Vector3::UNIT_Z);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 	// Create Ceiling Entity //////////////////////////////////////////////////////////////////////////////////
 	Ogre::Entity* ceiling = engine->gfxMgr->ogreSceneManager->createEntity("ceiling");
@@ -336,7 +338,6 @@ std::string GameMgr:: getNewName()
 
 	return "object_" + s;
 }
-
 
 
 
