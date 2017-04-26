@@ -139,7 +139,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( x, z, groundMaterial);
 
 	// Create Ceiling
-	// createCeiling(); DEBUG THIS
+	// createCeiling(); DEBUG THIS LATER
 
 	// Second block reads in location of you and enemies
 	// Check for Objects line
