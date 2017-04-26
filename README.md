@@ -10,7 +10,7 @@ Instructions for linking the sound engine
 
 3. In the "Libraries" settings under "GCC C++ Linker," add the following to 
    the Libraries (-l) section:
-	pthread
+	pthread, 
 	IrrKlang
 
 4. In the "Libraries" settings under "GCC C++ Linker," add the following to
