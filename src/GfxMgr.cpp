@@ -85,13 +85,34 @@ void GfxMgr::createViewport(){
 	ogreCamera->setAspectRatio(Ogre::Real(ogreViewport->getActualWidth()) /
 											Ogre::Real(ogreViewport->getActualHeight()));
 
+
 	//begin background testing
 	// Create background material
+
 	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Background", "General");
 	material->getTechnique(0)->getPass(0)->createTextureUnitState("splash.png");
 	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
 	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
 	material->getTechnique(0)->getPass(0)->setLightingEnabled(true);
+
+	// Testing Animated Splash Screen
+	//engine->entityMgr->CreateEntity(EntityType::LOGO, Ogre::Vector3(0, 0, 0), 0);
+/*
+	Ogre::Entity *splash = ogreSceneManager->createEntity("Logo", "boat.mesh");
+	splash->setCastShadows(true);
+
+	// Create scene node for this entity
+	splashNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode("Logo");
+	splashNode->attachObject(splash);
+	splash->setMaterialName("DDG51.bmp");
+	splashNode->setScale(10.f, 10.0f, 10.0f);
+
+	// Set Animation States
+	ogreAnimationState = splash->getAnimationState("CameraRotate");
+	ogreAnimationState->setLoop(true);
+	ogreAnimationState->setEnabled(true);
+*/
+
 
 	// Create background rectangle covering the whole screen
 	rect = new Ogre::Rectangle2D(true);

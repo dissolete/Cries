@@ -173,7 +173,7 @@ void Wall::Tick(float dt)
 }
 
 Arch::Arch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ARCH, pos, heading, eng){
-	this->meshfile = "fish.mesh";
+	this->meshfile = "ninja.mesh";
 }
 
 Arch::~Arch()
@@ -185,6 +185,20 @@ void Arch::Tick(float dt)
 {
 	Entity381::Tick(dt);
 
+}
+
+Logo::Logo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::LOGO, pos, heading, eng){
+	this->meshfile = "Splash.mesh";
+}
+
+Logo::~Logo()
+{
+//
+}
+
+void Logo::Tick(float dt)
+{
+	Entity381::Tick(dt);
 }
 
 

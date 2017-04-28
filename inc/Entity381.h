@@ -104,4 +104,12 @@ public:
 	void Tick(float dt);
 };
 
+class Logo: public Entity381 {
+public:
+	Logo(Ogre::Vector3 pos, float heading, Engine *eng);
+	~Logo();
+	void Tick(float dt);
+};
+
+
 #endif /* ENTITY381_H_ */

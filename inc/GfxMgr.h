@@ -57,6 +57,9 @@ public:
 	Ogre::Camera* ogreCamera;
 	Ogre::Rectangle2D* rect;
 	Ogre::SceneNode* backgroundNode;
+	Ogre::SceneNode* splashNode;
+
+	Ogre::AnimationState* ogreAnimationState;
 
 };
 
