@@ -14,6 +14,7 @@ Engine::Engine(){
 	entityMgr = 0;
 	gameMgr = 0;
 	uiMgr = 0;
+	soundMgr = 0;
 	keepRunning = true;
 	theState = STATE::SPLASH;
 	timeSinceLastEvent = 0;
@@ -36,6 +37,7 @@ void Engine::init(){
 	entityMgr = new EntityMgr(this);
 	gameMgr = new GameMgr(this);
 	uiMgr = new UiMgr(this);
+	soundMgr = new SoundMgr(this);
 
 	// initialize
 	gfxMgr->init();
@@ -43,6 +45,7 @@ void Engine::init(){
 	entityMgr->init();
 	gameMgr->init();
 	uiMgr->init();
+	soundMgr->init();
 
 }
 
@@ -52,6 +55,7 @@ void Engine::tickAll(float dt){
 	entityMgr->tick(dt);
 	gameMgr->tick(dt);
 	uiMgr->tick(dt);
+	soundMgr->tick(dt);
 }
 
 void Engine::shutdown(){
@@ -60,6 +64,7 @@ void Engine::shutdown(){
 	entityMgr->stop();
 	gameMgr->stop();
 	uiMgr->stop();
+	soundMgr->stop();
 }
 
 void Engine::run(){

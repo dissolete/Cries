@@ -13,7 +13,7 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
     ceiling = new Ogre::MovablePlane("ceiling");
     ceiling->d = 0;
-    ceiling->normal = Ogre::Vector3::UNIT_Y;
+    ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
 }
 
 GameMgr::~GameMgr(){
@@ -68,7 +68,7 @@ void GameMgr::createGround(int &width, int &heigth, std::string &material)
 
 void GameMgr::createCeiling()
 {
-	Ogre::MovablePlane plane(Ogre::Vector3::UNIT_Y, 50);
+	Ogre::MovablePlane plane(Ogre::Vector3::UNIT_Y, 200);
 
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
@@ -140,7 +140,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( x, z, groundMaterial);
 
 	// Create Ceiling
-	// createCeiling(); DEBUG THIS LATER
+	createCeiling(); //DEBUG THIS LATER
 
 	// Second block reads in location of you and enemies
 	// Check for Objects line
@@ -244,8 +244,8 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				// Check wall position to prevent going outside of map
 				if( wallPosition.x < 1800 ||
 					wallPosition.x > -1800 ||
-					wallPosition.z > -3000 ||
-					wallPosition.z < 3000 )
+					wallPosition.z > -2500 ||
+					wallPosition.z < 2500 )
 				{
 					// reset position
 					//wallPosition.x = 0;
@@ -253,7 +253,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 					// Increment Positions to prevent overlap from reset
 					wallPosition.x += 25;
-					//wallPosition.z += 25;
+					//wallPosition.z += 50;
 				}
 
 				//wallPosition.z += 50;
@@ -323,11 +323,11 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	//load_song(std::string songName, std::string filePath);
+	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ss.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
-	//play_song(std::string songName, bool looped);
+	engine->soundMgr->play_song("Layer 1", true);
 
 	// Play song (.wav)
 }
