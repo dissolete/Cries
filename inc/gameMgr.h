@@ -9,8 +9,13 @@
 #define GAMEMGR_H_
 
 #include <mgr.h>
+#include <Grid.h>
+#include <Utils.h>
 #include <OgreMeshManager.h>
 #include <OgreMovablePlane.h>
+
+class Grid;
+class GridParams;
 
 // Constants for Grid Array Size
 const int COL_SIZE = 20;
@@ -18,6 +23,9 @@ const int ROW_SIZE = 17;
 
 
 class GameMgr : public Mgr {
+
+protected:
+	Grid* grid;
 
 private:
 	void createSky();
@@ -47,6 +55,8 @@ public:
 
 	Ogre::Plane floor;
 	Ogre::MovablePlane *ceiling;
+
+	Grid* getGrid() const;
 
 };
 
