@@ -47,6 +47,7 @@ public:
 
 	Ogre::Plane floor;
 	Ogre::MovablePlane *ceiling;
+	float gameplayTime;
 
 };
 

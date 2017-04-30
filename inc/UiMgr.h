@@ -14,6 +14,7 @@
 #include <OISKeyboard.h>
 #include <OISMouse.h>
 #include <mgr.h>
+#include <string>
 
 #include <SdkTrays.h>
 
@@ -21,6 +22,7 @@ class UiMgr : public Mgr, public Ogre::FrameListener, public OIS::KeyListener, p
 {
 private:
 	void loadMenu();
+	std::string timeAsString(float time);
 
 protected:
 	virtual void windowResized(Ogre::RenderWindow *rw);
@@ -47,6 +49,7 @@ public:
 	OgreBites::InputContext mInputContext;
 	OgreBites::SdkTrayManager* mTrayMgr;
 	Ogre::OverlaySystem* mOverlaySystem;
+	OgreBites::Label *timeMonitor;
 };
 
 #endif /* INC_UIMGR_H_ */

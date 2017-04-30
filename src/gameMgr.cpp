@@ -14,6 +14,7 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine){
     ceiling = new Ogre::MovablePlane("ceiling");
     ceiling->d = 0;
     ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
+    gameplayTime = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -35,6 +36,11 @@ void GameMgr::stop(){
 
 void GameMgr::tick(float dt){
 	//engine->gfxMgr->ogreAnimationState->addTime(dt);
+	if(engine->theState == STATE::GAMEPLAY)
+	{
+		gameplayTime += dt;
+		std::cout << "Gameplay time: " << gameplayTime << std::endl;
+	}
 }
 
 

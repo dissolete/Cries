@@ -94,14 +94,11 @@ void UnitAI::SetCommand(Command* c){
 }
 
 void UnitAI::Tick(float dt){
-	std::cout << commands.size() << " commands stored" << std::endl;
+
 	if(!commands.empty()){
 		commands.front()->tick(dt);
-		std::cout << "Made it before done statement" << std::endl;
 		if(commands.front()->done()){
-			std::cout << "Made it before popping off the command" << std::endl;
 			commands.clear();
-			std::cout << "Made it past popping off the command" << std::endl;
 		}
 	}
 }
