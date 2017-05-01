@@ -3,6 +3,7 @@
  *
  *  Created on: Mar 9, 2017
  *      Author: sushil
+ *      Edited: Gage Thomas
  */
 
 #include <GfxMgr.h>

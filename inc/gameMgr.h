@@ -12,7 +12,6 @@
 #include <Grid.h>
 #include <Utils.h>
 #include <OgreMeshManager.h>
-#include <OgreMovablePlane.h>
 #include <string>
 
 class Grid;
@@ -55,7 +54,7 @@ public:
 	std::string getNewName();
 
 	Ogre::Plane floor;
-	Ogre::MovablePlane *ceiling;
+	Ogre::Plane ceiling;
 	float gameplayTime;
 
 	Grid* getGrid() const;

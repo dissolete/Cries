@@ -106,7 +106,7 @@ void HearNo::Tick(float dt)
 }
 
 SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SEENO, pos, heading, eng){
-	this->meshfile = "ogrehead.mesh";
+	this->meshfile = "See-No.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
 	this->maxSpeed = 35;

@@ -82,6 +82,8 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 		break;
 	}
 
+
+
 	if( entityType == EntityType::LOGO )
 	{
 		/*
@@ -93,18 +95,13 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 		*/
 	}
 
-	if( entityType == EntityType::WALL )
-	{
-		//ent->ogreEntity->setMaterialName("Examples/Rock");
-	}
-
-	CreateOgreEntityAndNode(ent);
-
 	// Check material name
 	if( entityType == EntityType::WALL )
 	{
 		ent->ogreEntity->setMaterialName("Examples/RustySteel");
 	}
+
+	CreateOgreEntityAndNode(ent);
 
 	entities.push_front(ent);
 	return ent;

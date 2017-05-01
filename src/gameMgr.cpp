@@ -3,6 +3,7 @@
  *
  *  Created on: Mar 11, 2017
  *      Author: sushil
+ *      Edited: Hadi Rumjahn, Jakob Shepard
  */
 
 #include <gameMgr.h>
@@ -11,9 +12,7 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = new Ogre::MovablePlane("ceiling");
-    ceiling->d = 0;
-    ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
+    ceiling = Ogre::Plane(Ogre::Vector3::NEGATIVE_UNIT_Y, 0);
     gameplayTime = 0;
     entityCount = 0;
 }
@@ -75,17 +74,15 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 
 void GameMgr::createCeiling()
 {
-	Ogre::MovablePlane plane(-1 * Ogre::Vector3::UNIT_Y, 50);
-
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
 	    "ceiling",
 	    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		plane,
+		ceiling,
 		4000, 3400, 20, 20,
 	    true,
 	    1, 5, 5,
-	    -Ogre::Vector3::UNIT_Z);
+	    Ogre::Vector3::UNIT_Z);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -94,6 +91,7 @@ void GameMgr::createCeiling()
 	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(ceiling);
 	ceiling->setCastShadows(false);
 	ceiling->setMaterialName("Examples/Rockwall");
+	//ceiling->pass->setCullingMode(Ogre::CULL_NONE);
 }
 
 void GameMgr::createSky(){
@@ -394,7 +392,7 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ss.wav");
+	engine->soundMgr->load_song("Layer 1", "/nfs/home/hrumjahn/git/Cries/resources/ss.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
