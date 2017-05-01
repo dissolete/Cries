@@ -9,12 +9,13 @@
 #include <engine.h>
 #include <OgreMeshManager.h>
 
-GameMgr::GameMgr(Engine *engine): Mgr(engine){
+GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
     ceiling = new Ogre::MovablePlane("ceiling");
     ceiling->d = 0;
     ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
     gameplayTime = 0;
+    entityCount = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -44,7 +45,7 @@ void GameMgr::tick(float dt){
 }
 
 
-void GameMgr::createGround(int &width, int &heigth, std::string &material)
+void GameMgr::createGround(int width, int heigth, std::string &material)
 {
 	// Create Plane //////////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
@@ -143,14 +144,15 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	std::cerr << "Ground Material: " << groundMaterial << std::endl;
 	/////////////////////////////////////////////////////////////////
 
+
 	// Create floor mesh with read in dimensions
-	createGround( x, z, groundMaterial);
+	createGround( x*100, z*100, groundMaterial);
 
 	// Create Ceiling
 	createCeiling(); //DEBUG THIS LATER
 
 	// Setup the grid
-	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, z, x, engine);
+	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, x, z, engine);
 
 	// Second block reads in location of you and enemies
 	// Check for Objects line
@@ -199,7 +201,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	fin >> readEnt->mesh;
 	fin >> x_offset >> y_offset >> z_offset;
-	fin >> readEnt->entityScale;
+	fin >> readEnt->entityOrientation >> readEnt->entityScale;
 
 	// set entity info
 	readEnt->positionOffset = Ogre::Vector3(x_offset, y_offset, z_offset);
@@ -244,21 +246,21 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	*/
 
 	// Loop through map dimensions
-	for( int row = 0; row < ROW_SIZE; row++ )
+	for( int row = 0; row < ROW_SIZE - 3; row++ )
 	{
-		for( int col = 0; col < COL_SIZE; col++ )
+		for( int col = 0; col < COL_SIZE - 3; col++ )
 		{
 			fin >> c;
-			buff = x + '\0'; // convert to string
-			readEnt = objects[buff];
+			//buff = x + '\0'; // convert to string
+			//readEnt = objects[buff];
 
 			// Check for walls (Not player or enemy nodes)
 			if( c == 'W' )
 			{
-				std::cerr << "Creating Wall" << std::endl;
+				//std::cerr << "Creating Wall" << std::endl;
 
-				engine->entityMgr->CreateEntity(EntityType::WALL, wallPosition, 0);
-				std::cerr << "Wall Created" << std::endl;
+				//engine->entityMgr->CreateEntity(EntityType::WALL, wallPosition, 0);
+				//std::cerr << "Wall Created" << std::endl;
 				//engine->entityMgr->
 
 				// Create a Wall
@@ -269,15 +271,41 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				engine->gfxMgr->wallNode->attachObject(wallEntity);
 				*/
 
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// Jake edits
+				//
+
+				// Grab the "objects" config stuff from the object map that Hadi built
+				readFromFile * objectEntData = objects["D"];
+
+				GridParams * gridParam =  this->grid->getGrid(row, col);
+				if(gridParam) gridParam->notWalkable();
+
+				Ogre::Vector3 position(this->grid->getPosition(row, col).x, 10.0f, this->grid->getPosition(row, col).z);
+
+				engine->entityMgr->CreateEntity(EntityType::WALL, position, 0);
+
+				// Create ogre entity
+				Ogre::Entity * wallEntity = engine->gfxMgr->ogreSceneManager->createEntity(getNewName(), objectEntData->mesh);
+				wallEntity->setMaterialName("Examples/RustySteel");
+				Ogre::SceneNode * newWallNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(position);
+				newWallNode->attachObject(wallEntity);
+				entitySceneNodes.push_back(newWallNode);
+
+				objectEntData = NULL;
+
+				//
+				// End Jake edits
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 				// Set Scale and position
 				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setScale(0.1f, 1.0f, 0.1f);
 				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setPosition(wallPosition);
 
 				// Placement in world SHALL NOT PASS
-				this->grid->getGrid(row, col)->notWalkable();
-				engine->gfxMgr->wallNode->setPosition(this->grid->getPosition(row, col).x, 10.0f,
-																	this->grid->getPosition(row, col).z);
+//				this->grid->getGrid(row, col)->notWalkable();
+//				engine->gfxMgr->wallNode->setPosition(this->grid->getPosition(row, col).x, 10.0f, this->grid->getPosition(row, col).z);
 
 
 
@@ -307,9 +335,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			// Check for Arch
 			else if( c == 'A' )
 			{
-				std::cerr << "Spawning Arch" << std::endl;
-				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
-				archPosition.x += 50;
+//				std::cerr << "Spawning Arch" << std::endl;
+//				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
+//				archPosition.x += 50;
 
 			}
 
@@ -317,9 +345,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			else if( c == 'C' )
 			{
 				// Spawn Enemy
-				std::cerr << "Spawning Enemy" << std::endl;
-
-				loadCharacters();
+//				std::cerr << "Spawning Enemy" << std::endl;
+//
+//				loadCharacters();
 /*
 				// Create Test Enemy
 				Ogre::Entity* enemyEntity = engine->gfxMgr->ogreSceneManager->createEntity(getNewName(), characterMesh);
@@ -343,7 +371,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	// Create Skybox for the hell of it
 	createSky();
-	delete readEnt;
+//	delete readEnt;
 }
 
 void GameMgr::setupEnvironment()
@@ -409,14 +437,8 @@ void GameMgr::loadCharacters()
 
 std::string GameMgr:: getNewName()
 {
-	static int count = 0;
 
-	std::string s;
-	std::stringstream out;
-	out << count ++;
-	s = out.str();
-
-	return "object_" + s;
+	return std::string("object_" + std::to_string(entityCount++));
 }
 
 

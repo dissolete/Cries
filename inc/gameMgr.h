@@ -13,6 +13,7 @@
 #include <Utils.h>
 #include <OgreMeshManager.h>
 #include <OgreMovablePlane.h>
+#include <string>
 
 class Grid;
 class GridParams;
@@ -29,7 +30,7 @@ protected:
 
 private:
 	void createSky();
-	void createGround(int &width, int &heigth, std::string &material);
+	void createGround(int width, int heigth, std::string &material);
 	void createCeiling();
 
 	// Loads a level given from file
@@ -58,6 +59,10 @@ public:
 	float gameplayTime;
 
 	Grid* getGrid() const;
+
+	std::vector<Ogre::SceneNode*> entitySceneNodes;
+
+	int entityCount;
 
 };
 

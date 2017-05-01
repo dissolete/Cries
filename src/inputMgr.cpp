@@ -371,7 +371,7 @@ void InputMgr::UpdateCamera(float dt){
 	}
 
 	Ogre::Vector3 newPos = engine->gfxMgr->cameraNode->getPosition();
-	newPos.y = 50;
+	newPos.y = 300;
 	engine->gfxMgr->cameraNode->setPosition(newPos);
 
 }

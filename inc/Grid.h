@@ -15,7 +15,7 @@
 #include <Utils.h>
 #include <mgr.h>
 
-#define GRID_MULT 10.0
+#define GRID_MULT 100.0
 
 class Engine;
 
