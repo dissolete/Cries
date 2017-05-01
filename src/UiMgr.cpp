@@ -12,6 +12,8 @@ UiMgr::UiMgr(Engine* eng): Mgr(eng){
 	// Initialize the OverlaySystem (changed for Ogre 1.9)
 	    mOverlaySystem = new Ogre::OverlaySystem();
 	    engine->gfxMgr->ogreSceneManager->addRenderQueueListener(mOverlaySystem);
+	    mTrayMgr = 0;
+	    timeMonitor = 0;
 
 	    //Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -35,6 +37,8 @@ void UiMgr::stop(){
 
 void UiMgr::loadLevel(){
 	mTrayMgr->hideCursor();
+	timeMonitor = mTrayMgr->createLabel(OgreBites::TL_TOP, "Timer", timeAsString(engine->gameMgr->gameplayTime));
+	//timeMonitor->getOverlayElement()->    Get this in order to change the material
 }
 
 void UiMgr::tick(float dt){
@@ -50,6 +54,10 @@ void UiMgr::tick(float dt){
 			engine->gfxMgr->loadMenu();
 			loadMenu();//Creates the button
 		}
+	} else if(engine->theState == STATE::GAMEPLAY)
+	{
+		timeMonitor->setCaption(timeAsString(engine->gameMgr->gameplayTime));
+		std::cout << timeAsString(engine->gameMgr->gameplayTime) << std::endl;
 	}
 }
 
@@ -113,4 +121,24 @@ void UiMgr::itemSelected(OgreBites::SelectMenu *m){
 void UiMgr::loadMenu()
 {
 	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
+}
+
+std::string UiMgr::timeAsString(float time)
+{
+	std::string result = "";
+	int resultTime = (int) time;
+	int seconds = resultTime % 60;
+	int minutes = resultTime / 60;
+	if(minutes < 10)
+	{
+		result += "0";
+	}
+	result += std::to_string(minutes) + ":";
+	if(seconds < 10)
+	{
+		result += "0";
+	}
+	result += std::to_string(seconds);
+
+	return result;
 }

@@ -311,7 +311,6 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 // Game specific input handling
 void InputMgr::UpdateCamera(float dt){
 	float move = 50.0f;
-	float rotate = 0.1f;
 
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
 		 isSprinting = true;

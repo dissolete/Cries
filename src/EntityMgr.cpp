@@ -43,6 +43,7 @@ void EntityMgr::CreateOgreEntityAndNode(Entity381 *ent){
 		ent->ogreEntity = engine->gfxMgr->ogreSceneManager->createEntity(ent->meshfile);
 		ent->ogreSceneNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
+		//ent->ogreEntity->setCastShadows(true);
 		ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading));
 	}
 
@@ -71,9 +72,30 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 		ent = new Arch(position, heading, engine);
 		break;
 
+	// TESTING
+	case EntityType::LOGO:
+		ent = new Logo(position, heading, engine);
+		break;
+
 	default:
 		ent = new HearNo(position, heading, engine);
 		break;
+	}
+
+	if( entityType == EntityType::LOGO )
+	{
+		/*
+		//ent->ogreEntity->setMaterialName("splash");
+		ent->engine->gfxMgr->splashNode->setScale(10.f, 10.0f, 10.0f);
+		ent->engine->gfxMgr->ogreAnimationState = ent->ogreEntity->getAnimationState("CameraRotate");
+		ent->engine->gfxMgr->ogreAnimationState->setLoop(true);
+		ent->engine->gfxMgr->ogreAnimationState->setEnabled(true);
+		*/
+	}
+
+	if( entityType == EntityType::WALL )
+	{
+		//ent->ogreEntity->setMaterialName("Examples/Rock");
 	}
 
 	CreateOgreEntityAndNode(ent);

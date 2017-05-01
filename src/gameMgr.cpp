@@ -13,7 +13,8 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
     ceiling = new Ogre::MovablePlane("ceiling");
     ceiling->d = 0;
-    ceiling->normal = Ogre::Vector3::UNIT_Y;
+    ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
+    gameplayTime = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -34,7 +35,12 @@ void GameMgr::stop(){
 }
 
 void GameMgr::tick(float dt){
-
+	//engine->gfxMgr->ogreAnimationState->addTime(dt);
+	if(engine->theState == STATE::GAMEPLAY)
+	{
+		gameplayTime += dt;
+		std::cout << "Gameplay time: " << gameplayTime << std::endl;
+	}
 }
 
 
@@ -68,7 +74,7 @@ void GameMgr::createGround(int &width, int &heigth, std::string &material)
 
 void GameMgr::createCeiling()
 {
-	Ogre::MovablePlane plane(Ogre::Vector3::UNIT_Y, 50);
+	Ogre::MovablePlane plane(-1 * Ogre::Vector3::UNIT_Y, 50);
 
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
@@ -78,7 +84,7 @@ void GameMgr::createCeiling()
 		4000, 3400, 20, 20,
 	    true,
 	    1, 5, 5,
-	    Ogre::Vector3::UNIT_Z);
+	    -Ogre::Vector3::UNIT_Z);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -140,7 +146,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( x, z, groundMaterial);
 
 	// Create Ceiling
-	// createCeiling(); DEBUG THIS LATER
+	createCeiling(); //DEBUG THIS LATER
 
 	// Second block reads in location of you and enemies
 	// Check for Objects line
@@ -226,6 +232,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				std::cerr << "Creating Wall" << std::endl;
 
 				engine->entityMgr->CreateEntity(EntityType::WALL, wallPosition, 0);
+				std::cerr << "Wall Created" << std::endl;
 				//engine->entityMgr->
 
 				// Create a Wall
@@ -244,8 +251,8 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				// Check wall position to prevent going outside of map
 				if( wallPosition.x < 1800 ||
 					wallPosition.x > -1800 ||
-					wallPosition.z > -3000 ||
-					wallPosition.z < 3000 )
+					wallPosition.z > -2500 ||
+					wallPosition.z < 2500 )
 				{
 					// reset position
 					//wallPosition.x = 0;
@@ -253,7 +260,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 					// Increment Positions to prevent overlap from reset
 					wallPosition.x += 25;
-					//wallPosition.z += 25;
+					//wallPosition.z += 50;
 				}
 
 				//wallPosition.z += 50;
@@ -323,11 +330,11 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	//load_song(std::string songName, std::string filePath);
+	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ss.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
-	//play_song(std::string songName, bool looped);
+	engine->soundMgr->play_song("Layer 1", true);
 
 	// Play song (.wav)
 }
@@ -343,6 +350,31 @@ void GameMgr::loadCharacters()
 	engine->entityMgr->CreateEntity(EntityType::HEARNO, Ogre::Vector3(0, 10, -1000), 0);
 	engine->entityMgr->CreateEntity(EntityType::SEENO, Ogre::Vector3(500, 0, -500), Ogre::Math::HALF_PI / 2);
 	engine->entityMgr->CreateEntity(EntityType::SPEAKNO, Ogre::Vector3(-500, 20, -500), Ogre::Math::HALF_PI / -2);
+
+	// Setup Animation Defaults
+	Ogre::Animation::setDefaultInterpolationMode(Ogre::Animation::IM_LINEAR);
+	Ogre::Animation::setDefaultRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
+
+
+	// Create Entity
+	Ogre::Entity *splash = engine->gfxMgr->ogreSceneManager->createEntity("Splash.mesh");
+
+	// Create scene node for this entity
+	engine->gfxMgr->splashNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode();
+	engine->gfxMgr->splashNode->attachObject(splash);
+	splash->setMaterialName("Material");
+	engine->gfxMgr->splashNode->setScale(10.f, 10.0f, 10.0f);
+	engine->gfxMgr->splashNode->setPosition( 0.0f, 400, -3500);
+	engine->gfxMgr->splashNode->roll(Ogre::Degree(-360));
+	engine->gfxMgr->splashNode->pitch(Ogre::Degree(90));
+/*
+	// Set Animation States
+	//engine->gfxMgr->ogreAnimationState = splash->getAnimationState("Test");
+	engine->gfxMgr->ogreAnimationState->setWeight(1);
+	engine->gfxMgr->ogreAnimationState->setLoop(true);
+	engine->gfxMgr->ogreAnimationState->setEnabled(true);
+*/
+
 
 }
 

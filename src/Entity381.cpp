@@ -77,11 +77,10 @@ void Entity381::SetStatus(Status newStatus)
 		aiAsp->clear();
 		//Stop moving
 		desiredSpeed = 0;
-		std::cout << "Made it to the end of waiting block" << std::endl;
+
 	}
 
 	theStatus = newStatus;
-	std::cout << "Made it to the end of SetStatus" << std::endl;
 }
 
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
@@ -173,7 +172,7 @@ void Wall::Tick(float dt)
 }
 
 Arch::Arch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ARCH, pos, heading, eng){
-	this->meshfile = "fish.mesh";
+	this->meshfile = "ninja.mesh";
 }
 
 Arch::~Arch()
@@ -185,6 +184,20 @@ void Arch::Tick(float dt)
 {
 	Entity381::Tick(dt);
 
+}
+
+Logo::Logo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::LOGO, pos, heading, eng){
+	this->meshfile = "Splash.mesh";
+}
+
+Logo::~Logo()
+{
+//
+}
+
+void Logo::Tick(float dt)
+{
+	Entity381::Tick(dt);
 }
 
 
