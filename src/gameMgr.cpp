@@ -119,8 +119,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	float x_offset, y_offset, z_offset;
 	float scale, orientation;
 	std::string groundMaterial, objectMesh, characterMesh;
-	std::string buffer;
+	std::string buffer, buff;
 	char objectChar;
+	std::map<std::string, readFromFile*> objects;
 
 
 	// Open File
@@ -148,6 +149,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// Create Ceiling
 	createCeiling(); //DEBUG THIS LATER
 
+	// Setup the grid
+	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, z, x, engine);
+
 	// Second block reads in location of you and enemies
 	// Check for Objects line
 	fin >> buffer;
@@ -158,9 +162,20 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	}
 
 	// Read Objects and positions
-	fin >> objectChar >> objectMesh;
+	readFromFile* readEnt = new readFromFile();
+
+	fin >> buff; // read single char
+
+	fin >> readEnt->mesh;
 	fin >> x_offset >> y_offset >> z_offset;
-	fin >> orientation >> scale;
+	fin >> readEnt->entityOrientation >> readEnt->entityScale;
+
+	// Set entity info
+	readEnt->positionOffset = Ogre::Vector3(x_offset, y_offset, z_offset);
+	readEnt->entity = false;
+	objects[buff] = readEnt;
+
+	readEnt = new readFromFile(); // read in next if any
 
 	// Testing Second Box Readin ///////////////////////////////////
 	std::cerr << "Objects" << std::endl;
@@ -179,9 +194,20 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	}
 
 	// Read in Characters
-	fin >> objectChar >> characterMesh;
+
+	fin >> buff; // read next char
+
+	fin >> readEnt->mesh;
 	fin >> x_offset >> y_offset >> z_offset;
-	fin >> orientation >> scale;
+	fin >> readEnt->entityScale;
+
+	// set entity info
+	readEnt->positionOffset = Ogre::Vector3(x_offset, y_offset, z_offset);
+	readEnt->entity = true;
+	objects[buff] = readEnt;
+
+	// read next if any
+	readEnt = new readFromFile();
 
 	// Testing Third Box Readin ///////////////////////////////////
 	std::cerr << "Characters" << std::endl;
@@ -223,8 +249,8 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 		for( int col = 0; col < COL_SIZE; col++ )
 		{
 			fin >> c;
-			std::cerr << c << std::endl;
-
+			buff = x + '\0'; // convert to string
+			readEnt = objects[buff];
 
 			// Check for walls (Not player or enemy nodes)
 			if( c == 'W' )
@@ -248,6 +274,14 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setScale(0.1f, 1.0f, 0.1f);
 				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setPosition(wallPosition);
 
+				// Placement in world SHALL NOT PASS
+				this->grid->getGrid(row, col)->notWalkable();
+				engine->gfxMgr->wallNode->setPosition(this->grid->getPosition(row, col).x, 10.0f,
+																	this->grid->getPosition(row, col).z);
+
+
+
+/*
 				// Check wall position to prevent going outside of map
 				if( wallPosition.x < 1800 ||
 					wallPosition.x > -1800 ||
@@ -262,6 +296,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 					wallPosition.x += 25;
 					//wallPosition.z += 50;
 				}
+*/
 
 				//wallPosition.z += 50;
 
@@ -308,6 +343,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	// Create Skybox for the hell of it
 	createSky();
+	delete readEnt;
 }
 
 void GameMgr::setupEnvironment()
@@ -341,21 +377,6 @@ void GameMgr::setupSounds()
 
 void GameMgr::loadObjects()
 {
-	// Future use to load other non moving objects into the world
-}
-
-void GameMgr::loadCharacters()
-{
-	//Creating the entities
-	engine->entityMgr->CreateEntity(EntityType::HEARNO, Ogre::Vector3(0, 10, -1000), 0);
-	engine->entityMgr->CreateEntity(EntityType::SEENO, Ogre::Vector3(500, 0, -500), Ogre::Math::HALF_PI / 2);
-	engine->entityMgr->CreateEntity(EntityType::SPEAKNO, Ogre::Vector3(-500, 20, -500), Ogre::Math::HALF_PI / -2);
-
-	// Setup Animation Defaults
-	Ogre::Animation::setDefaultInterpolationMode(Ogre::Animation::IM_LINEAR);
-	Ogre::Animation::setDefaultRotationInterpolationMode(Ogre::Animation::RIM_LINEAR);
-
-
 	// Create Entity
 	Ogre::Entity *splash = engine->gfxMgr->ogreSceneManager->createEntity("Splash.mesh");
 
@@ -367,6 +388,14 @@ void GameMgr::loadCharacters()
 	engine->gfxMgr->splashNode->setPosition( 0.0f, 400, -3500);
 	engine->gfxMgr->splashNode->roll(Ogre::Degree(-360));
 	engine->gfxMgr->splashNode->pitch(Ogre::Degree(90));
+}
+
+void GameMgr::loadCharacters()
+{
+	//Creating the entities
+	engine->entityMgr->CreateEntity(EntityType::HEARNO, Ogre::Vector3(0, 10, -1000), 0);
+	engine->entityMgr->CreateEntity(EntityType::SEENO, Ogre::Vector3(500, 0, -500), Ogre::Math::HALF_PI / 2);
+	engine->entityMgr->CreateEntity(EntityType::SPEAKNO, Ogre::Vector3(-500, 20, -500), Ogre::Math::HALF_PI / -2);
 /*
 	// Set Animation States
 	//engine->gfxMgr->ogreAnimationState = splash->getAnimationState("Test");

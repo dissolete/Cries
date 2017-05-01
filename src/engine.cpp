@@ -38,6 +38,7 @@ void Engine::init(){
 	gameMgr = new GameMgr(this);
 	uiMgr = new UiMgr(this);
 	soundMgr = new SoundMgr(this);
+	gridMgr = new Grid(this);
 
 	// initialize
 	gfxMgr->init();
@@ -46,6 +47,7 @@ void Engine::init(){
 	gameMgr->init();
 	uiMgr->init();
 	soundMgr->init();
+	gridMgr->init();
 
 }
 
@@ -56,6 +58,7 @@ void Engine::tickAll(float dt){
 	gameMgr->tick(dt);
 	uiMgr->tick(dt);
 	soundMgr->tick(dt);
+	gridMgr->tick(dt);
 }
 
 void Engine::shutdown(){
@@ -65,6 +68,7 @@ void Engine::shutdown(){
 	gameMgr->stop();
 	uiMgr->stop();
 	soundMgr->stop();
+	gridMgr->stop();
 }
 
 void Engine::run(){

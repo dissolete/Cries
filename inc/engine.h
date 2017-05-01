@@ -17,6 +17,7 @@ class InputMgr;
 #include <Types.h>
 #include <UiMgr.h>
 #include <soundMgr.h>
+#include <Grid.h>
 
 class EntityMgr;
 
@@ -33,6 +34,7 @@ public:
 	GameMgr*        gameMgr;
 	UiMgr*          uiMgr;
 	SoundMgr*       soundMgr;
+	Grid*           gridMgr;
 
 	//ControlMgr*   controlMgr;
 

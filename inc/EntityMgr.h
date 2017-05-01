@@ -44,9 +44,15 @@ public:
 
 	Entity381 *CreateEntity(EntityType entityType, Ogre::Vector3 pos, float yaw = 0);
 	void CreateOgreEntityAndNode(Entity381 *ent);
+};
 
-	Ogre::Entity* test;
-
+class readFromFile {
+public:
+	std::string mesh;
+	Ogre::Vector3 positionOffset;
+	float entityScale;
+	float entityOrientation;
+	bool entity;
 };
 
 
