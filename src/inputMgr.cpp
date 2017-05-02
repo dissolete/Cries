@@ -61,7 +61,8 @@ InputMgr::InputMgr(Engine *engine) : Mgr(engine){
 	windowResized(engine->gfxMgr->ogreRenderWindow);
 	Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 
-	isSprinting = false;
+	isCrouching = isSprinting = false;
+	cameraYPos = STANDING_HEIGHT;
 
 }
 
@@ -310,14 +311,25 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 
 // Game specific input handling
 void InputMgr::UpdateCamera(float dt){
-	float move = 50.0f;
+	float move = 100.0f;
+	//float desiredCameraYPos = 10.0f;
+	float yChange = 100.0f;
 
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
 		 isSprinting = true;
 		 move *= 4;
-	 } else
+	 }
+	 else if(keyboard->isKeyDown(OIS::KC_LCONTROL))
 	 {
 		 isSprinting = false;
+		 isCrouching = true;
+		 move /= 2;
+		 //desiredCameraYPos = 0.0f;
+	 }
+	 else
+	 {
+		 isSprinting = false;
+		 isCrouching = false;
 	 }
 	//Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
 
@@ -371,7 +383,20 @@ void InputMgr::UpdateCamera(float dt){
 	}
 
 	Ogre::Vector3 newPos = engine->gfxMgr->cameraNode->getPosition();
-	newPos.y = 300;
+
+	if(isCrouching)
+	{
+		if(cameraYPos > CROUCH_HEIGHT)
+			cameraYPos -= yChange * dt;
+	}
+	else
+	{
+		if(cameraYPos < STANDING_HEIGHT)
+			cameraYPos += yChange * dt;
+	}
+
+
+	newPos.y = cameraYPos;
 	engine->gfxMgr->cameraNode->setPosition(newPos);
 
 }

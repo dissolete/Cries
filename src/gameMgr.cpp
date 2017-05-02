@@ -74,6 +74,11 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 
 void GameMgr::createCeiling()
 {
+<<<<<<< HEAD
+=======
+	Ogre::MovablePlane plane(-Ogre::Vector3::UNIT_Y, 100);
+
+>>>>>>> 9f4239665485028db6c0ec75cf2e5fdd1c9074f1
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
 	    "ceiling",
@@ -238,95 +243,29 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	Ogre::Vector3 enemyPosition;
 	enemyPosition = Ogre::Vector3(-1200, 0, 1000);
 
-	/*
-	Ogre::ManualObject test;
-	test.convertToMesh(objectMesh, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	*/
-
 	// Loop through map dimensions
 	for( int row = 0; row < ROW_SIZE - 3; row++ )
 	{
 		for( int col = 0; col < COL_SIZE - 3; col++ )
 		{
 			fin >> c;
-			//buff = x + '\0'; // convert to string
-			//readEnt = objects[buff];
+
+			Ogre::Vector3 gridPositionInWorld = this->grid->getPosition(row, col);
 
 			// Check for walls (Not player or enemy nodes)
 			if( c == 'W' )
 			{
-				//std::cerr << "Creating Wall" << std::endl;
-
-				//engine->entityMgr->CreateEntity(EntityType::WALL, wallPosition, 0);
-				//std::cerr << "Wall Created" << std::endl;
-				//engine->entityMgr->
-
-				// Create a Wall
-				/*
-				Ogre::Entity* wallEntity = engine->gfxMgr->ogreSceneManager->createEntity(getNewName(), objectMesh);
-				wallEntity->setMaterialName("Examples/RustySteel");
-				engine->gfxMgr->wallNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(wallPosition);
-				engine->gfxMgr->wallNode->attachObject(wallEntity);
-				*/
-
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				// Jake edits
-				//
 
 				// Grab the "objects" config stuff from the object map that Hadi built
-				readFromFile * objectEntData = objects["D"];
+				readFromFile * objectEntData = objects["D"]; // Currently not used lmao
 
 				GridParams * gridParam =  this->grid->getGrid(row, col);
 				if(gridParam) gridParam->notWalkable();
 
-				Ogre::Vector3 position(this->grid->getPosition(row, col).x, 10.0f, this->grid->getPosition(row, col).z);
-
-				engine->entityMgr->CreateEntity(EntityType::WALL, position, 0);
-
-				// Create ogre entity
-				Ogre::Entity * wallEntity = engine->gfxMgr->ogreSceneManager->createEntity(getNewName(), objectEntData->mesh);
-				wallEntity->setMaterialName("Examples/RustySteel");
-				Ogre::SceneNode * newWallNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(position);
-				newWallNode->attachObject(wallEntity);
-				entitySceneNodes.push_back(newWallNode);
+				engine->entityMgr->CreateEntity(EntityType::WALL, gridPositionInWorld, 0);
 
 				objectEntData = NULL;
-
-				//
-				// End Jake edits
-				/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-				// Set Scale and position
-				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setScale(0.1f, 1.0f, 0.1f);
-				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setPosition(wallPosition);
-
-				// Placement in world SHALL NOT PASS
-//				this->grid->getGrid(row, col)->notWalkable();
-//				engine->gfxMgr->wallNode->setPosition(this->grid->getPosition(row, col).x, 10.0f, this->grid->getPosition(row, col).z);
-
-
-
-/*
-				// Check wall position to prevent going outside of map
-				if( wallPosition.x < 1800 ||
-					wallPosition.x > -1800 ||
-					wallPosition.z > -2500 ||
-					wallPosition.z < 2500 )
-				{
-					// reset position
-					//wallPosition.x = 0;
-					//wallPosition.z = 0;
-
-					// Increment Positions to prevent overlap from reset
-					wallPosition.x += 25;
-					//wallPosition.z += 50;
-				}
-*/
-
-				//wallPosition.z += 50;
-
-				// Set blocked area
+				gridParam = NULL;
 			}
 
 
@@ -357,28 +296,19 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 			}
 
-
+			// See no evil
 			else if( c == 'C' )
 			{
-				// Spawn Enemy
-//				std::cerr << "Spawning Enemy" << std::endl;
-//
-//				loadCharacters();
-/*
-				// Create Test Enemy
-				Ogre::Entity* enemyEntity = engine->gfxMgr->ogreSceneManager->createEntity(getNewName(), characterMesh);
-				// enemyEntity->setMaterialName("Examples/RustySteel");
+				engine->entityMgr->CreateEntity(EntityType::SEENO, gridPositionInWorld, 0);
+			}
 
-				engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(enemyPosition)->attachObject(enemyEntity);
-
-
-				// Set Scale and position
-				engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setScale(0.1f, 0.02f, 0.1f);
-				//engine->gfxMgr->ogreSceneManager->getRootSceneNode()->setPosition(position);
-
-				enemyPosition.x += 10; // Increment Positions to prevent overlap
-				//enemyPosition.z += 50;
-*/
+			else if(c == 'S')
+			{
+				engine->entityMgr->CreateEntity(EntityType::SPEAKNO, gridPositionInWorld, 0);
+			}
+			else if(c == 'H')
+			{
+				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
 			}
 		}
 	}
@@ -393,7 +323,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 void GameMgr::setupEnvironment()
 {
 	//We know graphicsMgr is ready and initialized
-	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
 	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setPosition(100.0, 800.0, 100.0);
@@ -437,9 +367,9 @@ void GameMgr::loadObjects()
 void GameMgr::loadCharacters()
 {
 	//Creating the entities
-	engine->entityMgr->CreateEntity(EntityType::HEARNO, Ogre::Vector3(0, 10, -1000), 0);
-	engine->entityMgr->CreateEntity(EntityType::SEENO, Ogre::Vector3(500, 0, -500), Ogre::Math::HALF_PI / 2);
-	engine->entityMgr->CreateEntity(EntityType::SPEAKNO, Ogre::Vector3(-500, 20, -500), Ogre::Math::HALF_PI / -2);
+//	engine->entityMgr->CreateEntity(EntityType::HEARNO, Ogre::Vector3(0, 10, -1000), 0);
+//	engine->entityMgr->CreateEntity(EntityType::SEENO, Ogre::Vector3(500, 0, -500), Ogre::Math::HALF_PI / 2);
+//	engine->entityMgr->CreateEntity(EntityType::SPEAKNO, Ogre::Vector3(-500, 20, -500), Ogre::Math::HALF_PI / -2);
 /*
 	// Set Animation States
 	//engine->gfxMgr->ogreAnimationState = splash->getAnimationState("Test");
