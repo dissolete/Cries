@@ -29,6 +29,9 @@ private:
 
 protected:
 	//
+	float myAngleBetween(Ogre::Vector3 v1, Ogre::Vector3 v2);
+	void setMagnitude(Ogre::Vector3 v, float mag);
+	bool notObstructed(Ogre::Vector3 player, Ogre::Vector3 enemy);
 
 public:
 

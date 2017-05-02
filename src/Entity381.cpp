@@ -9,6 +9,7 @@
 #include <Aspect.h>
 #include <UnitAI.h>
 #include <Types.h>
+#include <cmath>
 
 unsigned int Entity381::nextId = 0;
 
@@ -83,6 +84,11 @@ void Entity381::SetStatus(Status newStatus)
 	theStatus = newStatus;
 }
 
+float Entity381::myAngleBetween(Ogre::Vector3 v1, Ogre::Vector3 v2)
+{
+	float result = std::abs(Ogre::Math::ACos(v1.dotProduct(v2) / (v1.length() * v2.length())).valueDegrees());
+}
+
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
 	this->meshfile = "ogrehead.mesh";
 	this->acceleration = 1.0f;
@@ -96,10 +102,15 @@ HearNo::~HearNo(){
 
 void HearNo::Tick(float dt)
 {
-	//For now, no matter what this guy sees you and begins following
-	if(theStatus != Status::ALERTED)
+	//If the enemy isn't alerted, check to see if it can see the player
+	if(theStatus == Status::WAITING)
 	{
-		SetStatus(Status::ALERTED);
+		Ogre::Vector3 diff = ogreSceneNode->getPosition() - engine->gfxMgr->cameraNode->getPosition();
+		Ogre::Vector3 facing;
+		facing.x = Ogre::Math::Cos(heading);
+		facing.y = Ogre::Math::Sin(heading);
+
+		if(myAngleBetween(diff, facing) <= 60)//If the abs angle between facing and the player is within 120 vision cone
 	}
 
 	Entity381::Tick(dt);
