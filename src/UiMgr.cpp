@@ -38,7 +38,7 @@ void UiMgr::stop(){
 void UiMgr::loadLevel(){
 	mTrayMgr->hideCursor();
 	timeMonitor = mTrayMgr->createLabel(OgreBites::TL_TOP, "Timer", timeAsString(engine->gameMgr->gameplayTime));
-	//timeMonitor->getOverlayElement()->    Get this in order to change the material
+	//timeMonitor->getOverlayElement()->setMaterialName("TransparentBackground.png");    //Get this in order to change the material
 }
 
 void UiMgr::tick(float dt){

@@ -336,6 +336,24 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
+				// TESTING
+				readFromFile * objectEntData = objects["D"];
+
+				GridParams * gridParam =  this->grid->getGrid(row, col);
+				if(gridParam) gridParam->notWalkable();
+
+				Ogre::Vector3 position(this->grid->getPosition(row, col).x, 10.0f, this->grid->getPosition(row, col).z);
+
+				engine->entityMgr->CreateEntity(EntityType::ARCH, position, 0);
+
+				// Create ogre entity
+				Ogre::Entity * wallEntity = engine->gfxMgr->ogreSceneManager->createEntity(getNewName(), objectEntData->mesh);
+				wallEntity->setMaterialName("Examples/RustySteel");
+				Ogre::SceneNode * newWallNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(position);
+				newWallNode->attachObject(wallEntity);
+				entitySceneNodes.push_back(newWallNode);
+
+				objectEntData = NULL;
 
 			}
 

@@ -136,6 +136,9 @@ void SeeNo::Tick(float dt)
 
 SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
 	this->meshfile = "ogrehead.mesh";
+
+	// TEST
+	//this->meshfile = "arch.mesh";
 	this->acceleration = 1.0f;
 	this->turnRate = 0.1f;
 	this->maxSpeed = 35;
@@ -172,7 +175,7 @@ void Wall::Tick(float dt)
 }
 
 Arch::Arch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ARCH, pos, heading, eng){
-	this->meshfile = "ninja.mesh";
+	this->meshfile = "arch.mesh";
 }
 
 Arch::~Arch()
