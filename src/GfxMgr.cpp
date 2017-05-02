@@ -62,7 +62,7 @@ void GfxMgr::createCamera(){
 
 	// Create main camera
 	ogreCamera = ogreSceneManager->createCamera("MainCam");
-	ogreCamera->setPosition(0, 20, 0);
+	ogreCamera->setPosition(0, 35, 0);
 	ogreCamera->setNearClipDistance(5);
 	cameraNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
 

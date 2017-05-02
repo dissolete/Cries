@@ -75,7 +75,7 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 
 void GameMgr::createCeiling()
 {
-	Ogre::MovablePlane plane(-1 * Ogre::Vector3::UNIT_Y, 50);
+	Ogre::MovablePlane plane(-Ogre::Vector3::UNIT_Y, 100);
 
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
@@ -85,7 +85,7 @@ void GameMgr::createCeiling()
 		4000, 3400, 20, 20,
 	    true,
 	    1, 5, 5,
-	    -Ogre::Vector3::UNIT_Z);
+	    Ogre::Vector3::UNIT_Z);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -240,11 +240,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	Ogre::Vector3 enemyPosition;
 	enemyPosition = Ogre::Vector3(-1200, 0, 1000);
 
-	/*
-	Ogre::ManualObject test;
-	test.convertToMesh(objectMesh, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	*/
-
 	// Loop through map dimensions
 	for( int row = 0; row < ROW_SIZE - 3; row++ )
 	{
@@ -307,7 +302,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 void GameMgr::setupEnvironment()
 {
 	//We know graphicsMgr is ready and initialized
-	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
 	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setPosition(100.0, 800.0, 100.0);
