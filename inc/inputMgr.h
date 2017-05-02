@@ -66,7 +66,11 @@ public:
     OIS::Mouse*        mouse;
     OIS::Keyboard*     keyboard;
 
-    bool isSprinting;
+    bool isSprinting, isCrouching;
+    float cameraYPos;
+
+    const float CROUCH_HEIGHT = 2.0f;
+    const float STANDING_HEIGHT = 35.0f;
 
 
 
