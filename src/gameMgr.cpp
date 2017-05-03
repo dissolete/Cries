@@ -25,7 +25,7 @@ void GameMgr::init(){
 }
 
 void GameMgr::loadLevel(){
-	this->loadLevel("level001.txt");
+	this->loadLevel("level002.txt");
 
 }
 
@@ -272,13 +272,29 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			}
 
 
-			// Check for Arch
+			// Check for Arch Facing North South
 			else if( c == 'A' )
 			{
+				/*
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
+
+				GridParams * gridParam =  this->grid->getGrid(row, col);
+				if(gridParam) gridParam->notWalkable();
+
+				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
+
+				//objectEntData = NULL;
+				gridParam = NULL;
+				*/
+
+			}
+
+			// Check for arch facing west east
+			else if( c == 'a')
+			{
 
 				GridParams * gridParam =  this->grid->getGrid(row, col);
 				if(gridParam) gridParam->notWalkable();

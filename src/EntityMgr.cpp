@@ -95,6 +95,11 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	CreateOgreEntityAndNode(ent);
 
+	if( entityType == EntityType::ARCH )
+	{
+		ent->ogreSceneNode->yaw(Ogre::Degree(90));
+	}
+
 	if( entityType == EntityType::HEARNO )
 	{
 		//ent->ogreSceneNode->set
