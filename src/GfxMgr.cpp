@@ -83,11 +83,7 @@ void GfxMgr::createCamera(){
 void GfxMgr::setCameraPosition( Ogre::Vector3 pos )
 {
 	cameraNode->setPosition(pos);
-	/*
-	cameraPosition.x = pos.x;
-	cameraPosition.y = pos.y;
-	cameraPosition.z = pos.z;
-	*/
+	//ogreCamera->setPosition(0, 35, 0);
 }
 
 Ogre::Vector3 GfxMgr::getCameraPosition()
