@@ -18,11 +18,6 @@
 class Grid;
 class GridParams;
 
-// Constants for Grid Array Size
-const int COL_SIZE = 20;
-const int ROW_SIZE = 17;
-
-
 class GameMgr : public Mgr {
 
 protected:
@@ -31,7 +26,7 @@ protected:
 private:
 	void createSky();
 	void createGround(int width, int heigth, std::string &material);
-	void createCeiling();
+	void createCeiling(int width, int heigth);
 
 	// Loads a level given from file
 	void loadLevel(std::string levelFilename);
@@ -55,7 +50,7 @@ public:
 	std::string getNewName();
 
 	Ogre::Plane floor;
-	Ogre::MovablePlane *ceiling;
+	Ogre::Plane ceiling;
 	float gameplayTime;
 
 	Grid* getGrid() const;

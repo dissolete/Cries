@@ -11,9 +11,7 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = new Ogre::MovablePlane("ceiling");
-    ceiling->d = 0;
-    ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
+    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -100);
     gameplayTime = 0;
     entityCount = 0;
 }
@@ -73,27 +71,25 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-void GameMgr::createCeiling()
+void GameMgr::createCeiling(int width, int heigth)
 {
-	Ogre::MovablePlane plane(-1 * Ogre::Vector3::UNIT_Y, 50);
-
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
 	    "ceiling",
 	    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		plane,
-		4000, 3400, 20, 20,
+		ceiling,
+		width, heigth, 20, 20,
 	    true,
 	    1, 5, 5,
-	    -Ogre::Vector3::UNIT_Z);
+	    Ogre::Vector3::UNIT_Z);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	// Create Ceiling Entity //////////////////////////////////////////////////////////////////////////////////
-	Ogre::Entity* ceiling = engine->gfxMgr->ogreSceneManager->createEntity("ceiling");
-	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(ceiling);
-	ceiling->setCastShadows(false);
-	ceiling->setMaterialName("Examples/Rockwall");
+	Ogre::Entity* ceilingEntity = engine->gfxMgr->ogreSceneManager->createEntity("ceiling");
+	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(ceilingEntity);
+	ceilingEntity->setCastShadows(false);
+	ceilingEntity->setMaterialName("Examples/Rockwall");
 }
 
 void GameMgr::createSky(){
@@ -116,12 +112,11 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 {
 	// Variables
 	std::ifstream fin;
-	int x, z;
+	int gridRowSize, gridColSize;
 	float x_offset, y_offset, z_offset;
-	float scale, orientation;
+	//float scale, orientation;
 	std::string groundMaterial, objectMesh, characterMesh;
 	std::string buffer, buff;
-	char objectChar;
 	std::map<std::string, readFromFile*> objects;
 
 
@@ -136,23 +131,23 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	}
 
 	// First block is world dimensions and material name
-	fin >> x >> z;
+	fin >> gridRowSize >> gridColSize;
 	fin >> groundMaterial;
 
 	// TESTING FILE READ ////////////////////////////////////////////
-	std::cerr << "Ground Dimensions: " << x << " x " << z << std::endl;
+	std::cerr << "Ground Dimensions: " << gridRowSize << " x " << gridColSize << std::endl;
 	std::cerr << "Ground Material: " << groundMaterial << std::endl;
 	/////////////////////////////////////////////////////////////////
 
 
 	// Create floor mesh with read in dimensions
-	createGround( x*100, z*100, groundMaterial);
+	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
-	createCeiling(); //DEBUG THIS LATER
+	createCeiling( gridRowSize*1000, gridColSize*1000 ); //DEBUG THIS LATER
 
 	// Setup the grid
-	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, x, z, engine);
+	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
 
 	// Second block reads in location of you and enemies
 	// Check for Objects line
@@ -179,14 +174,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	readEnt = new readFromFile(); // read in next if any
 
-	// Testing Second Box Readin ///////////////////////////////////
-	std::cerr << "Objects" << std::endl;
-	std::cerr << objectChar << " " << objectMesh << std::endl;
-	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
-	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
-	///////////////////////////////////////////////////////////////
-
-
 	// Check for Characters line /////////////////////////////////////////////////////////////////
 	fin >> buffer;
 
@@ -211,12 +198,14 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// read next if any
 	readEnt = new readFromFile();
 
+	/*
 	// Testing Third Box Readin ///////////////////////////////////
 	std::cerr << "Characters" << std::endl;
 	std::cerr << objectChar << " " << characterMesh << std::endl;
 	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
 	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
 	///////////////////////////////////////////////////////////////
+	 */
 
 	// Read the World Placement //////////////////////////////////////////////////////////////////
 	char c;
@@ -231,6 +220,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 
 	// Pre Conditions for World setup
+	/*
 	Ogre::Vector3 wallPosition;
 	wallPosition = Ogre::Vector3(-1850, 50, 1200);
 
@@ -239,34 +229,44 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	Ogre::Vector3 enemyPosition;
 	enemyPosition = Ogre::Vector3(-1200, 0, 1000);
-
-	/*
-	Ogre::ManualObject test;
-	test.convertToMesh(objectMesh, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	*/
 
+	std::ofstream fout;
+	fout.open("GRID.txt");
+
 	// Loop through map dimensions
-	for( int row = 0; row < ROW_SIZE - 3; row++ )
+	for( int row = 0; row < gridRowSize; row++ )
 	{
-		for( int col = 0; col < COL_SIZE - 3; col++ )
+		for( int col = 0; col < gridColSize; col++ )
 		{
 			fin >> c;
 
+			fout << c; // test world read in
+
 			Ogre::Vector3 gridPositionInWorld = this->grid->getPosition(row, col);
+
+
+			if( c == 'P')
+			{
+				// Find the Start Position and set camera to there
+				engine->gfxMgr->setCameraPosition( gridPositionInWorld );
+				std::cerr << gridPositionInWorld << std::endl;
+			}
+
 
 			// Check for walls (Not player or enemy nodes)
 			if( c == 'W' )
 			{
 
 				// Grab the "objects" config stuff from the object map that Hadi built
-				readFromFile * objectEntData = objects["D"]; // Currently not used lmao
+				//readFromFile * objectEntData = objects["D"]; // Currently not used lmao
 
 				GridParams * gridParam =  this->grid->getGrid(row, col);
 				if(gridParam) gridParam->notWalkable();
 
 				engine->entityMgr->CreateEntity(EntityType::WALL, gridPositionInWorld, 0);
 
-				objectEntData = NULL;
+				//objectEntData = NULL;
 				gridParam = NULL;
 			}
 
@@ -277,6 +277,15 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
+				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
+
+				GridParams * gridParam =  this->grid->getGrid(row, col);
+				if(gridParam) gridParam->notWalkable();
+
+				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
+
+				//objectEntData = NULL;
+				gridParam = NULL;
 
 			}
 
@@ -295,8 +304,11 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
 			}
 		}
+
+		fout << std::endl;
 	}
 
+	fout.close();
 	// Create the Entities
 
 	// Create Skybox for the hell of it
@@ -307,7 +319,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 void GameMgr::setupEnvironment()
 {
 	//We know graphicsMgr is ready and initialized
-	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
 	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
 	light->setType(Ogre::Light::LT_POINT);
 	light->setPosition(100.0, 800.0, 100.0);
