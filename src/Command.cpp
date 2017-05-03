@@ -48,9 +48,10 @@ void Search::init(){
 
 bool Search::done(){
 	Ogre::Vector3 diff = targetLocation - entity->pos;
-	if (diff.length() < (entity->speed * entity->speed) / (2 * entity->acceleration)){
+	if (diff.length() < MOVE_DISTANCE_THRESHOLD){
 		entity->SetStatus(Status::WAITING);
 		entity->desiredHeading = FixAngle(entity->heading + Ogre::Math::PI);
+		entity->speed = 0;
 		return true;
 	} else {
 		return false;
@@ -107,6 +108,7 @@ void PursuePath::init()
 	theGrid = entity->engine->gameMgr->grid;
 	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
 			theGrid->getPos(target->getPosition()));
+	std::cout << "Path: " << &path << std::endl;
 
 	std::cout << "Path length: " << path.size() << std::endl;
 }
@@ -114,7 +116,7 @@ void PursuePath::init()
 void PursuePath::tick(float dt)
 {
 	std::cout << "Made it inside PursuePath" << std::endl;
-	if(!path.empty())
+	if(!path.empty() && path.front() != NULL && path.back() != NULL)
 	{
 		std::cout << "Made it inside tick if statement for PursuePath" << std::endl;
 		if(theGrid->getPos(target->getPosition()) != path.back())
@@ -122,24 +124,33 @@ void PursuePath::tick(float dt)
 			//Find the new path if the player has moved
 			path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
 					theGrid->getPos(target->getPosition()));
-		}
-
-		//compute offset
-		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
-		entity->desiredHeading = atan2(diff.z, diff.x);
-		entity->desiredSpeed = entity->maxSpeed;
-
-		//Check to see if you have successfully finished the first move point
-		if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())
+		} else
 		{
-			path.pop_front();
+
+			//compute offset
+			Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
+			entity->desiredHeading = atan2(diff.z, diff.x);
+			entity->desiredSpeed = entity->maxSpeed;
+
+			//Check to see if you have successfully finished the first move point
+			if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())
+			{
+				path.pop_front();
+			}
 		}
 	}
 }
 
 bool PursuePath::done()
 {
-	return path.empty();
+	if(path.empty())
+	{
+		entity->speed = 0;
+		return true;
+	} else
+	{
+		return false;
+	}
 }
 
 SearchPath::SearchPath(Entity381 *ent, Ogre::Vector3 location) : Command(ent, COMMAND_TYPE::SEARCHPATH)
@@ -191,6 +202,7 @@ bool SearchPath::done()
 	if(path.empty())
 	{
 		entity->SetStatus(Status::WAITING);
+		entity->speed = 0;
 		return true;
 	} else
 	{

@@ -483,7 +483,9 @@ std::list<GridParams*> Grid::findPath( GridParams* start, GridParams* end )
 		if(currentNode != end)
 		{
 			std::cout << "Ending at currentNode != end" << std::endl;
-			return std::list<GridParams *>();
+			std::cout << path.front() << std::endl;
+			std::cout << "Path: " << &path << std::endl;
+			return path;
 		}
 
 		//Recreate the shortest path

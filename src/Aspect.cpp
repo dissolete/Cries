@@ -72,6 +72,11 @@ void Physics::Tick(float dt){
 
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
+	//If this movement places the entity in a wall, reverse direction
+	if(!(entity->engine->gameMgr->grid->getPos(entity->pos)->isWalkable()))
+	{
+		entity->pos -= entity->vel *dt;
+	}
 
 }
 
