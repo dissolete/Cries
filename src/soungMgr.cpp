@@ -86,3 +86,18 @@ void SoundMgr::play_song(std::string songName, bool looped)
 		std::cerr << "Attempt to play song " << songName << " failed! The song could not be found in the sound engine!" << std::endl;
 	}
 }
+
+void SoundMgr::stop_song(std::string songName)
+{
+	// Check if song exists
+//	if(not m_songMap.find(songName) != m_songMap.end())
+//	{
+//
+//	}
+}
+
+void SoundMgr::stop_sound(std::string soundName)
+{
+
+}
+

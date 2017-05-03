@@ -54,6 +54,7 @@ void GfxMgr::initResources(){
 
 void GfxMgr::createSceneManager(){
 	ogreSceneManager = ogreRoot->createSceneManager(Ogre::ST_GENERIC);
+	ogreSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 
 void GfxMgr::createCamera(){
@@ -74,6 +75,16 @@ void GfxMgr::createCamera(){
 	pitchNode = yawNode->createChildSceneNode();
 	pitchNode->attachObject(ogreCamera);
 
+	// Create flashlight
+	flashLightNode = cameraNode->createChildSceneNode();
+	Ogre::Light * flashLight = ogreSceneManager->createLight("Flashlight");
+	flashLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	flashLight->setDiffuseColour(Ogre::ColourValue::White);
+	flashLight->setSpecularColour(Ogre::ColourValue::White);
+	flashLight->setDirection(0, 0, -1);
+	flashLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+
+	pitchNode->attachObject(flashLight);
 
 	//cameraNode->setPosition(0, 100, 500);
 	//ogreCamera->lookAt(0, 0, 0);

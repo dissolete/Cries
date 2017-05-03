@@ -272,29 +272,12 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 //				archPosition.x += 50;
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
 
-				GridParams * gridParam =  this->grid->getGrid(row, col);
-				if(gridParam) gridParam->notWalkable();
+
 
 				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
-				gridParam = NULL;
-				*/
-
-			}
-
-			// Check for arch facing west east
-			else if( c == 'a')
-			{
-
-				GridParams * gridParam =  this->grid->getGrid(row, col);
-				if(gridParam) gridParam->notWalkable();
-
-				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
-
-				//objectEntData = NULL;
-				gridParam = NULL;
-
+      */
 			}
 
 			// See no evil
@@ -329,11 +312,11 @@ void GameMgr::setupEnvironment()
 {
 	//We know graphicsMgr is ready and initialized
 	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
-	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
-	light->setType(Ogre::Light::LT_POINT);
-	light->setPosition(100.0, 800.0, 100.0);
-	light->setDiffuseColour(Ogre::ColourValue::White);
-	light->setSpecularColour(Ogre::ColourValue::White);
+//	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
+//	light->setType(Ogre::Light::LT_POINT);
+//	light->setPosition(100.0, 800.0, 100.0);
+//	light->setDiffuseColour(Ogre::ColourValue::White);
+//	light->setSpecularColour(Ogre::ColourValue::White);
 }
 
 /*
@@ -390,5 +373,8 @@ std::string GameMgr:: getNewName()
 	return std::string("object_" + std::to_string(entityCount++));
 }
 
-
+Grid* GameMgr::getGrid() const
+{
+	return this->grid;
+}
 
