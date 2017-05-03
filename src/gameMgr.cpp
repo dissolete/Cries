@@ -14,6 +14,7 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
     ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -100);
     gameplayTime = 0;
     entityCount = 0;
+    grid = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -38,7 +39,6 @@ void GameMgr::tick(float dt){
 	if(engine->theState == STATE::GAMEPLAY)
 	{
 		gameplayTime += dt;
-		std::cout << "Gameplay time: " << gameplayTime << std::endl;
 	}
 }
 
@@ -63,7 +63,7 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 	groundEntity->setMaterialName(material);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Create Separated Water Ground ////////////////////////////////////////////////////////////////////////
+	// Create Separated Water Ground //////gridMgr = new Grid();//////////////////////////////////////////////////////////////////
 	Ogre::Entity* groundEntity2 = engine->gfxMgr->ogreSceneManager->createEntity("ground");
 	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity2);
 	groundEntity2->setCastShadows(false);
@@ -314,6 +314,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// Create Skybox for the hell of it
 	createSky();
 //	delete readEnt;
+
 }
 
 void GameMgr::setupEnvironment()

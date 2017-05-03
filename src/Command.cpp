@@ -50,6 +50,7 @@ bool Search::done(){
 	Ogre::Vector3 diff = targetLocation - entity->pos;
 	if (diff.length() < (entity->speed * entity->speed) / (2 * entity->acceleration)){
 		entity->SetStatus(Status::WAITING);
+		entity->desiredHeading = FixAngle(entity->heading + Ogre::Math::PI);
 		return true;
 	} else {
 		return false;
@@ -90,8 +91,10 @@ void Pursue::tick(float dt){
 
 PursuePath::PursuePath(Entity381 *ent, Ogre::SceneNode *targ) : Command(ent, COMMAND_TYPE::PURSUEPATH)
 {
+	std::cout << "PursuePath made" << std::endl;
 	target = targ;
 	theGrid = NULL;
+	init();
 }
 
 PursuePath::~PursuePath()
@@ -101,15 +104,19 @@ PursuePath::~PursuePath()
 
 void PursuePath::init()
 {
-	theGrid = entity->engine->gridMgr;
+	theGrid = entity->engine->gameMgr->grid;
 	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
 			theGrid->getPos(target->getPosition()));
+
+	std::cout << "Path length: " << path.size() << std::endl;
 }
 
 void PursuePath::tick(float dt)
 {
+	std::cout << "Made it inside PursuePath" << std::endl;
 	if(!path.empty())
 	{
+		std::cout << "Made it inside tick if statement for PursuePath" << std::endl;
 		if(theGrid->getPos(target->getPosition()) != path.back())
 		{
 			//Find the new path if the player has moved
@@ -137,10 +144,12 @@ bool PursuePath::done()
 
 SearchPath::SearchPath(Entity381 *ent, Ogre::Vector3 location) : Command(ent, COMMAND_TYPE::SEARCHPATH)
 {
+	std::cout << "SearchPath made" << std::endl;
 	targetLocation = location;
 	MOVE_DISTANCE_THRESHOLD = 100;
 
 	theGrid = NULL;
+	init();
 }
 
 SearchPath::~SearchPath()
@@ -150,15 +159,20 @@ SearchPath::~SearchPath()
 
 void SearchPath::init()
 {
-	theGrid = entity->engine->gridMgr;
+	theGrid = entity->engine->gameMgr->grid;
 	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
 			theGrid->getPos(targetLocation));
+
+	std::cout << "Path length: " << path.size() << std::endl;
 }
 
 void SearchPath::tick(float dt)
 {
+
+	std::cout << "Made it inside SearchPath tick" << std::endl;
 	if(!path.empty())
 	{
+		std::cout << "Made it inside if in tick for SearchPath" << std::endl;
 		//compute offset
 		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
 		entity->desiredHeading = atan2(diff.z, diff.x);

@@ -107,39 +107,50 @@ bool Entity381::canSee(Ogre::Vector3 player)
 {
 
 	DIRECTION lookDir;
-	GridParams *location = engine->gridMgr->getPos(ogreSceneNode->getPosition());
-	GridParams *playerLocation = engine->gridMgr->getPos(player);
+	GridParams *location = engine->gameMgr->grid->getPos(ogreSceneNode->getPosition());
+	GridParams *playerLocation = engine->gameMgr->grid->getPos(player);
 
 	//Assumes a heading of 0 is East
 	//0.393 is 22.5 degrees in radians
+
+	std::cout << "Heading: " << heading << std::endl;
 	if((heading >= 0.0 && heading < 0.393) || (heading <= 0.0 && heading > -0.393))
 	{
 		lookDir = DIRECTION::EAST;
+
+		std::cout << "East" << std::endl;
 		//1.178 = 67.5 degrees
 	} else if(heading >= 0.393 && heading < 1.178)
 	{
 		lookDir = DIRECTION::SOUTHEAST;
+		std::cout << "SouthEast" << std::endl;
 		//1.963= 112.5 degrees
 	} else if(heading >= 1.178 && heading < 1.963)
 	{
 		lookDir = DIRECTION::SOUTH;
+		std::cout << "South" << std::endl;
 		//2.749 = 157.5 degrees
 	} else if(heading >= 1.963 && heading < 2.749)
 	{
 		lookDir = DIRECTION::SOUTHWEST;
+		std::cout << "Southwest" << std::endl;
 	} else if((heading >= 2.749 && heading <= 3.14159) || (heading >= -3.14159 && heading <= -2.749))
 	{
 		lookDir = DIRECTION::WEST;
+		std::cout << "West" << std::endl;
 	} else if (heading <= -0.393 && heading > -1.178)
 	{
 		lookDir = DIRECTION::NORTHEAST;
+		std::cout << "NorthEast" << std::endl;
 	} else if (heading <= -1.178 && heading > -1.963)
 	{
 		lookDir = DIRECTION::NORTH;
+		std::cout << "North" << std::endl;
 	} else
 	{
 		//Must be northwest
 		lookDir = DIRECTION::NORTHWEST;
+		std::cout << "northwest, " << heading << std::endl;
 	}
 
 	//Now search in lookDir for the player
@@ -157,32 +168,34 @@ bool Entity381::canSee(Ogre::Vector3 player)
 		switch(lookDir)
 		{
 		case DIRECTION::EAST :
-			location = engine->gridMgr->getEast(location);
+			location = engine->gameMgr->grid->getEast(location);
 			break;
 		case DIRECTION::NORTH :
-			location = engine->gridMgr->getNorth(location);
+			location = engine->gameMgr->grid->getNorth(location);
 			break;
 		case DIRECTION::NORTHEAST :
-			location = engine->gridMgr->getNE(location);
+			location = engine->gameMgr->grid->getNE(location);
 			break;
 		case DIRECTION::NORTHWEST :
-			location = engine->gridMgr->getNW(location);
+			location = engine->gameMgr->grid->getNW(location);
 			break;
 		case DIRECTION::SOUTH :
-			location = engine->gridMgr->getSouth(location);
+			location = engine->gameMgr->grid->getSouth(location);
 			break;
 		case DIRECTION::SOUTHEAST :
-			location = engine->gridMgr->getSE(location);
+			location = engine->gameMgr->grid->getSE(location);
 			break;
 		case DIRECTION::SOUTHWEST :
-			location = engine->gridMgr->getSW(location);
+			location = engine->gameMgr->grid->getSW(location);
 			break;
 		default :
 			//Must be west
-			location = engine->gridMgr->getWest(location);
+			location = engine->gameMgr->grid->getWest(location);
 			break;
 		}
 	}
+
+	return false;
 }
 
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
@@ -233,7 +246,7 @@ void SeeNo::Tick(float dt)
 {
 	if(theStatus == Status::WAITING || theStatus == Status::SEARCHING)
 	{
-		if(engine->inputMgr->isSprinting)
+		if(engine->inputMgr->isSprinting && (pos - engine->gfxMgr->cameraNode->getPosition()).length() <= 600)
 		{
 			SetStatus(Status::ALERTED);
 		}
@@ -282,7 +295,7 @@ void SpeakNo::Tick(float dt)
 		if(canSee(engine->gfxMgr->cameraNode->getPosition()))
 		{
 			SetStatus(Status::ALERTED);
-		} else if(engine->inputMgr->isSprinting)
+		} else if(engine->inputMgr->isSprinting && (pos - engine->gfxMgr->cameraNode->getPosition()).length() <= 600)
 		{
 			SetStatus(Status::SEARCHING);
 		}

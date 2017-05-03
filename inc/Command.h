@@ -14,6 +14,7 @@ class Entity381;
 #include <OgreVector3.h>
 #include <Types.h>
 #include <Grid.h>
+#include <Utils.h>
 
 class Command {
 

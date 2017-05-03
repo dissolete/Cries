@@ -32,7 +32,7 @@ GridParams::GridParams( int gID, int row, int col, bool isClear)
 		this->contains = 'W';
 
 	parent = NULL;
-	F = G = H = std::INT_MAX;
+	F = G = H = INT_MAX;
 
 }
 
@@ -147,7 +147,7 @@ void GridParams::setParent(GridParams *nParent)
 void GridParams::resetAStarParams()
 {
 	parent = NULL;
-	F = G = H = std::INT_MAX;
+	F = G = H = INT_MAX;
 }
 
 bool GridParams::operator() (GridParams *lhs, GridParams *rhs)
@@ -252,18 +252,18 @@ GridParams* Grid::getGrid( int rows, int cols )
 	return &this->data[cols].data[rows];
 }
 
-std::vector<GridParams*>* Grid::getNeighbors( GridParams* n )
+std::vector<GridParams*> Grid::getNeighbors( GridParams* n )
 {
-	std::vector<GridParams*>* neighbors = new std::list<GridParams*>();
+	std::vector<GridParams*> neighbors;
 
-	neighbors->push_back(this->getNW(n));
-	neighbors->push_back(this->getNorth(n));
-	neighbors->push_back(this->getNE(n));
-	neighbors->push_back(this->getEast(n));
-	neighbors->push_back(this->getSE(n));
-	neighbors->push_back(this->getSouth(n));
-	neighbors->push_back(this->getSW(n));
-	neighbors->push_back(this->getWest(n));
+	neighbors.push_back(this->getNW(n));
+	neighbors.push_back(this->getNorth(n));
+	neighbors.push_back(this->getNE(n));
+	neighbors.push_back(this->getEast(n));
+	neighbors.push_back(this->getSE(n));
+	neighbors.push_back(this->getSouth(n));
+	neighbors.push_back(this->getSW(n));
+	neighbors.push_back(this->getWest(n));
 
 	return neighbors;
 }
@@ -376,12 +376,14 @@ Ogre::Vector3 Grid::getPosition( int row, int col )
 // Get Closest Grid area
 GridParams* Grid::getPos( Ogre::Vector3 position )
 {
+
 	// Closest Row Value
 	int r = clamp(round((position.z - GRID_MULT/2.0 + (this->rowNum * GRID_MULT)/2.0) /
 		float(GRID_MULT)), 0, this->rowNum - 1);
 
 	int c = clamp(round((position.x - GRID_MULT/2.0 + (this->colNum * GRID_MULT)/2.0) /
 		float(GRID_MULT)), 0, this->colNum - 1);
+
 
 	return this->getGrid(r, c);
 }
@@ -393,6 +395,7 @@ std::list<GridParams*> Grid::findPath( GridParams* start, GridParams* end )
 
 	if(start == NULL || end == NULL)
 	{
+		std::cout << "Ended at start == NULL or end == NULL" << std::endl;
 		return path;
 	} else
 	{
@@ -479,11 +482,12 @@ std::list<GridParams*> Grid::findPath( GridParams* start, GridParams* end )
 
 		if(currentNode != end)
 		{
+			std::cout << "Ending at currentNode != end" << std::endl;
 			return std::list<GridParams *>();
 		}
 
 		//Recreate the shortest path
-
+		std::cout << "Made it to path recreation" << std::endl;
 		while(currentNode != NULL)
 		{
 			path.push_front(currentNode);
@@ -495,7 +499,7 @@ std::list<GridParams*> Grid::findPath( GridParams* start, GridParams* end )
 		{
 			(*iter)->resetAStarParams();
 		}
-		for(auto iter = closed.begin(); closed != closed.end(); iter++)
+		for(auto iter = closed.begin(); iter != closed.end(); iter++)
 		{
 			(*iter)->resetAStarParams();
 		}

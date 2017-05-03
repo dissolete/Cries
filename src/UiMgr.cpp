@@ -57,7 +57,6 @@ void UiMgr::tick(float dt){
 	} else if(engine->theState == STATE::GAMEPLAY)
 	{
 		timeMonitor->setCaption(timeAsString(engine->gameMgr->gameplayTime));
-		std::cout << timeAsString(engine->gameMgr->gameplayTime) << std::endl;
 	}
 }
 

@@ -16,6 +16,7 @@
 #include <mgr.h>
 #include <cmath>
 #include <climits>
+#include <set>
 
 #define GRID_MULT 100.0
 
@@ -101,7 +102,7 @@ public:
 	GridParams* getGrid( int rows, int cols );
 
 	// Get Grid Positions around location
-	std::vector<GridParams*> *getNeighbors( GridParams* n );
+	std::vector<GridParams*> getNeighbors( GridParams* n );
 	GridParams* getNorth( GridParams* n );
 	GridParams* getSouth( GridParams* n );
 	GridParams* getWest( GridParams* n );

@@ -19,7 +19,7 @@ W......A.WW...WWWW
 W....AWW.WW...WWWW
 WA.WW..A.AWAWWWWWW
 W..WWWW......WWWWW
-W..W..A..C...WWWWW
+W..W..A..H...WWWWW
 W..A.C.A.....WWWWW
 W..W..W.W.W..WWWWW	
 W..W..W.W..WAWWWWW
