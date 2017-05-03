@@ -25,7 +25,7 @@ void GameMgr::init(){
 }
 
 void GameMgr::loadLevel(){
-	this->loadLevel("level002.txt");
+	this->loadLevel("level001.txt");
 
 }
 
@@ -103,7 +103,7 @@ void GameMgr::loadLevel(std::string levelFilename)
 	// Load the environment, objects, and characters
 	this->loadEnvironment(levelFilename);
 	this->setupEnvironment();
-	this->setupSounds();
+	//this->setupSounds();
 	this->loadObjects();
 	this->loadCharacters();
 }
@@ -197,15 +197,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	// read next if any
 	readEnt = new readFromFile();
-
-	/*
-	// Testing Third Box Readin ///////////////////////////////////
-	std::cerr << "Characters" << std::endl;
-	std::cerr << objectChar << " " << characterMesh << std::endl;
-	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
-	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
-	///////////////////////////////////////////////////////////////
-	 */
 
 	// Read the World Placement //////////////////////////////////////////////////////////////////
 	char c;

@@ -191,7 +191,8 @@ void GfxMgr::loadMenu()
 {
 	// Create background material
 	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("MenuScreen", "General");
-	material->getTechnique(0)->getPass(0)->createTextureUnitState("GameLogoPrototype.png");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("GameLogo.png");
+	//material->getTechnique(0)->getPass(0)->createTextureUnitState("Title.mesh");
 	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
 	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
 	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
