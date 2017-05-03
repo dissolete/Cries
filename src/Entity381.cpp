@@ -201,7 +201,7 @@ bool Entity381::canSee(Ogre::Vector3 player)
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 1.0f;
-	this->turnRate = 0.1f;
+	this->turnRate = 0.3f;
 	this->maxSpeed = 35;
 }
 
@@ -233,7 +233,7 @@ void HearNo::Tick(float dt)
 SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SEENO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 1.0f;
-	this->turnRate = 0.1f;
+	this->turnRate = 0.3f;
 	this->maxSpeed = 35;
 }
 
@@ -265,7 +265,7 @@ void SeeNo::Tick(float dt)
 SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 1.0f;
-	this->turnRate = 0.1f;
+	this->turnRate = 0.3f;
 	this->maxSpeed = 35;
 }
 

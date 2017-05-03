@@ -93,17 +93,28 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 		*/
 	}
 
-	if( entityType == EntityType::WALL )
+	CreateOgreEntityAndNode(ent);
+
+	if( entityType == EntityType::HEARNO )
 	{
-		//ent->ogreEntity->setMaterialName("Examples/Rock");
+		//ent->ogreSceneNode->set
 	}
 
-	CreateOgreEntityAndNode(ent);
+	if( entityType == EntityType::SEENO )
+	{
+		//ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading + Ogre::Math::PI/2));
+	}
+
+	if( entityType == EntityType::SPEAKNO )
+	{
+
+	}
 
 	// Check material name
 	if( entityType == EntityType::WALL )
 	{
 		ent->ogreEntity->setMaterialName("Examples/RustySteel");
+		ent->ogreSceneNode->setScale(1, 10, 1);
 	}
 
 	entities.push_front(ent);

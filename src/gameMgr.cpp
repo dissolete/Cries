@@ -11,7 +11,7 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -100);
+    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -400);
     gameplayTime = 0;
     entityCount = 0;
     grid = 0;
@@ -248,7 +248,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			if( c == 'P')
 			{
 				// Find the Start Position and set camera to there
-				engine->gfxMgr->setCameraPosition( gridPositionInWorld );
+				// Make camera position higher then rest
+				//gridPositionInWorld.y += 20;
+				engine->gfxMgr->cameraNode->setPosition( gridPositionInWorld );
 				std::cerr << gridPositionInWorld << std::endl;
 			}
 
