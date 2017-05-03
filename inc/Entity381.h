@@ -30,8 +30,7 @@ private:
 protected:
 	//
 	float myAngleBetween(Ogre::Vector3 v1, Ogre::Vector3 v2);
-	void setMagnitude(Ogre::Vector3 v, float mag);
-	bool notObstructed(Ogre::Vector3 player, Ogre::Vector3 enemy);
+	bool canSee(Ogre::Vector3 player);
 
 public:
 
@@ -73,6 +72,7 @@ public:
 	SeeNo(Ogre::Vector3 pos, float heading, Engine *eng);
 	~SeeNo();
 	void Tick(float dt);
+	std::list<GridParams*> path;
 
 };
 

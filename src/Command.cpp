@@ -50,7 +50,6 @@ bool Search::done(){
 	Ogre::Vector3 diff = targetLocation - entity->pos;
 	if (diff.length() < (entity->speed * entity->speed) / (2 * entity->acceleration)){
 		entity->SetStatus(Status::WAITING);
-		std::cout << "Just before return" << std::endl;
 		return true;
 	} else {
 		return false;
@@ -89,8 +88,101 @@ void Pursue::tick(float dt){
 	entity->desiredSpeed = entity->maxSpeed;
 }
 
+PursuePath::PursuePath(Entity381 *ent, Ogre::SceneNode *targ) : Command(ent, COMMAND_TYPE::PURSUEPATH)
+{
+	target = targ;
+	theGrid = NULL;
+}
 
+PursuePath::~PursuePath()
+{
 
+}
+
+void PursuePath::init()
+{
+	theGrid = entity->engine->gridMgr;
+	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
+			theGrid->getPos(target->getPosition()));
+}
+
+void PursuePath::tick(float dt)
+{
+	if(!path.empty())
+	{
+		if(theGrid->getPos(target->getPosition()) != path.back())
+		{
+			//Find the new path if the player has moved
+			path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
+					theGrid->getPos(target->getPosition()));
+		}
+
+		//compute offset
+		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
+		entity->desiredHeading = atan2(diff.z, diff.x);
+		entity->desiredSpeed = entity->maxSpeed;
+
+		//Check to see if you have successfully finished the first move point
+		if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())
+		{
+			path.pop_front();
+		}
+	}
+}
+
+bool PursuePath::done()
+{
+	return path.empty();
+}
+
+SearchPath::SearchPath(Entity381 *ent, Ogre::Vector3 location) : Command(ent, COMMAND_TYPE::SEARCHPATH)
+{
+	targetLocation = location;
+	MOVE_DISTANCE_THRESHOLD = 100;
+
+	theGrid = NULL;
+}
+
+SearchPath::~SearchPath()
+{
+
+}
+
+void SearchPath::init()
+{
+	theGrid = entity->engine->gridMgr;
+	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
+			theGrid->getPos(targetLocation));
+}
+
+void SearchPath::tick(float dt)
+{
+	if(!path.empty())
+	{
+		//compute offset
+		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
+		entity->desiredHeading = atan2(diff.z, diff.x);
+		entity->desiredSpeed = entity->maxSpeed;
+
+		//Check to see if you have successfully finished the first move point
+		if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())
+		{
+			path.pop_front();
+		}
+	}
+}
+
+bool SearchPath::done()
+{
+	if(path.empty())
+	{
+		entity->SetStatus(Status::WAITING);
+		return true;
+	} else
+	{
+		return false;
+	}
+}
 
 
 

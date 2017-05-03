@@ -14,6 +14,8 @@
 #include <GfxMgr.h>
 #include <Utils.h>
 #include <mgr.h>
+#include <cmath>
+#include <climits>
 
 #define GRID_MULT 100.0
 
@@ -26,11 +28,12 @@ protected:
 	int colCoordinate;
 	bool clear;
 
+	int G, H, F;
 	// May not need
 	GridParams* parent;
-	int G, H, F;
 
 public:
+
 	Ogre::Entity* entity; // pointer to entity in this grid
 
 	GridParams();
@@ -46,10 +49,24 @@ public:
 	int getCol();
 
 	// Get Position of object in grid
-	Ogre::Vector3 getCurruntPosition( int rows, int cols );
+	Ogre::Vector3 getCurrentPosition( int rows, int cols );
 	void walkable();
 	void notWalkable();
 	bool isWalkable();
+
+	void resetAStarParams();
+
+	int getG();
+	int getH();
+	int getF();
+	void setG(int nG);
+	void setH(int nH);
+	void setF(int G, int H);
+
+	GridParams* getParent();
+	void setParent(GridParams *nParent);
+
+	bool operator() (GridParams *lhs, GridParams *rhs);
 
 	char contains;
 };
@@ -84,7 +101,7 @@ public:
 	GridParams* getGrid( int rows, int cols );
 
 	// Get Grid Positions around location
-	std::list<GridParams*> *getNeighbors( GridParams* n );
+	std::vector<GridParams*> *getNeighbors( GridParams* n );
 	GridParams* getNorth( GridParams* n );
 	GridParams* getSouth( GridParams* n );
 	GridParams* getWest( GridParams* n );
@@ -110,5 +127,8 @@ public:
 	std::list<GridParams*> findPath( GridParams* start, GridParams* goal );
 
 };
+
+typedef std::multiset<GridParams*, GridParams> AStarPriorityQueue;
+AStarPriorityQueue::iterator findGridNode(AStarPriorityQueue &pq, GridParams *gn);
 
 #endif /* INC_GRID_H_ */

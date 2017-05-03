@@ -31,6 +31,9 @@ GridParams::GridParams( int gID, int row, int col, bool isClear)
 	else
 		this->contains = 'W';
 
+	parent = NULL;
+	F = G = H = std::INT_MAX;
+
 }
 
 GridParams::~GridParams()
@@ -68,7 +71,7 @@ int GridParams::getCol()
 	return colCoordinate;
 }
 
-Ogre::Vector3 GridParams::getCurruntPosition( int rows, int cols )
+Ogre::Vector3 GridParams::getCurrentPosition( int rows, int cols )
 {
 	Ogre::Vector3 position;
 
@@ -95,6 +98,67 @@ void GridParams::notWalkable()
 bool GridParams::isWalkable()
 {
 	return this->clear;
+}
+
+int GridParams::getG()
+{
+	return G;
+}
+
+int GridParams::getH()
+{
+	return H;
+}
+
+int GridParams::getF()
+{
+	return F;
+}
+
+void GridParams::setG(int nG)
+{
+	G = nG;
+	F = G + H;
+}
+
+void GridParams::setH(int nH)
+{
+	H = nH;
+	F = G + H;
+}
+
+void GridParams::setF(int nG, int nH)
+{
+	G = nG;
+	H = nH;
+	F = G + H;
+}
+
+GridParams* GridParams::getParent()
+{
+	return parent;
+}
+
+void GridParams::setParent(GridParams *nParent)
+{
+	parent = nParent;
+}
+
+void GridParams::resetAStarParams()
+{
+	parent = NULL;
+	F = G = H = std::INT_MAX;
+}
+
+bool GridParams::operator() (GridParams *lhs, GridParams *rhs)
+{
+	if(lhs == rhs)
+	{
+		return false;
+	} else
+	{
+		return lhs -> F < rhs -> F;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -188,9 +252,9 @@ GridParams* Grid::getGrid( int rows, int cols )
 	return &this->data[cols].data[rows];
 }
 
-std::list<GridParams*>* Grid::getNeighbors( GridParams* n )
+std::vector<GridParams*>* Grid::getNeighbors( GridParams* n )
 {
-	std::list<GridParams*>* neighbors = new std::list<GridParams*>();
+	std::vector<GridParams*>* neighbors = new std::list<GridParams*>();
 
 	neighbors->push_back(this->getNW(n));
 	neighbors->push_back(this->getNorth(n));
@@ -323,11 +387,136 @@ GridParams* Grid::getPos( Ogre::Vector3 position )
 }
 
 // Find a path to walk in map
-std::list<GridParams*> Grid::findPath( GridParams* start, GridParams* goal )
+std::list<GridParams*> Grid::findPath( GridParams* start, GridParams* end )
 {
 	std::list<GridParams*> path;
 
+	if(start == NULL || end == NULL)
+	{
+		return path;
+	} else
+	{
+		AStarPriorityQueue open = AStarPriorityQueue();
+		AStarPriorityQueue closed = AStarPriorityQueue();
+
+		start->setParent(NULL);
+		start->setF(0, getDistanceBetweenGrid(start, end));
+
+		GridParams *currentNode = start;
+		while(currentNode == start || !(open.empty()))
+		{
+			if(!(open.empty()))
+			{
+				currentNode = *(open.begin()); //Gets the first sorted node
+				open.erase(open.begin()); //Pop from the queue
+			}
+
+			//If we are at the destination, we are done
+			if(currentNode == end)
+			{
+				break;
+			}
+
+			std::vector<GridParams*> neighbors = getNeighbors(currentNode);
+
+			//Now go through each neighbor
+			for(int i = 0; i < 8; i++)
+			{
+				GridParams * neighbor = neighbors[i];
+
+				if(neighbor == NULL)
+				{
+					continue;
+				}
+				//If you can't walk on the neighbor
+				if(!(neighbor->isWalkable()))
+				{
+					continue;
+				}
+
+				//Do not cut corners if ortho is blocked
+				if(i % 2 == 0 && (!(neighbors[(i + 7) % 8]->isWalkable()) ||
+						!(neighbors[(i + 1) % 8]->isWalkable())))
+				{
+					continue;
+				}
+
+				//Calculate the new G value
+				int newG = currentNode->getG() + ((i % 2) ? (10) : (14));
+
+				//If the node has already been explored
+				auto closedNeighbor = findGridNode(closed, neighbor);
+				if(closedNeighbor != closed.end())
+				{
+					//Update closed with the new path
+					if(newG < (*closedNeighbor)->getG())
+					{
+						closed.erase(closedNeighbor);
+						neighbor->setF(newG, this->getDistanceBetweenGrid(neighbor, end));
+						neighbor->setParent(currentNode);
+						closed.insert(neighbor);
+					}
+					continue;
+				}
+
+				auto prevNeighbor = findGridNode(open, neighbor);
+				//If neighbor not in open or node in open's G is greater
+				if(prevNeighbor == open.end() || newG < (*prevNeighbor)->getG())
+				{
+					if(prevNeighbor != open.end())
+					{
+						open.erase(prevNeighbor);
+					}
+
+					neighbor->setF(newG, this->getDistanceBetweenGrid(neighbor, end));
+					neighbor->setParent(currentNode);
+					open.insert(neighbor);
+				}
+			}
+
+			closed.insert(currentNode);
+		}
+
+		if(currentNode != end)
+		{
+			return std::list<GridParams *>();
+		}
+
+		//Recreate the shortest path
+
+		while(currentNode != NULL)
+		{
+			path.push_front(currentNode);
+			currentNode = currentNode->getParent();
+		}
+
+		//Reset all the nodes we used during the search
+		for(auto iter = open.begin(); iter != open.end(); iter++)
+		{
+			(*iter)->resetAStarParams();
+		}
+		for(auto iter = closed.begin(); closed != closed.end(); iter++)
+		{
+			(*iter)->resetAStarParams();
+		}
+	}
+
 	return path;
+}
+
+AStarPriorityQueue::iterator findGridNode(AStarPriorityQueue &pq, GridParams *gn)
+{
+	auto first = pq.begin();
+	auto last = pq.end();
+	while(first != last)
+	{
+		if(*first == gn)
+		{
+			return first;
+		}
+		++first;
+	}
+	return last;
 }
 
 
