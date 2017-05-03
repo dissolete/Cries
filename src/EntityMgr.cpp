@@ -44,7 +44,7 @@ void EntityMgr::CreateOgreEntityAndNode(Entity381 *ent){
 		ent->ogreSceneNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode(ent->pos);
 		ent->ogreSceneNode->attachObject(ent->ogreEntity);
 		//ent->ogreEntity->setCastShadows(true);
-		ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading));
+		ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading + Ogre::Math::PI/2));
 	}
 
 }
