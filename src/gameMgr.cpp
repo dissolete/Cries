@@ -218,7 +218,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 		std::cerr << "FILE NOT FORMATTED CORRECTLY" << std::endl;
 	}
 
-
 	// Pre Conditions for World setup
 	/*
 	Ogre::Vector3 wallPosition;
@@ -336,13 +335,11 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ss.wav");
+	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
 	engine->soundMgr->play_song("Layer 1", true);
-
-	// Play song (.wav)
 }
 
 void GameMgr::loadObjects()
