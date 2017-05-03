@@ -17,7 +17,6 @@ GfxMgr::GfxMgr(Engine *eng): Mgr(eng) {
 	plugins   = "plugins.cfg";
 
 	ogreRoot = new Ogre::Root(plugins);
-	cameraPosition.y = 35; // Default y position
 
 	cf.load(resources);
 	loadConfig(cf);
@@ -93,7 +92,7 @@ void GfxMgr::setCameraPosition( Ogre::Vector3 pos )
 
 Ogre::Vector3 GfxMgr::getCameraPosition()
 {
-	return cameraPosition;
+	return cameraNode->getPosition();
 }
 
 void GfxMgr::createViewport(){
