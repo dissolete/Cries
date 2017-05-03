@@ -20,7 +20,9 @@ enum class EntityType {
 
 enum class COMMAND_TYPE{
 	SEARCH,
-	PURSUE
+	PURSUE,
+	SEARCHPATH,
+	PURSUEPATH
 };
 
 enum class ASPECT_TYPE {
@@ -40,6 +42,17 @@ enum class Status {
 	WAITING,
 	ALERTED,
 	SEARCHING
+};
+
+enum class DIRECTION {
+	SOUTH,
+	SOUTHWEST,
+	WEST,
+	NORTHWEST,
+	NORTH,
+	NORTHEAST,
+	EAST,
+	SOUTHEAST
 };
 
 #endif /* TYPES_H_ */

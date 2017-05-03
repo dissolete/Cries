@@ -50,7 +50,7 @@ bool Search::done(){
 	Ogre::Vector3 diff = targetLocation - entity->pos;
 	if (diff.length() < (entity->speed * entity->speed) / (2 * entity->acceleration)){
 		entity->SetStatus(Status::WAITING);
-		std::cout << "Just before return" << std::endl;
+		entity->desiredHeading = FixAngle(entity->heading + Ogre::Math::PI);
 		return true;
 	} else {
 		return false;
@@ -89,8 +89,114 @@ void Pursue::tick(float dt){
 	entity->desiredSpeed = entity->maxSpeed;
 }
 
+PursuePath::PursuePath(Entity381 *ent, Ogre::SceneNode *targ) : Command(ent, COMMAND_TYPE::PURSUEPATH)
+{
+	std::cout << "PursuePath made" << std::endl;
+	target = targ;
+	theGrid = NULL;
+	init();
+}
 
+PursuePath::~PursuePath()
+{
 
+}
+
+void PursuePath::init()
+{
+	theGrid = entity->engine->gameMgr->grid;
+	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
+			theGrid->getPos(target->getPosition()));
+
+	std::cout << "Path length: " << path.size() << std::endl;
+}
+
+void PursuePath::tick(float dt)
+{
+	std::cout << "Made it inside PursuePath" << std::endl;
+	if(!path.empty())
+	{
+		std::cout << "Made it inside tick if statement for PursuePath" << std::endl;
+		if(theGrid->getPos(target->getPosition()) != path.back())
+		{
+			//Find the new path if the player has moved
+			path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
+					theGrid->getPos(target->getPosition()));
+		}
+
+		//compute offset
+		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
+		entity->desiredHeading = atan2(diff.z, diff.x);
+		entity->desiredSpeed = entity->maxSpeed;
+
+		//Check to see if you have successfully finished the first move point
+		if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())
+		{
+			path.pop_front();
+		}
+	}
+}
+
+bool PursuePath::done()
+{
+	return path.empty();
+}
+
+SearchPath::SearchPath(Entity381 *ent, Ogre::Vector3 location) : Command(ent, COMMAND_TYPE::SEARCHPATH)
+{
+	std::cout << "SearchPath made" << std::endl;
+	targetLocation = location;
+	MOVE_DISTANCE_THRESHOLD = 100;
+
+	theGrid = NULL;
+	init();
+}
+
+SearchPath::~SearchPath()
+{
+
+}
+
+void SearchPath::init()
+{
+	theGrid = entity->engine->gameMgr->grid;
+	path = theGrid->findPath(theGrid->getPos(entity->ogreSceneNode->getPosition()),
+			theGrid->getPos(targetLocation));
+
+	std::cout << "Path length: " << path.size() << std::endl;
+}
+
+void SearchPath::tick(float dt)
+{
+
+	std::cout << "Made it inside SearchPath tick" << std::endl;
+	if(!path.empty())
+	{
+		std::cout << "Made it inside if in tick for SearchPath" << std::endl;
+		//compute offset
+		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
+		entity->desiredHeading = atan2(diff.z, diff.x);
+		entity->desiredSpeed = entity->maxSpeed;
+
+		//Check to see if you have successfully finished the first move point
+		if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())
+		{
+			path.pop_front();
+		}
+	}
+}
+
+bool SearchPath::done()
+{
+	if(path.empty())
+	{
+		entity->SetStatus(Status::WAITING);
+		return true;
+	} else
+	{
+		return false;
+	}
+}
 
 
 

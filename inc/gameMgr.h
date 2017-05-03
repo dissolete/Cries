@@ -21,7 +21,7 @@ class GridParams;
 class GameMgr : public Mgr {
 
 protected:
-	Grid* grid;
+
 
 private:
 	void createSky();
@@ -48,6 +48,8 @@ public:
 	void loadCharacters();
 
 	std::string getNewName();
+
+	Grid* grid;
 
 	Ogre::Plane floor;
 	Ogre::Plane ceiling;
