@@ -75,7 +75,7 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 
 void GameMgr::createCeiling()
 {
-	Ogre::MovablePlane plane(-Ogre::Vector3::UNIT_Y, 100);
+	Ogre::Plane plane(-Ogre::Vector3::UNIT_Y, -100);
 
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
