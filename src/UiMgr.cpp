@@ -31,7 +31,8 @@ void UiMgr::init(){
     //mTrayMgr->hideCursor();
 }
 
-void UiMgr::stop(){
+void UiMgr::stop()
+{
 
 }
 

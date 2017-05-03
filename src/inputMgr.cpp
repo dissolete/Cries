@@ -19,6 +19,7 @@
 #include <ostream>
 
 #include <OgreRay.h>
+#include <Grid.h>
 
 
 InputMgr::InputMgr(Engine *engine) : Mgr(engine){
@@ -358,8 +359,27 @@ void InputMgr::UpdateCamera(float dt){
 	{
 		dirVec.x += move;
 	}
+
 	//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());
 	engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec *  dt, Ogre::Node::TS_LOCAL);
+
+	Ogre::Vector3 currentPos = engine->gfxMgr->cameraNode->getPosition();
+
+
+	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(currentPos);
+
+	if(currentLocationAsGridParam and not currentLocationAsGridParam->isWalkable())
+	{
+		std::cerr << "You cant walk here" << std::endl;
+		engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * -dirVec *  dt, Ogre::Node::TS_LOCAL);
+//			if(dirVec.x > 0) dirVec.x -= 2*move;
+//			else if(dirVec.x < 0) dirVec.x += 2*move;
+//
+//			if(dirVec.z > 0) dirVec.z -= 2*move;
+//			else if(dirVec.z < 0) dirVec.z += 2*move;
+	}
+	else
+		std::cerr << "You can walk here" << std::endl;
 
 	Ogre::Real pitchAngle, pitchAngleSign;
 	// Angle of rotation around the X-axis.
@@ -384,6 +404,8 @@ void InputMgr::UpdateCamera(float dt){
 
 	Ogre::Vector3 newPos = engine->gfxMgr->cameraNode->getPosition();
 
+
+
 	if(isCrouching)
 	{
 		if(cameraYPos > CROUCH_HEIGHT)
@@ -397,6 +419,13 @@ void InputMgr::UpdateCamera(float dt){
 
 
 	newPos.y = cameraYPos;
+
+	// Check for camera collision with wall
+//	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(newPos);
+//
+//	if(currentLocationAsGridParam and currentLocationAsGridParam->isWalkable())
+//		std::cerr << "The area you are standing is walkable! :)" << std::endl;
+
 	engine->gfxMgr->cameraNode->setPosition(newPos);
 
 }
