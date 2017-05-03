@@ -26,7 +26,7 @@ protected:
 private:
 	void createSky();
 	void createGround(int width, int heigth, std::string &material);
-	void createCeiling();
+	void createCeiling(int width, int heigth);
 
 	// Loads a level given from file
 	void loadLevel(std::string levelFilename);
@@ -50,7 +50,7 @@ public:
 	std::string getNewName();
 
 	Ogre::Plane floor;
-	Ogre::MovablePlane *ceiling;
+	Ogre::Plane ceiling;
 	float gameplayTime;
 
 	Grid* getGrid() const;
