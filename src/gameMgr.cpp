@@ -252,10 +252,18 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 		{
 			fin >> c;
 
-			fout << c;
-			std::cerr << "INSIDE READ" << std::endl;
+			fout << c; // test world read in
 
 			Ogre::Vector3 gridPositionInWorld = this->grid->getPosition(row, col);
+
+
+			if( c == 'P')
+			{
+				// Find the Start Position and set camera to there
+				engine->gfxMgr->setCameraPosition( gridPositionInWorld );
+				std::cerr << gridPositionInWorld << std::endl;
+			}
+
 
 			// Check for walls (Not player or enemy nodes)
 			if( c == 'W' )

@@ -36,6 +36,7 @@ private:
 
 	void createSceneManager();
 	void createCamera();
+
 	Ogre::Viewport *ogreViewport;
 	void createViewport();
 
@@ -50,6 +51,8 @@ public:
 	virtual void stop();
 
 	void loadMenu();
+	void setCameraPosition( Ogre::Vector3 pos );
+	Ogre::Vector3 getCameraPosition();
 
 	Ogre::RenderWindow* ogreRenderWindow;
 	Ogre::SceneManager* ogreSceneManager;

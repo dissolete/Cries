@@ -17,6 +17,7 @@ GfxMgr::GfxMgr(Engine *eng): Mgr(eng) {
 	plugins   = "plugins.cfg";
 
 	ogreRoot = new Ogre::Root(plugins);
+	cameraPosition.y = 35; // Default y position
 
 	cf.load(resources);
 	loadConfig(cf);
@@ -63,7 +64,7 @@ void GfxMgr::createCamera(){
 	// Create main camera
 	ogreCamera = ogreSceneManager->createCamera("MainCam");
 	//ogreCamera->setPosition(0, 35, 0);
-	ogreCamera->setPosition(0, 500, 0);
+	//ogreCamera->setPosition(0, 500, 0);
 	ogreCamera->setNearClipDistance(5);
 	cameraNode = ogreSceneManager->getRootSceneNode()->createChildSceneNode();
 
@@ -78,6 +79,21 @@ void GfxMgr::createCamera(){
 	//cameraNode->setPosition(0, 100, 500);
 	//ogreCamera->lookAt(0, 0, 0);
 
+}
+
+void GfxMgr::setCameraPosition( Ogre::Vector3 pos )
+{
+	cameraNode->setPosition(pos);
+	/*
+	cameraPosition.x = pos.x;
+	cameraPosition.y = pos.y;
+	cameraPosition.z = pos.z;
+	*/
+}
+
+Ogre::Vector3 GfxMgr::getCameraPosition()
+{
+	return cameraPosition;
 }
 
 void GfxMgr::createViewport(){
