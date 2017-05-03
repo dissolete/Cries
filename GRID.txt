@@ -1,14 +1,3 @@
-18 22
-Examples/BeachStones
-
-Objects
-D cube.mesh 0.0 2.0 0.0   0.0 0.02
-
-
-Characters
-C ninja.mesh 0.0 0.0 0.0  0.0 0.15
-
-World
 WWWWWWWWWWWWWWWWWW
 WWWWWWWWWWWAWA...E
 WWWW........W....W
@@ -21,7 +10,7 @@ WA.WW..A.AWAWWWWWW
 W..WWWW......WWWWW
 W..W..A..C...WWWWW
 W..A.C.A.....WWWWW
-W..W..W.W.W..WWWWW	
+W..W..W.W.W..WWWWW
 W..W..W.W..WAWWWWW
 WWWWWWW..WWW.WWWWW
 ...W.....WWW.....W

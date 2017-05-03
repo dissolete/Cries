@@ -146,7 +146,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 
 	// Create floor mesh with read in dimensions
-	createGround( x*100, z*100, groundMaterial);
+	createGround( x*1000, z*1000, groundMaterial);
 
 	// Create Ceiling
 	createCeiling(); //DEBUG THIS LATER
@@ -231,6 +231,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 
 	// Pre Conditions for World setup
+	/*
 	Ogre::Vector3 wallPosition;
 	wallPosition = Ogre::Vector3(-1850, 50, 1200);
 
@@ -239,13 +240,20 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	Ogre::Vector3 enemyPosition;
 	enemyPosition = Ogre::Vector3(-1200, 0, 1000);
+	*/
+
+	std::ofstream fout;
+	fout.open("GRID.txt");
 
 	// Loop through map dimensions
-	for( int row = 0; row < ROW_SIZE - 3; row++ )
+	for( int row = 0; row < ROW_SIZE; row++ )
 	{
-		for( int col = 0; col < COL_SIZE - 3; col++ )
+		for( int col = 0; col < COL_SIZE; col++ )
 		{
 			fin >> c;
+
+			fout << c;
+			std::cerr << "INSIDE READ" << std::endl;
 
 			Ogre::Vector3 gridPositionInWorld = this->grid->getPosition(row, col);
 
@@ -272,6 +280,15 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
+				readFromFile * objectEntData = objects["C"]; // Currently not used lmao
+
+				GridParams * gridParam =  this->grid->getGrid(row, col);
+				if(gridParam) gridParam->notWalkable();
+
+				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
+
+				objectEntData = NULL;			std::ofstream fout;
+				gridParam = NULL;
 
 			}
 
@@ -290,8 +307,11 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
 			}
 		}
+
+		fout << std::endl;
 	}
 
+	fout.close();
 	// Create the Entities
 
 	// Create Skybox for the hell of it
