@@ -11,9 +11,7 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = new Ogre::MovablePlane("ceiling");
-    ceiling->d = 0;
-    ceiling->normal = -1 * Ogre::Vector3::UNIT_Y;
+    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -400);
     gameplayTime = 0;
     entityCount = 0;
 }
@@ -73,16 +71,14 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
-void GameMgr::createCeiling()
+void GameMgr::createCeiling(int width, int heigth)
 {
-	Ogre::Plane plane(-Ogre::Vector3::UNIT_Y, -100);
-
 	// Create Ceiling ///////////////////////////////////////////////////////////////////////////////////////
 	Ogre::MeshManager::getSingleton().createPlane(
 	    "ceiling",
 	    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		plane,
-		4000, 3400, 20, 20,
+		ceiling,
+		width, heigth, 20, 20,
 	    true,
 	    1, 5, 5,
 	    Ogre::Vector3::UNIT_Z);
@@ -90,10 +86,10 @@ void GameMgr::createCeiling()
 
 
 	// Create Ceiling Entity //////////////////////////////////////////////////////////////////////////////////
-	Ogre::Entity* ceiling = engine->gfxMgr->ogreSceneManager->createEntity("ceiling");
-	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(ceiling);
-	ceiling->setCastShadows(false);
-	ceiling->setMaterialName("Examples/Rockwall");
+	Ogre::Entity* ceilingEntity = engine->gfxMgr->ogreSceneManager->createEntity("ceiling");
+	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(ceilingEntity);
+	ceilingEntity->setCastShadows(false);
+	ceilingEntity->setMaterialName("Examples/Rockwall");
 }
 
 void GameMgr::createSky(){
@@ -148,7 +144,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
-	createCeiling(); //DEBUG THIS LATER
+	createCeiling( gridRowSize*1000, gridColSize*1000 ); //DEBUG THIS LATER
 
 	// Setup the grid
 	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
@@ -222,7 +218,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 		std::cerr << "FILE NOT FORMATTED CORRECTLY" << std::endl;
 	}
 
-
 	// Pre Conditions for World setup
 	/*
 	Ogre::Vector3 wallPosition;
@@ -253,7 +248,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			if( c == 'P')
 			{
 				// Find the Start Position and set camera to there
-				engine->gfxMgr->setCameraPosition( gridPositionInWorld );
+				// Make camera position higher then rest
+				//gridPositionInWorld.y += 20;
+				engine->gfxMgr->cameraNode->setPosition( gridPositionInWorld );
 				std::cerr << gridPositionInWorld << std::endl;
 			}
 
@@ -338,13 +335,11 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ss.wav");
+	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
 	engine->soundMgr->play_song("Layer 1", true);
-
-	// Play song (.wav)
 }
 
 void GameMgr::loadObjects()

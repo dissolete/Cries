@@ -94,11 +94,7 @@ void GfxMgr::createCamera(){
 void GfxMgr::setCameraPosition( Ogre::Vector3 pos )
 {
 	cameraNode->setPosition(pos);
-	/*
-	cameraPosition.x = pos.x;
-	cameraPosition.y = pos.y;
-	cameraPosition.z = pos.z;
-	*/
+	//ogreCamera->setPosition(0, 35, 0);
 }
 
 Ogre::Vector3 GfxMgr::getCameraPosition()
@@ -212,4 +208,10 @@ void GfxMgr::loadMenu()
 	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
 	rect->setMaterial("MenuScreen");
+
+	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ds3m.wav");
+	//load_sound(std::string soundName, std::string filePath);
+
+	//play_sound(std::string soundName);
+	engine->soundMgr->play_song("Layer 1", true);
 }
