@@ -68,7 +68,7 @@ void Physics::Tick(float dt){
 	if(entity->heading > entity->desiredHeading)
 		entity->heading -= entity->turnRate * dt;
 
-	//entity->heading = FixAngle(entity->heading); // between -pi and pi
+	entity->heading = FixAngle(entity->heading); // between -pi and pi
 
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
@@ -89,6 +89,7 @@ void UnitAI::AddCommand(Command *c){
 }
 
 void UnitAI::SetCommand(Command* c){
+	delete commands.front();
 	commands.clear();
 	commands.push_front(c);
 }

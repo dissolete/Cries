@@ -13,6 +13,8 @@ class Entity381;
 #include <Entity381.h>
 #include <OgreVector3.h>
 #include <Types.h>
+#include <Grid.h>
+#include <Utils.h>
 
 class Command {
 
@@ -55,6 +57,38 @@ public:
 
 
 	Ogre::SceneNode* target;
+
+};
+
+class PursuePath : public Command {
+public:
+	PursuePath(Entity381 *ent, Ogre::SceneNode *targ);
+	~PursuePath();
+
+	virtual void init();
+	virtual void tick(float dt);
+	virtual bool done();
+
+	std::list<GridParams*> path;
+	Ogre::SceneNode* target;
+	Grid *theGrid;
+};
+
+class SearchPath: public Command {
+
+public:
+	SearchPath(Entity381* ent, Ogre::Vector3 location);
+	~SearchPath();
+
+	void init();
+	void tick(float dt);
+	bool done();
+
+	Ogre::Vector3 targetLocation;
+	float MOVE_DISTANCE_THRESHOLD;
+
+	std::list<GridParams*> path;
+	Grid *theGrid;
 
 };
 

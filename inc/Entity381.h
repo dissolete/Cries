@@ -11,6 +11,7 @@
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
 #include <engine.h>
+#include <Grid.h>
 
 #include <Types.h>
 
@@ -29,6 +30,8 @@ private:
 
 protected:
 	//
+	float myAngleBetween(Ogre::Vector3 v1, Ogre::Vector3 v2);
+	bool canSee(Ogre::Vector3 player);
 
 public:
 
@@ -70,6 +73,7 @@ public:
 	SeeNo(Ogre::Vector3 pos, float heading, Engine *eng);
 	~SeeNo();
 	void Tick(float dt);
+	std::list<GridParams*> path;
 
 };
 
