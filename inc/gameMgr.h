@@ -18,11 +18,6 @@
 class Grid;
 class GridParams;
 
-// Constants for Grid Array Size
-const int COL_SIZE = 18;
-const int ROW_SIZE = 22;
-
-
 class GameMgr : public Mgr {
 
 protected:

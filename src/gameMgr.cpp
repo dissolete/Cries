@@ -116,12 +116,11 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 {
 	// Variables
 	std::ifstream fin;
-	int x, z;
+	int gridRowSize, gridColSize;
 	float x_offset, y_offset, z_offset;
-	float scale, orientation;
+	//float scale, orientation;
 	std::string groundMaterial, objectMesh, characterMesh;
 	std::string buffer, buff;
-	char objectChar;
 	std::map<std::string, readFromFile*> objects;
 
 
@@ -136,23 +135,23 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	}
 
 	// First block is world dimensions and material name
-	fin >> x >> z;
+	fin >> gridRowSize >> gridColSize;
 	fin >> groundMaterial;
 
 	// TESTING FILE READ ////////////////////////////////////////////
-	std::cerr << "Ground Dimensions: " << x << " x " << z << std::endl;
+	std::cerr << "Ground Dimensions: " << gridRowSize << " x " << gridColSize << std::endl;
 	std::cerr << "Ground Material: " << groundMaterial << std::endl;
 	/////////////////////////////////////////////////////////////////
 
 
 	// Create floor mesh with read in dimensions
-	createGround( x*1000, z*1000, groundMaterial);
+	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
 	createCeiling(); //DEBUG THIS LATER
 
 	// Setup the grid
-	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, x, z, engine);
+	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
 
 	// Second block reads in location of you and enemies
 	// Check for Objects line
@@ -179,14 +178,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 	readEnt = new readFromFile(); // read in next if any
 
-	// Testing Second Box Readin ///////////////////////////////////
-	std::cerr << "Objects" << std::endl;
-	std::cerr << objectChar << " " << objectMesh << std::endl;
-	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
-	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
-	///////////////////////////////////////////////////////////////
-
-
 	// Check for Characters line /////////////////////////////////////////////////////////////////
 	fin >> buffer;
 
@@ -211,12 +202,14 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// read next if any
 	readEnt = new readFromFile();
 
+	/*
 	// Testing Third Box Readin ///////////////////////////////////
 	std::cerr << "Characters" << std::endl;
 	std::cerr << objectChar << " " << characterMesh << std::endl;
 	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
 	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
 	///////////////////////////////////////////////////////////////
+	 */
 
 	// Read the World Placement //////////////////////////////////////////////////////////////////
 	char c;
@@ -246,9 +239,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	fout.open("GRID.txt");
 
 	// Loop through map dimensions
-	for( int row = 0; row < ROW_SIZE; row++ )
+	for( int row = 0; row < gridRowSize; row++ )
 	{
-		for( int col = 0; col < COL_SIZE; col++ )
+		for( int col = 0; col < gridColSize; col++ )
 		{
 			fin >> c;
 
@@ -270,14 +263,14 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			{
 
 				// Grab the "objects" config stuff from the object map that Hadi built
-				readFromFile * objectEntData = objects["D"]; // Currently not used lmao
+				//readFromFile * objectEntData = objects["D"]; // Currently not used lmao
 
 				GridParams * gridParam =  this->grid->getGrid(row, col);
 				if(gridParam) gridParam->notWalkable();
 
 				engine->entityMgr->CreateEntity(EntityType::WALL, gridPositionInWorld, 0);
 
-				objectEntData = NULL;
+				//objectEntData = NULL;
 				gridParam = NULL;
 			}
 
@@ -288,14 +281,14 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
-				readFromFile * objectEntData = objects["C"]; // Currently not used lmao
+				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
 
 				GridParams * gridParam =  this->grid->getGrid(row, col);
 				if(gridParam) gridParam->notWalkable();
 
 				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
-				objectEntData = NULL;			std::ofstream fout;
+				//objectEntData = NULL;
 				gridParam = NULL;
 
 			}
