@@ -208,10 +208,4 @@ void GfxMgr::loadMenu()
 	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
 	rect->setMaterial("MenuScreen");
-
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ds3m.wav");
-	//load_sound(std::string soundName, std::string filePath);
-
-	//play_sound(std::string soundName);
-	engine->soundMgr->play_song("Layer 1", true);
 }
