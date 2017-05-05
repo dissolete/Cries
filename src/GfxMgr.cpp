@@ -54,7 +54,6 @@ void GfxMgr::initResources(){
 
 void GfxMgr::createSceneManager(){
 	ogreSceneManager = ogreRoot->createSceneManager(Ogre::ST_GENERIC);
-	ogreSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 }
 
 void GfxMgr::createCamera(){

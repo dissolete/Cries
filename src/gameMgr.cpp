@@ -282,7 +282,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 
 
 
-				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
+				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
 
@@ -319,11 +319,11 @@ void GameMgr::setupEnvironment()
 {
 	//We know graphicsMgr is ready and initialized
 	engine->gfxMgr->ogreSceneManager->setAmbientLight(Ogre::ColourValue(0.3, 0.3, 0.3));
-//	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
-//	light->setType(Ogre::Light::LT_POINT);
-//	light->setPosition(100.0, 800.0, 100.0);
-//	light->setDiffuseColour(Ogre::ColourValue::White);
-//	light->setSpecularColour(Ogre::ColourValue::White);
+	Ogre::Light* light = engine->gfxMgr->ogreSceneManager->createLight("MainLight");
+	light->setType(Ogre::Light::LT_POINT);
+	light->setPosition(100.0, 800.0, 100.0);
+	light->setDiffuseColour(Ogre::ColourValue::White);
+	light->setSpecularColour(Ogre::ColourValue::White);
 }
 
 /*
