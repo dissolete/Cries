@@ -9,6 +9,7 @@
 #include <Aspect.h>
 #include <UnitAI.h>
 #include <Types.h>
+#include <cmath>
 
 unsigned int Entity381::nextId = 0;
 
@@ -67,11 +68,24 @@ void Entity381::SetStatus(Status newStatus)
 	//If becoming alerted, begin to follow the player
 	if(newStatus == Status::ALERTED)
 	{
-		aiAsp->SetCommand(new Pursue(this, engine->gfxMgr->cameraNode));
+		if(entityType == EntityType::HEARNO || entityType == EntityType::SPEAKNO)
+		{
+			aiAsp->SetCommand(new Pursue(this, engine->gfxMgr->cameraNode));
+		} else //Must be seeno
+		{
+			aiAsp->SetCommand(new PursuePath(this, engine->gfxMgr->cameraNode));
+		}
+
 	} else if(newStatus == Status::SEARCHING)
 	{
 		//^If the monster can't find the player anymore, search last position
-		aiAsp->SetCommand(new Search(this, engine->gfxMgr->cameraNode->getPosition()));
+		if(entityType == EntityType::HEARNO)
+		{
+			aiAsp->SetCommand(new Search(this, engine->gfxMgr->cameraNode->getPosition()));
+		} else //Search via hearing
+		{
+			aiAsp->SetCommand(new SearchPath(this, engine->gfxMgr->cameraNode->getPosition()));
+		}
 	} else //Must be waiting now, do nothing
 	{
 		aiAsp->clear();
@@ -81,6 +95,107 @@ void Entity381::SetStatus(Status newStatus)
 	}
 
 	theStatus = newStatus;
+}
+
+float Entity381::myAngleBetween(Ogre::Vector3 v1, Ogre::Vector3 v2)
+{
+	float result = std::abs(Ogre::Math::ACos(v1.dotProduct(v2) / (v1.length() * v2.length())).valueDegrees());
+	return result;
+}
+
+bool Entity381::canSee(Ogre::Vector3 player)
+{
+
+	DIRECTION lookDir;
+	GridParams *location = engine->gameMgr->grid->getPos(ogreSceneNode->getPosition());
+	GridParams *playerLocation = engine->gameMgr->grid->getPos(player);
+
+	//Assumes a heading of 0 is East
+	//0.393 is 22.5 degrees in radians
+
+	std::cout << "Heading: " << heading << std::endl;
+	if((heading >= 0.0 && heading < 0.393) || (heading <= 0.0 && heading > -0.393))
+	{
+		lookDir = DIRECTION::EAST;
+
+		std::cout << "East" << std::endl;
+		//1.178 = 67.5 degrees
+	} else if(heading >= 0.393 && heading < 1.178)
+	{
+		lookDir = DIRECTION::SOUTHEAST;
+		std::cout << "SouthEast" << std::endl;
+		//1.963= 112.5 degrees
+	} else if(heading >= 1.178 && heading < 1.963)
+	{
+		lookDir = DIRECTION::SOUTH;
+		std::cout << "South" << std::endl;
+		//2.749 = 157.5 degrees
+	} else if(heading >= 1.963 && heading < 2.749)
+	{
+		lookDir = DIRECTION::SOUTHWEST;
+		std::cout << "Southwest" << std::endl;
+	} else if((heading >= 2.749 && heading <= 3.14159) || (heading >= -3.14159 && heading <= -2.749))
+	{
+		lookDir = DIRECTION::WEST;
+		std::cout << "West" << std::endl;
+	} else if (heading <= -0.393 && heading > -1.178)
+	{
+		lookDir = DIRECTION::NORTHEAST;
+		std::cout << "NorthEast" << std::endl;
+	} else if (heading <= -1.178 && heading > -1.963)
+	{
+		lookDir = DIRECTION::NORTH;
+		std::cout << "North" << std::endl;
+	} else
+	{
+		//Must be northwest
+		lookDir = DIRECTION::NORTHWEST;
+		std::cout << "northwest, " << heading << std::endl;
+	}
+
+	//Now search in lookDir for the player
+	while(location != NULL)
+	{
+		if(location == playerLocation)
+		{
+			return true;
+		} else if(! location->isWalkable())
+		{
+			//If its a wall, return false. wall between statue and player
+			return false;
+		}
+		//Get next location
+		switch(lookDir)
+		{
+		case DIRECTION::EAST :
+			location = engine->gameMgr->grid->getEast(location);
+			break;
+		case DIRECTION::NORTH :
+			location = engine->gameMgr->grid->getNorth(location);
+			break;
+		case DIRECTION::NORTHEAST :
+			location = engine->gameMgr->grid->getNE(location);
+			break;
+		case DIRECTION::NORTHWEST :
+			location = engine->gameMgr->grid->getNW(location);
+			break;
+		case DIRECTION::SOUTH :
+			location = engine->gameMgr->grid->getSouth(location);
+			break;
+		case DIRECTION::SOUTHEAST :
+			location = engine->gameMgr->grid->getSE(location);
+			break;
+		case DIRECTION::SOUTHWEST :
+			location = engine->gameMgr->grid->getSW(location);
+			break;
+		default :
+			//Must be west
+			location = engine->gameMgr->grid->getWest(location);
+			break;
+		}
+	}
+
+	return false;
 }
 
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
@@ -96,10 +211,20 @@ HearNo::~HearNo(){
 
 void HearNo::Tick(float dt)
 {
-	//For now, no matter what this guy sees you and begins following
-	if(theStatus != Status::ALERTED)
+	//If the enemy isn't alerted, check to see if it can see the player
+	if(theStatus == Status::WAITING || theStatus == Status::SEARCHING)
 	{
-		SetStatus(Status::ALERTED);
+		if(canSee(engine->gfxMgr->cameraNode->getPosition()))
+		{
+			SetStatus(Status::ALERTED);
+		}
+	} else if(theStatus == Status::ALERTED)
+	{
+		//If he can no longer see the player, search where he last saw the player
+		if(!canSee(engine->gfxMgr->cameraNode->getPosition()))
+		{
+			SetStatus(Status::SEARCHING);
+		}
 	}
 
 	Entity381::Tick(dt);
@@ -119,13 +244,16 @@ SeeNo::~SeeNo()
 
 void SeeNo::Tick(float dt)
 {
-	if(engine->inputMgr->isSprinting)
+	if(theStatus == Status::WAITING || theStatus == Status::SEARCHING)
 	{
-		SetStatus(Status::ALERTED);
-	} else
+		if(engine->inputMgr->isSprinting && (pos - engine->gfxMgr->cameraNode->getPosition()).length() <= 600)
+		{
+			SetStatus(Status::ALERTED);
+		}
+	} else if(theStatus == Status::ALERTED)
 	{
 		//If the monster can't hear the player anymore
-		if(theStatus == Status::ALERTED)
+		if(!engine->inputMgr->isSprinting)
 		{
 			SetStatus(Status::SEARCHING);
 		}
@@ -148,10 +276,29 @@ SpeakNo::~SpeakNo()
 
 void SpeakNo::Tick(float dt)
 {
-	//For now, no matter what this guy sees you and begins following
-	if(theStatus != Status::ALERTED)
+
+	if(theStatus == Status::ALERTED)
 	{
-		SetStatus(Status::ALERTED);
+		if(!canSee(engine->gfxMgr->cameraNode->getPosition()))
+		{
+			SetStatus(Status::SEARCHING);
+		}
+	} else if(theStatus == Status::SEARCHING)
+	{
+		if(canSee(engine->gfxMgr->cameraNode->getPosition()))
+		{
+			SetStatus(Status::ALERTED);
+		}
+	} else
+	{
+		//Must be waiting
+		if(canSee(engine->gfxMgr->cameraNode->getPosition()))
+		{
+			SetStatus(Status::ALERTED);
+		} else if(engine->inputMgr->isSprinting && (pos - engine->gfxMgr->cameraNode->getPosition()).length() <= 600)
+		{
+			SetStatus(Status::SEARCHING);
+		}
 	}
 
 	Entity381::Tick(dt);

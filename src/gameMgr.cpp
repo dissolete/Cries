@@ -14,6 +14,7 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
     ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -400);
     gameplayTime = 0;
     entityCount = 0;
+    grid = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -38,7 +39,6 @@ void GameMgr::tick(float dt){
 	if(engine->theState == STATE::GAMEPLAY)
 	{
 		gameplayTime += dt;
-		std::cout << "Gameplay time: " << gameplayTime << std::endl;
 	}
 }
 
@@ -63,7 +63,7 @@ void GameMgr::createGround(int width, int heigth, std::string &material)
 	groundEntity->setMaterialName(material);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// Create Separated Water Ground ////////////////////////////////////////////////////////////////////////
+	// Create Separated Water Ground //////gridMgr = new Grid();//////////////////////////////////////////////////////////////////
 	Ogre::Entity* groundEntity2 = engine->gfxMgr->ogreSceneManager->createEntity("ground");
 	engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity2);
 	groundEntity2->setCastShadows(false);
@@ -103,7 +103,7 @@ void GameMgr::loadLevel(std::string levelFilename)
 	// Load the environment, objects, and characters
 	this->loadEnvironment(levelFilename);
 	this->setupEnvironment();
-	this->setupSounds();
+	//this->setupSounds();
 	this->loadObjects();
 	this->loadCharacters();
 }
@@ -198,15 +198,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// read next if any
 	readEnt = new readFromFile();
 
-	/*
-	// Testing Third Box Readin ///////////////////////////////////
-	std::cerr << "Characters" << std::endl;
-	std::cerr << objectChar << " " << characterMesh << std::endl;
-	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
-	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
-	///////////////////////////////////////////////////////////////
-	 */
-
 	// Read the World Placement //////////////////////////////////////////////////////////////////
 	char c;
 
@@ -272,9 +263,10 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			}
 
 
-			// Check for Arch
+			// Check for Arch Facing North South
 			else if( c == 'A' )
 			{
+				/*
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
@@ -285,7 +277,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
-
+      */
 			}
 
 			// See no evil
@@ -313,6 +305,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// Create Skybox for the hell of it
 	createSky();
 //	delete readEnt;
+
 }
 
 void GameMgr::setupEnvironment()

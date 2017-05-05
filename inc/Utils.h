@@ -30,9 +30,9 @@ inline float makeAnglePosNeg(float angle)
 
 inline float FixAngle(float radiansAngle){
 
-	while (radiansAngle > Ogre::Math::TWO_PI)
+	while (radiansAngle > Ogre::Math::PI)
 		radiansAngle -= Ogre::Math::TWO_PI;
-	while (radiansAngle < 0)
+	while (radiansAngle < -1 * Ogre::Math::TWO_PI)
 		radiansAngle += Ogre::Math::TWO_PI;
 
 	return radiansAngle;
