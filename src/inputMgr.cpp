@@ -20,7 +20,7 @@
 
 #include <OgreRay.h>
 #include <Grid.h>
-
+#include <VectorMath.h>
 
 InputMgr::InputMgr(Engine *engine) : Mgr(engine){
 	keyboardTimer = keyTime;
@@ -314,7 +314,7 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 void InputMgr::UpdateCamera(float dt){
 	float move = 100.0f;
 	//float desiredCameraYPos = 10.0f;
-	float yChange = 100.0f;
+	float yChange = 200.0f;
 
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
 		 isSprinting = true;
@@ -365,13 +365,35 @@ void InputMgr::UpdateCamera(float dt){
 
 	Ogre::Vector3 currentPos = engine->gfxMgr->cameraNode->getPosition();
 
-
+	// Using this to check if the player has collided with a wall
 	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(currentPos);
 
+	std::cerr << "(" << currentLocationAsGridParam->getRow() << ", " << currentLocationAsGridParam->getCol() << ")" << std::endl;
+
+	// Are we inside a wall now?
 	if(currentLocationAsGridParam and not currentLocationAsGridParam->isWalkable())
 	{
 		std::cerr << "You cant walk here" << std::endl;
+
+		// Undo the player movement
 		engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * -dirVec *  dt, Ogre::Node::TS_LOCAL);
+
+		// Get world position of player
+		currentPos = engine->gfxMgr->cameraNode->getPosition();
+
+		// Get coordinate of player
+		GridParams * playerCoor = engine->gameMgr->getGrid()->getPos(currentPos);
+
+		// It's possible the playerCoor* is null (when we are outside of the maze)
+		if(playerCoor){
+			Ogre::Vector3 normal = getWallNormal( Ogre::Vector2(playerCoor->getRow(), playerCoor->getCol()), Ogre::Vector2(currentLocationAsGridParam->getRow(), currentLocationAsGridParam->getCol()) );
+		// Adjust direction vector to slide along the wall
+			std::cerr << "The normal: " << normal.x << " " << normal.y << " " << normal.z << std::endl;
+
+			dirVec = getReflectionVector( engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec,  normal);
+			engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec *  dt + 2*normal, Ogre::Node::TS_LOCAL);
+		}
+
 //			if(dirVec.x > 0) dirVec.x -= 2*move;
 //			else if(dirVec.x < 0) dirVec.x += 2*move;
 //
