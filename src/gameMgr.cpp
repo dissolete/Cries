@@ -271,13 +271,17 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
+				*/
 
-
+				GridParams * gridParam =  this->grid->getGrid(row, col);
+				if(gridParam) gridParam->notWalkable();
 
 				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
-      */
+				gridParam = NULL;
+
+				//objectEntData = NULL;
 			}
 
 			// See no evil

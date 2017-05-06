@@ -3,6 +3,7 @@
  *
  *  Created on: Apr 12, 2017
  *      Author: chad
+ *      Editied: Hadi Rumjahn, Gage Thomas, Jake Shepard
  */
 
 #include <UiMgr.h>

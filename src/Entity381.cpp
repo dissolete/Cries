@@ -319,7 +319,7 @@ void Wall::Tick(float dt)
 }
 
 Arch::Arch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ARCH, pos, heading, eng){
-	this->meshfile = "arch.mesh";
+	this->meshfile = "Arch2.mesh";
 }
 
 Arch::~Arch()
