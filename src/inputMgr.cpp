@@ -368,6 +368,8 @@ void InputMgr::UpdateCamera(float dt){
 	// Using this to check if the player has collided with a wall
 	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(currentPos);
 
+	std::cerr << "(" << currentLocationAsGridParam->getRow() << ", " << currentLocationAsGridParam->getCol() << ")" << std::endl;
+
 	// Are we inside a wall now?
 	if(currentLocationAsGridParam and not currentLocationAsGridParam->isWalkable())
 	{
@@ -389,7 +391,7 @@ void InputMgr::UpdateCamera(float dt){
 			std::cerr << "The normal: " << normal.x << " " << normal.y << " " << normal.z << std::endl;
 
 			dirVec = getReflectionVector( engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec,  normal);
-			engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec *  dt + normal, Ogre::Node::TS_LOCAL);
+			engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec *  dt + 2*normal, Ogre::Node::TS_LOCAL);
 		}
 
 //			if(dirVec.x > 0) dirVec.x -= 2*move;
