@@ -69,8 +69,8 @@ public:
     bool isSprinting, isCrouching;
     float cameraYPos;
 
-    const float CROUCH_HEIGHT = 2.0f;
-    const float STANDING_HEIGHT = 35.0f;
+    const float CROUCH_HEIGHT = 40.0f;
+    const float STANDING_HEIGHT = 100.0f;
 
 
 
