@@ -361,12 +361,14 @@ void InputMgr::UpdateCamera(float dt){
 	}
 
 	//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());
-	engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec *  dt, Ogre::Node::TS_LOCAL);
+	//engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec *  dt, Ogre::Node::TS_LOCAL);
 
+	dirVec = engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec;
 	Ogre::Vector3 currentPos = engine->gfxMgr->cameraNode->getPosition();
+	Ogre::Vector3 nextPos = currentPos + dirVec * dt;
 
 	// Using this to check if the player has collided with a wall
-	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(currentPos);
+	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(nextPos);
 
 	std::cerr << "(" << currentLocationAsGridParam->getRow() << ", " << currentLocationAsGridParam->getCol() << ")" << std::endl;
 
@@ -376,10 +378,10 @@ void InputMgr::UpdateCamera(float dt){
 		std::cerr << "You cant walk here" << std::endl;
 
 		// Undo the player movement
-		engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * -dirVec *  dt, Ogre::Node::TS_LOCAL);
+		//engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * -dirVec *  dt, Ogre::Node::TS_LOCAL);
 
 		// Get world position of player
-		currentPos = engine->gfxMgr->cameraNode->getPosition();
+		//currentPos = engine->gfxMgr->cameraNode->getPosition();
 
 		// Get coordinate of player
 		GridParams * playerCoor = engine->gameMgr->getGrid()->getPos(currentPos);
@@ -390,8 +392,7 @@ void InputMgr::UpdateCamera(float dt){
 		// Adjust direction vector to slide along the wall
 			std::cerr << "The normal: " << normal.x << " " << normal.y << " " << normal.z << std::endl;
 
-			dirVec = getReflectionVector( engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec,  normal);
-			engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec *  dt + 2*normal, Ogre::Node::TS_LOCAL);
+			dirVec = getReflectionVector(dirVec,  normal);
 		}
 
 //			if(dirVec.x > 0) dirVec.x -= 2*move;
@@ -402,6 +403,8 @@ void InputMgr::UpdateCamera(float dt){
 	}
 	else
 		std::cerr << "You can walk here" << std::endl;
+
+	engine->gfxMgr->cameraNode->translate(dirVec *  dt, Ogre::Node::TS_LOCAL);
 
 	Ogre::Real pitchAngle, pitchAngleSign;
 	// Angle of rotation around the X-axis.
