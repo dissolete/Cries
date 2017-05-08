@@ -322,7 +322,6 @@ void UiMgr::itemSelected(OgreBites::SelectMenu *m){
     {
         std::cout <<"Menu!" << std::endl;
     }
-
 }
 
 void UiMgr::loadMenu()
@@ -330,7 +329,8 @@ void UiMgr::loadMenu()
 	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
 
 	// LOAD MAIN MENU SOUND
-	engine->soundMgr->load_song("Menu", "resources/Cries - Theme.ogg");
+	//engine->soundMgr->load_song("Menu", "resources/Cries - Theme.ogg");
+	engine->soundMgr->load_song("Menu", "resources/theme.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);

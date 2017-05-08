@@ -430,9 +430,9 @@ void InputMgr::UpdateCamera(float dt){
 
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
 		 isSprinting = true;
-		 //move *= 4;
+		 move *= 4;
 		 // testing
-		 move *= 8;
+		 //move *= 8;
 	 }
 	 else if(keyboard->isKeyDown(OIS::KC_LCONTROL))
 	 {
