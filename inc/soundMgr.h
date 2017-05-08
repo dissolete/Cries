@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <OgreVector3.h>
 #include "mgr.h"
 #include "irrKlang.h"
 
@@ -23,8 +24,10 @@ public:
 	void load_song(std::string songName, std::string filePath);
 	void load_sound(std::string soundName, std::string filePath);
 
-	void play_sound(std::string soundName);
-	void play_song(std::string songName, bool looped);
+	void play_sound2D(std::string soundName, bool looped = false);
+	void play_song2D(std::string songName, bool looped = false);
+
+	void play_sound3D(std::string soundName, bool looped, Ogre::Vector3 positionRelativeToCamera, Ogre::Vector3 lookVector);
 
 	void stop_sound(std::string soundName);
 	void stop_song(std::string soundName);
@@ -33,7 +36,7 @@ private:
 
 	irrklang::ISoundEngine * soundEngine;
 
-	std::map<std::string, std::string> m_soundMap, m_songMap;
+	std::map<std::string, irrklang::ISound*> m_soundMap, m_songMap;
 
 	bool soundEngineCreated;
 };
