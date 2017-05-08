@@ -120,5 +120,12 @@ public:
 	void Tick(float dt);
 };
 
+class EndArch: public Entity381 {
+public:
+	EndArch(Ogre::Vector3 pos, float heading, Engine *eng);
+	~EndArch();
+	void Tick(float dt);
+};
+
 
 #endif /* ENTITY381_H_ */
