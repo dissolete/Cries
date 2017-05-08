@@ -112,14 +112,14 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	if( entityType == EntityType::SPEAKNO )
 	{
-
+		ent->ogreSceneNode->setScale(10.0f, 20.0f, 10.0f);
 	}
 
 	// Check material name
 	if( entityType == EntityType::WALL )
 	{
 		ent->ogreEntity->setMaterialName("moss");
-		ent->ogreSceneNode->setScale(1, 10, 1);
+		ent->ogreSceneNode->setScale(25.0f, 500.0f, 50.0f);
 	}
 
 	entities.push_front(ent);

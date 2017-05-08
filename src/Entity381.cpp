@@ -297,7 +297,7 @@ void SeeNo::Tick(float dt)
 }
 
 SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
-	this->meshfile = "See-No.mesh";
+	this->meshfile = "Speak-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
 	this->maxSpeed = 70;
@@ -342,7 +342,7 @@ void SpeakNo::Tick(float dt)
 }
 
 Wall::Wall(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::WALL, pos, heading, eng){
-	this->meshfile = "cube.mesh";
+	this->meshfile = "Wall.mesh";
 	collShape = COLLISION_SHAPE::SQUARE;
 	collisionRange = 100.0f;
 }
