@@ -74,6 +74,16 @@ void GfxMgr::createCamera(){
 	pitchNode = yawNode->createChildSceneNode();
 	pitchNode->attachObject(ogreCamera);
 
+	// Create flashlight
+	flashLightNode = cameraNode->createChildSceneNode();
+	Ogre::Light * flashLight = ogreSceneManager->createLight("Flashlight");
+	flashLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	flashLight->setDiffuseColour(Ogre::ColourValue::White);
+	flashLight->setSpecularColour(Ogre::ColourValue::White);
+	flashLight->setDirection(0, 0, -1);
+	flashLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+
+	pitchNode->attachObject(flashLight);
 
 	//cameraNode->setPosition(0, 100, 500);
 	//ogreCamera->lookAt(0, 0, 0);
@@ -191,16 +201,11 @@ void GfxMgr::loadMenu()
 {
 	// Create background material
 	Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("MenuScreen", "General");
-	material->getTechnique(0)->getPass(0)->createTextureUnitState("GameLogoPrototype.png");
+	material->getTechnique(0)->getPass(0)->createTextureUnitState("GameLogo.png");
+	//material->getTechnique(0)->getPass(0)->createTextureUnitState("Title.mesh");
 	material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
 	material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
 	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
 	rect->setMaterial("MenuScreen");
-
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/ds3m.wav");
-	//load_sound(std::string soundName, std::string filePath);
-
-	//play_sound(std::string soundName);
-	engine->soundMgr->play_song("Layer 1", true);
 }

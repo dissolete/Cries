@@ -3,6 +3,7 @@
  *
  *  Created on: Apr 12, 2017
  *      Author: chad
+ *      Editied: Hadi Rumjahn, Gage Thomas, Jake Shepard
  */
 
 #include <UiMgr.h>
@@ -115,7 +116,8 @@ void UiMgr::init(){
     //mTrayMgr->hideCursor();
 }
 
-void UiMgr::stop(){
+void UiMgr::stop()
+{
 
 }
 
@@ -244,6 +246,14 @@ void UiMgr::tick(float dt){
 		{
 			engine->theState = STATE::MAIN_MENU;
 			engine->gfxMgr->loadMenu();
+
+			// LOAD MAIN MENU SOUND
+			engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/workspace/Cries/resources/theme.wav");
+			//load_sound(std::string soundName, std::string filePath);
+
+			//play_sound(std::string soundName);
+			engine->soundMgr->play_song("Layer 1", true);
+
 			loadMenu();//Creates the button
 		}
 	} else if(engine->theState == STATE::GAMEPLAY)

@@ -26,6 +26,9 @@ public:
 	void play_sound(std::string soundName);
 	void play_song(std::string songName, bool looped);
 
+	void stop_sound(std::string soundName);
+	void stop_song(std::string soundName);
+
 private:
 
 	irrklang::ISoundEngine * soundEngine;

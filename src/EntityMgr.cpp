@@ -95,6 +95,11 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	CreateOgreEntityAndNode(ent);
 
+	if( entityType == EntityType::ARCH )
+	{
+		ent->ogreSceneNode->yaw(Ogre::Degree(90));
+	}
+
 	if( entityType == EntityType::HEARNO )
 	{
 		//ent->ogreSceneNode->set
@@ -113,7 +118,7 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	// Check material name
 	if( entityType == EntityType::WALL )
 	{
-		ent->ogreEntity->setMaterialName("Examples/RustySteel");
+		ent->ogreEntity->setMaterialName("moss");
 		ent->ogreSceneNode->setScale(1, 10, 1);
 	}
 

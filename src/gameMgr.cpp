@@ -104,7 +104,7 @@ void GameMgr::loadLevel(std::string levelFilename)
 	// Load the environment, objects, and characters
 	this->loadEnvironment(levelFilename);
 	this->setupEnvironment();
-	this->setupSounds();
+	//this->setupSounds();
 	this->loadObjects();
 	this->loadCharacters();
 }
@@ -199,15 +199,6 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	// read next if any
 	readEnt = new readFromFile();
 
-	/*
-	// Testing Third Box Readin ///////////////////////////////////
-	std::cerr << "Characters" << std::endl;
-	std::cerr << objectChar << " " << characterMesh << std::endl;
-	std::cerr << "Located at: " << x_offset << ", " << y_offset << ", " << z_offset << std::endl;
-	std::cerr << "Scaled at: " << orientation << " " << scale << std::endl;
-	///////////////////////////////////////////////////////////////
-	 */
-
 	// Read the World Placement //////////////////////////////////////////////////////////////////
 	char c;
 
@@ -274,22 +265,25 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			}
 
 
-			// Check for Arch
+			// Check for Arch Facing North South
 			else if( c == 'A' )
 			{
+				/*
 //				std::cerr << "Spawning Arch" << std::endl;
 //				engine->entityMgr->CreateEntity(EntityType::ARCH, archPosition, 0);
 //				archPosition.x += 50;
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
+				*/
 
 				GridParams * gridParam =  this->grid->getGrid(row, col);
 				if(gridParam) gridParam->notWalkable();
 
-				engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
+				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
 				gridParam = NULL;
 
+				//objectEntData = NULL;
 			}
 
 			// See no evil
@@ -388,5 +382,8 @@ std::string GameMgr:: getNewName()
 	return std::string("object_" + std::to_string(entityCount++));
 }
 
-
+Grid* GameMgr::getGrid() const
+{
+	return this->grid;
+}
 
