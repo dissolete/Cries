@@ -23,6 +23,7 @@ class InputMgr : public Mgr, public OIS::KeyListener, public OIS::MouseListener,
 {
 private:
 	void UpdateCamera(float dt);
+	void UpdateText();
 //	void UpdateDesiredSpeedHeading(float dt);
 //	void UpdateSelection(float dt);
 //	void HandleSingleSelection();

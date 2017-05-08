@@ -8,6 +8,8 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#include <OgreVector3.h>
+
 
 inline float clamp(float value, float lower, float upper){
 	if (value > upper)
@@ -39,6 +41,12 @@ inline float FixAngle(float radiansAngle){
 }
 inline float differenceBetweenAngles(float angle1, float angle2){
     return makeAnglePosNeg(angle1 - angle2);
+}
+
+inline void setMagnitude(Ogre::Vector3 &vec, float mag)
+{
+	float multiplier = mag / vec.length();
+	vec = vec * multiplier;
 }
 
 

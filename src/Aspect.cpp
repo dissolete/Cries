@@ -32,7 +32,7 @@ Renderable::~Renderable(){
 void Renderable::Tick(float dt){
 	entity->ogreSceneNode->setPosition(entity->pos);
 	entity->ogreSceneNode->setOrientation(Ogre::Quaternion::IDENTITY);
-	entity->ogreSceneNode->yaw(Ogre::Radian(-entity->heading));
+	entity->ogreSceneNode->yaw(Ogre::Radian(-entity->heading + Ogre::Math::HALF_PI));
 }
 
 Physics::Physics(Entity381 * ent): Aspect(ent) {
@@ -63,6 +63,7 @@ void Physics::Tick(float dt){
 
 	//entity->speed = std::max(entity->minSpeed, std::min(entity->speed, entity->maxSpeed)); //clamp
 
+
 	if(entity->heading < entity->desiredHeading)
 		entity->heading += entity->turnRate * dt;
 	if(entity->heading > entity->desiredHeading)
@@ -72,6 +73,25 @@ void Physics::Tick(float dt){
 
 	entity->vel = Ogre::Vector3(cos(entity->heading) * entity->speed, 0, sin(entity->heading) * entity->speed);
 	entity->pos += entity->vel * dt;
+	//If this movement places the entity in a wall, reverse direction
+	if(!(entity->engine->gameMgr->grid->getPos(entity->pos)->isWalkable()))
+	{
+		entity->pos -= entity->vel *dt;
+	}
+	Ogre::Vector3 diff = entity->pos - entity->engine->gfxMgr->cameraNode->getPosition();
+	diff.y = 0;//Don't count height differences
+	if(diff.length() < 20 && (entity->entityType == EntityType::SEENO ||
+			entity->entityType == EntityType::SPEAKNO || entity->entityType == EntityType::HEARNO))
+	{
+		std::cout << "Game over distance reached" << std::endl;
+		entity->engine->theState = STATE::GAMEOVER;
+		entity->engine->uiMgr->loadGameOver();
+	}
+	/*if(entity->entityType == EntityType::SEENO || entity->entityType == EntityType::SPEAKNO
+			|| entity->entityType == EntityType::HEARNO)
+	{
+		entity->engine->entityMgr->fixCollisions(entity);
+	}*/
 
 }
 

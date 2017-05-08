@@ -56,6 +56,7 @@ public:
 	float gameplayTime;
 
 	Grid* getGrid() const;
+	GridParams *endPt;
 
 	std::vector<Ogre::SceneNode*> entitySceneNodes;
 

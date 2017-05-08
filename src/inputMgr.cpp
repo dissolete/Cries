@@ -124,6 +124,114 @@ void InputMgr::windowClosed(Ogre::RenderWindow* rw){
 
 bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 	std::cout << "Key Pressed: " << arg.key << std::endl;
+	//Handle name input:
+	if(engine->theState == STATE::GAMEOVER && engine->uiMgr->highScores == NULL)
+	{
+		char addition = '\t';
+		//I'm so sorry
+		switch(arg.key) {
+		case 0x10:
+			addition = 'q';
+			break;
+		case 0x11:
+			addition = 'w';
+			break;
+		case 0x12:
+			addition = 'e';
+			break;
+		case 0x13:
+			addition = 'r';
+			break;
+		case 0x14:
+			addition = 't';
+			break;
+		case 0x15:
+			addition = 'y';
+			break;
+		case 0x16:
+			addition = 'u';
+			break;
+		case 0x17:
+			addition = 'i';
+			break;
+		case 0x18:
+			addition = 'o';
+			break;
+		case 0x19:
+			addition = 'p';
+			break;
+		case 0x1E:
+			addition = 'a';
+			break;
+		case 0x1F:
+			addition = 's';
+			break;
+		case 0x20:
+			addition = 'd';
+			break;
+		case 0x21:
+			addition = 'f';
+			break;
+		case 0x22:
+			addition = 'g';
+			break;
+		case 0x23:
+			addition = 'h';
+			break;
+		case 0x24:
+			addition = 'j';
+			break;
+		case 0x25:
+			addition = 'k';
+			break;
+		case 0x26:
+			addition = 'l';
+			break;
+		case 0x2C:
+			addition = 'z';
+			break;
+		case 0x2D:
+			addition = 'x';
+			break;
+		case 0x2E:
+			addition = 'c';
+			break;
+		case 0x2F:
+			addition = 'v';
+			break;
+		case 0x30:
+			addition = 'b';
+			break;
+		case 0x31:
+			addition = 'n';
+			break;
+		case 0x32:
+			addition = 'm';
+			break;
+		case 0x39:
+			addition = ' ';
+			break;
+		}
+
+		//Check for capitalization
+		if(arg.key != 0x39 && addition != '\t' && (keyboard->isKeyDown(OIS::KC_LSHIFT) ||
+				keyboard->isKeyDown(OIS::KC_RSHIFT)))
+		{
+			addition = 'A' + (addition - 'a');
+		}
+		if(addition != '\t')
+		{
+			engine->uiMgr->nameLabel->setCaption(engine->uiMgr->nameLabel->getCaption() + addition);
+			//Handle backspace
+		} else if(arg.key == OIS::KC_BACK && engine->uiMgr->nameLabel->getCaption().length() > 0)
+		{
+			engine->uiMgr->nameLabel->setCaption(engine->uiMgr->nameLabel->getCaption().substr(0,
+					engine->uiMgr->nameLabel->getCaption().length() - 1));
+		} else if(arg.key == OIS::KC_RETURN)
+		{
+			engine->uiMgr->loadHighScores(engine->uiMgr->playerSurvived);
+		}
+	}
 	return true;
 }
 bool InputMgr::keyReleased(const OIS::KeyEvent &arg){
@@ -314,6 +422,7 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 void InputMgr::UpdateCamera(float dt){
 	float move = 100.0f;
 	//float desiredCameraYPos = 10.0f;
+
 	float yChange = 200.0f;
 
 	 if(keyboard->isKeyDown(OIS::KC_LSHIFT)){
@@ -449,6 +558,13 @@ void InputMgr::UpdateCamera(float dt){
 //		std::cerr << "The area you are standing is walkable! :)" << std::endl;
 
 	engine->gfxMgr->cameraNode->setPosition(newPos);
+
+	//If the player has reached the endpt
+	if(engine->gameMgr->grid->getPos(newPos) == engine->gameMgr->endPt)
+	{
+		engine->theState = STATE::GAMEOVER;
+		engine->uiMgr->loadGameOver(true);
+	}
 
 }
 //
