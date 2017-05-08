@@ -11,7 +11,7 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -400);
+    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -300);
     gameplayTime = 0;
     entityCount = 0;
     grid = 0;
@@ -145,7 +145,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
-	createCeiling( gridRowSize*100, gridColSize*100 ); //DEBUG THIS LATER
+	createCeiling( gridRowSize*1000, gridColSize*1000 );
 
 	// Setup the grid
 	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
