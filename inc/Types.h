@@ -15,8 +15,7 @@ enum class EntityType {
 	SPEAKNO,
 	WALL,
 	ARCH,
-	LOGO,
-	ENDARCH
+	LOGO
 };
 
 enum class COMMAND_TYPE{

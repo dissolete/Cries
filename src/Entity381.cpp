@@ -386,20 +386,6 @@ void Logo::Tick(float dt)
 	Entity381::Tick(dt);
 }
 
-EndArch::EndArch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ENDARCH, pos, heading, eng){
-	this->meshfile = "Angel_Archway_2x4.mesh";
-}
-
-EndArch::~EndArch()
-{
-//
-}
-
-void EndArch::Tick(float dt)
-{
-	Entity381::Tick(dt);
-}
-
 
 
 
