@@ -229,7 +229,7 @@ HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(Entity
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
-	this->maxSpeed = 70;
+	this->maxSpeed = 100;
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
@@ -264,7 +264,7 @@ SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityTy
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
-	this->maxSpeed = 70;
+	this->maxSpeed = 100;
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
@@ -300,7 +300,7 @@ SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(Enti
 	this->meshfile = "Speak-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
-	this->maxSpeed = 70;
+	this->maxSpeed = 100;
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
