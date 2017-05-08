@@ -378,12 +378,17 @@ GridParams* Grid::getPos( Ogre::Vector3 position )
 {
 
 	// Closest Row Value
-	int r = clamp(round((position.z - GRID_MULT/2.0 + (this->rowNum * GRID_MULT)/2.0) /
-		float(GRID_MULT)), 0, this->rowNum - 1);
+//	int r = clamp(round((position.z - GRID_MULT/2.0 + (this->rowNum * GRID_MULT)/2.0) /
+//		float(GRID_MULT)), 0, this->rowNum - 1);
+//
+//	int c = clamp(round((position.x - GRID_MULT/2.0 + (this->colNum * GRID_MULT)/2.0) /
+//		float(GRID_MULT)), 0, this->colNum - 1);
 
-	int c = clamp(round((position.x - GRID_MULT/2.0 + (this->colNum * GRID_MULT)/2.0) /
-		float(GRID_MULT)), 0, this->colNum - 1);
+	int r = (position.z + GRID_MULT/2.0)/(GRID_MULT) + this->rowNum/2;
+	int c = (position.x + GRID_MULT/2.0)/(GRID_MULT) + this->colNum/2;
 
+	//std::cerr << "The row and column calculated is: " << r << " " << c << std::endl;
+	std::cerr << "Rows: " << this->rowNum << ", Cols: " << this->colNum << std::endl;
 
 	return this->getGrid(r, c);
 }
