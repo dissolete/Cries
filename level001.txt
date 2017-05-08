@@ -1,4 +1,4 @@
-22 18
+16 29
 Examples/BeachStones
 
 Objects
@@ -9,25 +9,19 @@ Characters
 C ninja.mesh 0.0 0.0 0.0  0.0 0.15
 
 World
-WWWWWWWWWWWWWWWWWW
-WWWWWWWWWWWAWA...E
-WWWW........W....W
-WWWW.A....A..A...W
-WWW.AWWWWWWW..WWWW
-WW...W..WWW...WWWW
-W......A.WW...WWWW
-W....AWW.WW...WWWW
-WA.WW..A.AWAWWWWWW
-W..WWWW......WWWWW
-W..W..A..H...WWWWW
-W..A.C.A.....WWWWW
-W..W..W.W.W..WWWWW	
-W..W..W.W..WAWWWWW
-WWWWWWW..WWW.WWWWW
-...W.....WWW.....W
-...A...A.......A.W
-..WWWCWW.W..WWWWWW
-..WWW.WW.WA.WWWWWW
-..WWW.WW.W.WWWWWWW
-..WWWAWWWW..WWWWWW
-P.WWW.......WWWWWW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W...........................W
+W...........................W
+W...........................W
+W...........................W
+W...........................W
+W..............H............W
+W...........................W
+W...........................W
+W...........................W
+WP..........................W
+W...........................W
+W...........................W
+W...........................W
+W..............E............W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWW
