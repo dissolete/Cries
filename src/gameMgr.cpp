@@ -40,6 +40,13 @@ void GameMgr::tick(float dt){
 	if(engine->theState == STATE::GAMEPLAY)
 	{
 		gameplayTime += dt;
+
+//		if(engine->inputMgr->isMoving)
+//		{
+//			engine->soundMgr->play_sound2D("Slow Footsteps", true);
+//		}
+//		else
+//			engine->soundMgr->stop_sound("Slow Footsteps");
 	}
 }
 
@@ -104,7 +111,7 @@ void GameMgr::loadLevel(std::string levelFilename)
 	// Load the environment, objects, and characters
 	this->loadEnvironment(levelFilename);
 	this->setupEnvironment();
-	//this->setupSounds();
+	this->setupSounds();
 	this->loadObjects();
 	this->loadCharacters();
 }
@@ -275,13 +282,13 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
 				*/
 
-				GridParams * gridParam =  this->grid->getGrid(row, col);
-				if(gridParam) gridParam->notWalkable();
+				//GridParams * gridParam =  this->grid->getGrid(row, col);
+				//if(gridParam) gridParam->notWalkable();
 
 				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
-				gridParam = NULL;
+				//gridParam = NULL;
 
 				//objectEntData = NULL;
 			}
@@ -337,11 +344,22 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
+	//engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
-	engine->soundMgr->play_song("Layer 1", true);
+	//engine->soundMgr->play_song2D("Layer 1", true);
+
+	//engine->soundMgr->load_song("Menu Theme", "resources/Cries - Theme.wav");
+
+	engine->soundMgr->stop_song("Menu");
+	engine->soundMgr->load_song("Cycle", "resources/Cries - Cycle.ogg");
+	engine->soundMgr->load_song("Release", "resources/Cries - Release.ogg");
+	engine->soundMgr->load_sound("Slow Footsteps", "resources/Cries - Slow Footsteps.ogg");
+
+	engine->soundMgr->play_song2D("Cycle", true);
+
+
 }
 
 void GameMgr::loadObjects()

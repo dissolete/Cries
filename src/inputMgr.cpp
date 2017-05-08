@@ -62,8 +62,10 @@ InputMgr::InputMgr(Engine *engine) : Mgr(engine){
 	windowResized(engine->gfxMgr->ogreRenderWindow);
 	Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 
-	isCrouching = isSprinting = false;
+	isMoving = isCrouching = isSprinting = false;
 	cameraYPos = STANDING_HEIGHT;
+
+	priorNormal = Ogre::Vector3::ZERO;
 
 }
 
@@ -123,7 +125,8 @@ void InputMgr::windowClosed(Ogre::RenderWindow* rw){
 }
 
 bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
-	std::cout << "Key Pressed: " << arg.key << std::endl;
+
+	//std::cout << "Key Pressed: " << arg.key << std::endl;
 	//Handle name input:
 	if(engine->theState == STATE::GAMEOVER && engine->uiMgr->highScores == NULL)
 	{
@@ -235,7 +238,7 @@ bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 	return true;
 }
 bool InputMgr::keyReleased(const OIS::KeyEvent &arg){
-	std::cout << "Checking key release" << std::endl;
+	//std::cout << "Checking key release" << std::endl;
 	if(arg.key == OIS::KC_LSHIFT)
 		isSprinting = false;
 	return true;
@@ -286,7 +289,7 @@ bool InputMgr::mouseMoved(const OIS::MouseEvent &arg){
 
 bool InputMgr::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
 	if (id == OIS::MB_Left) {
-		std::cout << "Left mouse pressed" << std::endl;
+		//std::cout << "Left mouse pressed" << std::endl;
 		//HandleSingleSelection();
 	} else if (id == OIS::MB_Right){
 		//HandleCommand();
@@ -354,10 +357,10 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 //}
 
 //void InputMgr::HandleCommand(){
-//	std::cout << "Handling command" << std::endl;
+//	//std::cout << "Handling command" << std::endl;
 //	if (engine->entityMgr->selectedEntity != 0){
 //		Ogre::Vector3 pos = GetPositionUnderMouse();
-//		std::cout << "Right Click position: " << pos << std::endl;
+//		//std::cout << "Right Click position: " << pos << std::endl;
 //		if(pos != Ogre::Vector3::NEGATIVE_UNIT_Y){
 //			Entity381 *closest = GetClosestEntityToPosition(pos);
 //			if(closest == 0){
@@ -388,7 +391,7 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 //}
 
 //void InputMgr::CommandIntercept(Entity381* target){
-//	std::cout << "Intercepting: " << target->meshfile << std::endl;
+//	//std::cout << "Intercepting: " << target->meshfile << std::endl;
 //	Entity381* selectedEntity = engine->entityMgr->selectedEntity;
 //	Intercept *interceptCommand = new Intercept(selectedEntity, target);
 //	interceptCommand->init();
@@ -396,7 +399,7 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 //}
 //
 //void InputMgr::CommandFollow(Entity381 *target){
-//	std::cout << "Following: " << target->meshfile << std::endl;
+//	//std::cout << "Following: " << target->meshfile << std::endl;
 //	Entity381* selectedEntity = engine->entityMgr->selectedEntity;
 //	Follow *followCommand = new Follow(selectedEntity, target);
 //	followCommand->init();
@@ -407,7 +410,7 @@ bool InputMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 
 
 //void InputMgr::CommandMoveTo(Ogre::Vector3 position){
-//	std::cout << "Moving to: " << position << std::endl;
+//	//std::cout << "Moving to: " << position << std::endl;
 //	Entity381* selectedEntity = engine->entityMgr->selectedEntity;
 //	MoveTo* moveToCommand = new MoveTo(selectedEntity, position);
 //	moveToCommand->init();
@@ -469,48 +472,48 @@ void InputMgr::UpdateCamera(float dt){
 		dirVec.x += move;
 	}
 
-	//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());
-	engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec *  dt, Ogre::Node::TS_LOCAL);
+	if(dirVec != Ogre::Vector3::ZERO)
+		isMoving = true;
+	else
+		isMoving = false;
 
+	//engine->gfxMgr->cameraNode->setOrientation(pitchNode->getOrientation() * yawNode->getOrientation());
+	//engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec *  dt, Ogre::Node::TS_LOCAL);
+
+	dirVec = engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() *dirVec;
 	Ogre::Vector3 currentPos = engine->gfxMgr->cameraNode->getPosition();
+	Ogre::Vector3 nextPos = currentPos + dirVec * dt;
 
 	// Using this to check if the player has collided with a wall
-	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(currentPos);
+	GridParams * currentLocationAsGridParam = engine->gameMgr->getGrid()->getPos(nextPos);
 
-	std::cerr << "(" << currentLocationAsGridParam->getRow() << ", " << currentLocationAsGridParam->getCol() << ")" << std::endl;
+	//std::cerr << "(" << currentLocationAsGridParam->getRow() << ", " << currentLocationAsGridParam->getCol() << ")" << std::endl;
 
 	// Are we inside a wall now?
 	if(currentLocationAsGridParam and not currentLocationAsGridParam->isWalkable())
 	{
-		std::cerr << "You cant walk here" << std::endl;
 
 		// Undo the player movement
-		engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * -dirVec *  dt, Ogre::Node::TS_LOCAL);
+		//engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * -dirVec *  dt, Ogre::Node::TS_LOCAL);
 
 		// Get world position of player
-		currentPos = engine->gfxMgr->cameraNode->getPosition();
+		//currentPos = engine->gfxMgr->cameraNode->getPosition();
 
 		// Get coordinate of player
 		GridParams * playerCoor = engine->gameMgr->getGrid()->getPos(currentPos);
 
 		// It's possible the playerCoor* is null (when we are outside of the maze)
-		if(playerCoor){
+		if(playerCoor)
+		{
 			Ogre::Vector3 normal = getWallNormal( Ogre::Vector2(playerCoor->getRow(), playerCoor->getCol()), Ogre::Vector2(currentLocationAsGridParam->getRow(), currentLocationAsGridParam->getCol()) );
-		// Adjust direction vector to slide along the wall
-			std::cerr << "The normal: " << normal.x << " " << normal.y << " " << normal.z << std::endl;
 
-			dirVec = getReflectionVector( engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec,  normal);
-			engine->gfxMgr->cameraNode->translate(engine->gfxMgr->pitchNode->getOrientation() * engine->gfxMgr->yawNode->getOrientation() * dirVec *  dt + 2*normal, Ogre::Node::TS_LOCAL);
+			dirVec = getReflectionVector(dirVec, normal, priorNormal);
+
+			priorNormal = normal;
 		}
-
-//			if(dirVec.x > 0) dirVec.x -= 2*move;
-//			else if(dirVec.x < 0) dirVec.x += 2*move;
-//
-//			if(dirVec.z > 0) dirVec.z -= 2*move;
-//			else if(dirVec.z < 0) dirVec.z += 2*move;
 	}
-	else
-		std::cerr << "You can walk here" << std::endl;
+
+	engine->gfxMgr->cameraNode->translate(dirVec *  dt, Ogre::Node::TS_LOCAL);
 
 	Ogre::Real pitchAngle, pitchAngleSign;
 	// Angle of rotation around the X-axis.
