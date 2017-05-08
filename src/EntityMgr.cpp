@@ -121,3 +121,24 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	return ent;
 }
 
+//Will not handle the situation where it collides with two entities on opposite sides of each other
+void EntityMgr::fixCollisions(Entity381 *ent)
+{
+	for(Entity381 *other : entities)
+	{
+		//If the entity is not itself, and the entity is not an arch, check for collisions
+		if(ent != other && ent->entityType != EntityType::ARCH)
+		{
+			Ogre::Vector3 offset = other->pos - ent->pos;
+			//If the offset's length is less than the sum of their collision ranges, move back
+			if(ent->collides(other))
+			{
+				//Find how far you must offset the entity to remove it from the other entity
+				setMagnitude(offset, (ent->collisionRange + other->collisionRange - offset.length()));
+				ent->ogreSceneNode->translate(offset, Ogre::Node::TS_LOCAL);
+				ent->pos = ent->pos + offset;
+			}
+		}
+	}
+}
+

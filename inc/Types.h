@@ -35,7 +35,8 @@ enum class ASPECT_TYPE {
 enum class STATE {
 	SPLASH,
 	MAIN_MENU,
-	GAMEPLAY
+	GAMEPLAY,
+	GAMEOVER
 };
 
 enum class Status {
@@ -53,6 +54,11 @@ enum class DIRECTION {
 	NORTHEAST,
 	EAST,
 	SOUTHEAST
+};
+
+enum class COLLISION_SHAPE {
+	CIRCULAR,
+	SQUARE
 };
 
 #endif /* TYPES_H_ */

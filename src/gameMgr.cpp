@@ -15,6 +15,7 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
     gameplayTime = 0;
     entityCount = 0;
     grid = 0;
+    endPt = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -250,6 +251,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				// Find the Start Position and set camera to there
 				// Make camera position higher then rest
 				//gridPositionInWorld.y += 20;
+				gridPositionInWorld.y = gridPositionInWorld.y + 100;
 				engine->gfxMgr->cameraNode->setPosition( gridPositionInWorld );
 				std::cerr << gridPositionInWorld << std::endl;
 			}
@@ -303,6 +305,9 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			else if(c == 'H')
 			{
 				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
+			} else if(c == 'E')
+			{
+				endPt = grid->getPos(gridPositionInWorld);
 			}
 		}
 

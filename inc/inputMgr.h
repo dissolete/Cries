@@ -23,6 +23,7 @@ class InputMgr : public Mgr, public OIS::KeyListener, public OIS::MouseListener,
 {
 private:
 	void UpdateCamera(float dt);
+	void UpdateText();
 //	void UpdateDesiredSpeedHeading(float dt);
 //	void UpdateSelection(float dt);
 //	void HandleSingleSelection();
@@ -69,8 +70,8 @@ public:
     bool isSprinting, isCrouching;
     float cameraYPos;
 
-    const float CROUCH_HEIGHT = 2.0f;
-    const float STANDING_HEIGHT = 35.0f;
+    const float CROUCH_HEIGHT = 20.0f;
+    const float STANDING_HEIGHT = 135.0f;
 
 
 
