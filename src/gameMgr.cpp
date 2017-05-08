@@ -306,8 +306,12 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			else if(c == 'H')
 			{
 				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
-			} else if(c == 'E')
+			}
+
+			// Create Ending Arch
+			else if(c == 'E')
 			{
+				engine->entityMgr->CreateEntity(EntityType::ENDARCH, gridPositionInWorld, 0);
 				endPt = grid->getPos(gridPositionInWorld);
 			}
 		}
