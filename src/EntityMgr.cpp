@@ -119,7 +119,7 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	if( entityType == EntityType::WALL )
 	{
 		ent->ogreEntity->setMaterialName("moss");
-		ent->ogreSceneNode->setScale(1, 10, 1);
+		ent->ogreSceneNode->setScale(50, 250, 50);
 	}
 
 	entities.push_front(ent);

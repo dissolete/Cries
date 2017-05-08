@@ -145,7 +145,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
-	createCeiling( gridRowSize*1000, gridColSize*1000 ); //DEBUG THIS LATER
+	createCeiling( gridRowSize*100, gridColSize*100 ); //DEBUG THIS LATER
 
 	// Setup the grid
 	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
