@@ -66,11 +66,13 @@ public:
     OIS::Mouse*        mouse;
     OIS::Keyboard*     keyboard;
 
-    bool isSprinting, isCrouching;
+    bool isSprinting, isCrouching, isMoving;
     float cameraYPos;
 
     const float CROUCH_HEIGHT = 40.0f;
     const float STANDING_HEIGHT = 100.0f;
+
+    Ogre::Vector3 priorNormal; // Helpful for calculating wall normals :)
 
 
 

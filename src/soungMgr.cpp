@@ -92,7 +92,7 @@ void SoundMgr::play_sound2D(std::string soundName, bool looped)
 
 			// Make sure this isn't null, god forbid a segfault happens here that would be really annoying
 			if(sound)
-				soundEngine->play2D(sound->getSoundSource(), looped);
+				soundEngine->play2D(sound->getSoundSource(), looped, false, true);
 			else
 				std::cerr << "For some reason, the sound returned from the map for " << soundName << " was null. Skipping..." << std::endl;
 		}
@@ -114,7 +114,7 @@ void SoundMgr::play_song2D(std::string songName, bool looped)
 			irrklang::ISound * song = m_songMap[songName];
 
 			if(song)
-				soundEngine->play2D(song->getSoundSource(), looped);
+				soundEngine->play2D(song->getSoundSource(), looped, false, true);
 			else
 				std::cerr << "For some reason, the song returned from the map for " << songName << " was null. Skipping..." << std::endl;
 		}
@@ -162,10 +162,10 @@ void SoundMgr::stop_song(std::string songName)
 		{
 			irrklang::ISound * song = m_songMap[songName];
 
-			if(song){
-				soundEngine->removeSoundSource(song->getSoundSource());
+			if(song and not song->isFinished()){
+				//soundEngine->removeSoundSource(song->getSoundSource());
 				song->stop();
-				song->drop();
+				//song->drop();
 			}
 			else std::cerr << "Could not stop song " << songName << " because the song was null in the song map!" << std::endl;
 		}
@@ -182,7 +182,11 @@ void SoundMgr::stop_sound(std::string soundName)
 			{
 				irrklang::ISound * sound = m_soundMap[soundName];
 
-				if(sound) sound->stop();
+				if(sound and not sound->isFinished()){
+					//soundEngine->removeSoundSource(sound->getSoundSource());
+					sound->stop();
+					//sound->drop();
+				}
 				else std::cerr << "Could not stop sound " << soundName << " because the sound was null in the sound map!" << std::endl;
 			}
 		}

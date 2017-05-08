@@ -26,7 +26,7 @@ void GameMgr::init(){
 }
 
 void GameMgr::loadLevel(){
-	this->loadLevel("level001.txt");
+	this->loadLevel("level002.txt");
 
 }
 
@@ -39,6 +39,13 @@ void GameMgr::tick(float dt){
 	if(engine->theState == STATE::GAMEPLAY)
 	{
 		gameplayTime += dt;
+
+//		if(engine->inputMgr->isMoving)
+//		{
+//			engine->soundMgr->play_sound2D("Slow Footsteps", true);
+//		}
+//		else
+//			engine->soundMgr->stop_sound("Slow Footsteps");
 	}
 }
 
@@ -273,13 +280,13 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
 				*/
 
-				GridParams * gridParam =  this->grid->getGrid(row, col);
-				if(gridParam) gridParam->notWalkable();
+				//GridParams * gridParam =  this->grid->getGrid(row, col);
+				//if(gridParam) gridParam->notWalkable();
 
 				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
-				gridParam = NULL;
+				//gridParam = NULL;
 
 				//objectEntData = NULL;
 			}
@@ -343,6 +350,7 @@ void GameMgr::setupSounds()
 	engine->soundMgr->stop_song("Menu");
 	engine->soundMgr->load_song("Cycle", "resources/Cries - Cycle.ogg");
 	engine->soundMgr->load_song("Release", "resources/Cries - Release.ogg");
+	engine->soundMgr->load_sound("Slow Footsteps", "resources/Cries - Slow Footsteps.ogg");
 
 	engine->soundMgr->play_song2D("Cycle", true);
 

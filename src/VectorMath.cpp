@@ -1,26 +1,39 @@
 #include <VectorMath.h>
 
 
-Ogre::Vector3 getReflectionVector(Ogre::Vector3 incoming, Ogre::Vector3 normal)
+Ogre::Vector3 getReflectionVector(Ogre::Vector3 incoming, Ogre::Vector3 normal, Ogre::Vector3 priorNormal)
 {
 	Ogre::Vector3 calculatedVector = Ogre::Vector3::ZERO;
 
-	// Check normal
-
-	// If left or right wall
-	if(normal.z == 0)
+	if(normal.x == 0 and normal.z == 0)
 	{
+		// Use prior normal
+		if(priorNormal.x == 0)
+			calculatedVector.x = incoming.x;
+		else
+			calculatedVector.z = incoming.z;
+	}
+	else if(normal.x == 0 and normal.z != 0)
+	{
+		//std::cerr << "a" << std::endl;
+
+		calculatedVector.x = incoming.x;
+
+	}
+	else if(normal.z == 0 and normal.x != 0)
+	{
+		std::cerr << "b" << std::endl;
 		calculatedVector.z = incoming.z;
 	}
 
-	// or top and bottom wall
-	//(normal.x == 0)
 	else
 	{
-		calculatedVector.x = incoming.x;
+		//std::cerr << "else reached in getReflectionVector! The normal is "<< normal.x << ", "<< normal.y << ", "<< normal.z << ", "<< std::endl;
+		if(priorNormal.x == 0)
+			calculatedVector.x = incoming.x;
+		else
+			calculatedVector.z = incoming.z;
 	}
-
-
 
 	return calculatedVector;
 }
