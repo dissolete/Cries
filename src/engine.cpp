@@ -96,4 +96,5 @@ void Engine::loadLevel()
 	entityMgr->loadLevel();
 	gameMgr->loadLevel();
 	uiMgr->loadLevel();
+	soundMgr->loadLevel();
 }
