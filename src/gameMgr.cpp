@@ -41,12 +41,12 @@ void GameMgr::tick(float dt){
 	{
 		gameplayTime += dt;
 
-//		if(engine->inputMgr->isMoving)
-//		{
-//			engine->soundMgr->play_sound2D("Slow Footsteps", true);
-//		}
-//		else
-//			engine->soundMgr->stop_sound("Slow Footsteps");
+		if(engine->inputMgr->isMoving)
+		{
+			engine->soundMgr->play_sound2D("Slow Footsteps", true);
+		}
+		else
+			engine->soundMgr->stop_sound("Slow Footsteps");
 	}
 }
 
@@ -357,9 +357,9 @@ void GameMgr::setupSounds()
 	//engine->soundMgr->load_song("Menu Theme", "resources/Cries - Theme.wav");
 
 	engine->soundMgr->stop_song("Menu");
-	engine->soundMgr->load_song("Cycle", "resources/Cries - Cycle.ogg");
-	engine->soundMgr->load_song("Release", "resources/Cries - Release.ogg");
-	engine->soundMgr->load_sound("Slow Footsteps", "resources/Cries - Slow Footsteps.ogg");
+	engine->soundMgr->load_song("Cycle", "sounds/Cries-Cycle.wav");
+	engine->soundMgr->load_song("Release", "sounds/Cries-Release.wav");
+	engine->soundMgr->load_sound("Slow Footsteps", "sounds/Cries-Slow_Footsteps.wav");
 
 	engine->soundMgr->play_song2D("Cycle", true);
 

@@ -330,7 +330,7 @@ void UiMgr::loadMenu()
 
 	// LOAD MAIN MENU SOUND
 	//engine->soundMgr->load_song("Menu", "resources/Cries - Theme.ogg");
-	engine->soundMgr->load_song("Menu", "resources/theme.wav");
+	engine->soundMgr->load_song("Menu", "sounds/Cries-Theme.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);

@@ -395,11 +395,10 @@ EndArch::~EndArch()
 //
 }
 
-void EndArch::EndArch(float dt)
+void EndArch::Tick(float dt)
 {
 	Entity381::Tick(dt);
 }
-
 
 
 
