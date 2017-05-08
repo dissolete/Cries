@@ -37,9 +37,11 @@ void SoundMgr::loadLevel()
 void SoundMgr::stop()
 {
 	// Cleanup sound engine
-	if(soundEngineCreated) soundEngine->drop();
+	//if(soundEngineCreated)
+		//soundEngine->drop();
+	//soundEngine->setIsPaused(true);
 
-	soundEngineCreated = false;
+	//soundEngineCreated = false;
 }
 
 void SoundMgr::load_song(std::string songName, std::string filepath)
@@ -162,12 +164,17 @@ void SoundMgr::stop_song(std::string songName)
 		{
 			irrklang::ISound * song = m_songMap[songName];
 
+
+			soundEngine->removeSoundSource( song->getSoundSource() );
+			/*
 			if(song and not song->isFinished()){
 				//soundEngine->removeSoundSource(song->getSoundSource());
-				song->stop();
+				//song->stop();
 				//song->drop();
+
 			}
-			else std::cerr << "Could not stop song " << songName << " because the song was null in the song map!" << std::endl;
+			*/
+			//else std::cerr << "Could not stop song " << songName << " because the song was null in the song map!" << std::endl;
 		}
 	}
 	else
@@ -182,12 +189,17 @@ void SoundMgr::stop_sound(std::string soundName)
 			{
 				irrklang::ISound * sound = m_soundMap[soundName];
 
+				soundEngine->removeSoundSource( sound->getSoundSource() );
+
+				/*
 				if(sound and not sound->isFinished()){
 					//soundEngine->removeSoundSource(sound->getSoundSource());
 					sound->stop();
 					//sound->drop();
 				}
-				else std::cerr << "Could not stop sound " << soundName << " because the sound was null in the sound map!" << std::endl;
+				*/
+
+				//else std::cerr << "Could not stop sound " << soundName << " because the sound was null in the sound map!" << std::endl;
 			}
 		}
 		else

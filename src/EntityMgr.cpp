@@ -77,6 +77,10 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 		ent = new Logo(position, heading, engine);
 		break;
 
+	case EntityType::ENDARCH:
+		ent = new EndArch(position, heading, engine);
+		break;
+
 	default:
 		ent = new HearNo(position, heading, engine);
 		break;
@@ -120,6 +124,11 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 	{
 		ent->ogreEntity->setMaterialName("moss");
 		ent->ogreSceneNode->setScale(25.0f, 500.0f, 50.0f);
+	}
+
+	if( entityType == EntityType::ENDARCH )
+	{
+		ent->ogreSceneNode->setScale( 25.0f, 25.0f, 25.0f );
 	}
 
 	entities.push_front(ent);
