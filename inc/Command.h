@@ -34,14 +34,15 @@ public:
 class Search: public Command {
 
 public:
-	Search(Entity381* ent, Ogre::Vector3 location);
+	Search(Entity381* ent);
 	~Search();
 
 	void init();
 	void tick(float dt);
 	bool done();
 
-	Ogre::Vector3 targetLocation;
+	bool isDone;
+
 	float MOVE_DISTANCE_THRESHOLD;
 
 };

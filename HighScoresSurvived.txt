@@ -1,0 +1,10 @@
+Kars: 59930
+Wham: 59931
+ACDC: 59932
+Santana: 59933
+Dio: 59934
+Tarkus: 59935
+Yes: 59936
+A-ha: 59937
+The Police: 59938
+Tears for Fears: 59939

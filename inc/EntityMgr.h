@@ -20,6 +20,7 @@ class Entity381;
 
 #include <Entity381.h>
 #include <mgr.h>
+#include <Utils.h>
 
 class Engine;
 
@@ -44,6 +45,7 @@ public:
 
 	Entity381 *CreateEntity(EntityType entityType, Ogre::Vector3 pos, float yaw = 0);
 	void CreateOgreEntityAndNode(Entity381 *ent);
+	void fixCollisions(Entity381 *ent);
 };
 
 class readFromFile {

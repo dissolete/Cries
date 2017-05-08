@@ -14,6 +14,7 @@
 #include <Grid.h>
 
 #include <Types.h>
+#include <Utils.h>
 
 
 #include <list>
@@ -40,12 +41,16 @@ public:
 	virtual void Tick(float dt);
 	void DefaultInit();
 	void SetStatus(Status newStatus);
+	bool collides(Entity381 *other);
 
 	//static stuff
 	float maxSpeed, minSpeed;
 	float acceleration, turnRate;
 	EntityType entityType;
 	std::string meshfile;
+
+	COLLISION_SHAPE collShape;
+	float collisionRange;
 
 	//Ogre stuff
 	Ogre::Vector3 pos;

@@ -20,7 +20,6 @@ Entity381::Entity381(EntityType entType, Ogre::Vector3 pos, float heading, Engin
 	this->vel = Ogre::Vector3::ZERO;
 	this->speed = 0;
 
-
 	this->aspects.clear();
 	Renderable *r = new Renderable(this);
 	Physics *p = new Physics(this);
@@ -58,8 +57,11 @@ void Entity381::DefaultInit(){
 }
 
 void Entity381::Tick(float dt){
-	for(std::list<Aspect*>::const_iterator ai = aspects.begin(); ai != aspects.end(); ++ai){
-		(*ai)->Tick(dt);
+	if(engine->theState == STATE::GAMEPLAY)
+	{
+		for(std::list<Aspect*>::const_iterator ai = aspects.begin(); ai != aspects.end(); ++ai){
+			(*ai)->Tick(dt);
+		}
 	}
 }
 
@@ -81,7 +83,7 @@ void Entity381::SetStatus(Status newStatus)
 		//^If the monster can't find the player anymore, search last position
 		if(entityType == EntityType::HEARNO)
 		{
-			aiAsp->SetCommand(new Search(this, engine->gfxMgr->cameraNode->getPosition()));
+			aiAsp->SetCommand(new Search(this));
 		} else //Search via hearing
 		{
 			aiAsp->SetCommand(new SearchPath(this, engine->gfxMgr->cameraNode->getPosition()));
@@ -198,11 +200,39 @@ bool Entity381::canSee(Ogre::Vector3 player)
 	return false;
 }
 
+bool Entity381::collides(Entity381 *other)
+{
+	Ogre::Vector3 diff = (other->pos - pos);
+
+	if(other->collShape == COLLISION_SHAPE::SQUARE && collShape == COLLISION_SHAPE::SQUARE)
+	{
+		return (diff.x < other->collisionRange + collisionRange) || (diff.y < other->collisionRange + collisionRange);
+	} else if(other->collShape == COLLISION_SHAPE::SQUARE && collShape == COLLISION_SHAPE::CIRCULAR)
+	{
+		diff *= -1;//Need to flip directions]
+		setMagnitude(diff, collisionRange);
+		Ogre::Vector3 collisionPt = pos + diff;
+		diff = other->pos - collisionPt;
+		return (diff.x < other->collisionRange) || (diff.y < other->collisionRange);
+
+	} else if(other->collShape == COLLISION_SHAPE::CIRCULAR && collShape == COLLISION_SHAPE::SQUARE)
+	{
+		//Use the previous if statement's code
+		return other->collides(this);
+	} else //Must be circle and circle
+	{
+		return diff.length() < other->collisionRange + collisionRange;
+	}
+}
+
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
-	this->acceleration = 1.0f;
-	this->turnRate = 0.3f;
-	this->maxSpeed = 35;
+	this->acceleration = 5.0f;
+	this->turnRate = 1.0f;
+	this->maxSpeed = 70;
+
+	collShape = COLLISION_SHAPE::CIRCULAR;
+	collisionRange = 50.0f;
 }
 
 HearNo::~HearNo(){
@@ -232,9 +262,12 @@ void HearNo::Tick(float dt)
 
 SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SEENO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
-	this->acceleration = 1.0f;
-	this->turnRate = 0.3f;
-	this->maxSpeed = 35;
+	this->acceleration = 5.0f;
+	this->turnRate = 1.0f;
+	this->maxSpeed = 70;
+
+	collShape = COLLISION_SHAPE::CIRCULAR;
+	collisionRange = 50.0f;
 }
 
 SeeNo::~SeeNo()
@@ -259,14 +292,18 @@ void SeeNo::Tick(float dt)
 		}
 	}
 
+
 	Entity381::Tick(dt);
 }
 
 SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
-	this->meshfile = "See-No.mesh";
-	this->acceleration = 1.0f;
-	this->turnRate = 0.3f;
-	this->maxSpeed = 35;
+	this->meshfile = "Speak-No.mesh";
+	this->acceleration = 5.0f;
+	this->turnRate = 1.0f;
+	this->maxSpeed = 70;
+
+	collShape = COLLISION_SHAPE::CIRCULAR;
+	collisionRange = 50.0f;
 }
 
 SpeakNo::~SpeakNo()
@@ -305,7 +342,9 @@ void SpeakNo::Tick(float dt)
 }
 
 Wall::Wall(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::WALL, pos, heading, eng){
-	this->meshfile = "cube.mesh";
+	this->meshfile = "Wall.mesh";
+	collShape = COLLISION_SHAPE::SQUARE;
+	collisionRange = 100.0f;
 }
 
 Wall::~Wall()
