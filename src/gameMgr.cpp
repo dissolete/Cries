@@ -353,7 +353,7 @@ void GameMgr::loadObjects()
 	engine->gfxMgr->splashNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode();
 	engine->gfxMgr->splashNode->attachObject(splash);
 	splash->setMaterialName("Material");
-	engine->gfxMgr->splashNode->setScale(10.f, 10.0f, 10.0f);
+	engine->gfxMgr->splashNode->setScale(10.0f, 10.0f, 10.0f);
 	engine->gfxMgr->splashNode->setPosition( 0.0f, 400, -3500);
 	engine->gfxMgr->splashNode->roll(Ogre::Degree(-360));
 	engine->gfxMgr->splashNode->pitch(Ogre::Degree(90));
