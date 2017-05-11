@@ -99,6 +99,8 @@ UiMgr::UiMgr(Engine* eng): Mgr(eng){
 	    creditsButton = 0;
 	    credits = 0;
 	    playerSurvived = false;
+	    instructionButton = 0;
+	    instructions = 0;
 
 	    //Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -310,6 +312,10 @@ void UiMgr::buttonHit(OgreBites::Button *b){
         engine->theState = STATE::GAMEPLAY;
         engine->loadLevel();
         mTrayMgr->destroyWidget(b);
+        mTrayMgr->destroyWidget(instructions);
+        mTrayMgr->destroyWidget(instructionButton);
+        instructions = NULL;
+        instructionButton = NULL;
     } else if(b->getName() == "CreditsButton")
     {
     	if(credits->isVisible())
@@ -319,6 +325,16 @@ void UiMgr::buttonHit(OgreBites::Button *b){
     	{
     		credits->setText(getCredits());
     		credits->show();
+    	}
+    } else if(b->getName() == "InstructionButton")
+    {
+    	if(instructions->isVisible())
+    	{
+    		instructions->hide();
+    	} else
+    	{
+    		instructions->setText(getInstructions());
+    		instructions->show();
     	}
     }
 
@@ -335,6 +351,11 @@ void UiMgr::itemSelected(OgreBites::SelectMenu *m){
 void UiMgr::loadMenu()
 {
 	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
+	instructionButton = mTrayMgr->createButton(OgreBites::TL_BOTTOMLEFT, "InstructionButton", "Instructions");
+	instructions = mTrayMgr->createTextBox(OgreBites::TL_NONE, "Instructions", "Instructions", 300, 200);
+	instructions->getOverlayElement()->setPosition(0, 450);
+	instructions->setText(getInstructions());
+	instructions->hide();
 }
 
 std::string UiMgr::timeAsString(float time)
@@ -355,4 +376,9 @@ std::string UiMgr::timeAsString(float time)
 	result += std::to_string(seconds);
 
 	return result;
+}
+
+std::string UiMgr::getInstructions()
+{
+	return "WASD: Movement\nMouse: Look around\nShift: Sprint\nLeft Ctrl: Crouch";
 }

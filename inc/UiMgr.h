@@ -39,6 +39,7 @@ private:
 	void loadMenu();
 	std::string timeAsString(float time);
 	std::string getCredits();
+	std::string getInstructions();
 
 protected:
 	virtual void windowResized(Ogre::RenderWindow *rw);
@@ -74,6 +75,8 @@ public:
 	OgreBites::Label *nameLabel;
 	OgreBites::Button *creditsButton;
 	OgreBites::TextBox *credits;
+	OgreBites::Button *instructionButton;
+	OgreBites::TextBox *instructions;
 	bool playerSurvived;
 };
 
