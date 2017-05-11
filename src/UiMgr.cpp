@@ -161,7 +161,7 @@ void UiMgr::loadGameOver(bool survived)
 
 std::string UiMgr::getCredits()
 {
-	return "Cries\n\nPresented by Code R3d\n\nGage Thomas\n\nJake Shepherd\n\nHadi Rumjahn\n";
+	return "Cries\n\nPresented by Code R3d\n\nGame Producer:\nGage Thomas\n\nArt:\nHadi Rumjahn\n\nPhysics:\nJakeShepherd\n\nAI:\nGage Thomas\n\nGFX:\nGage Thomas\n\nSound:\nJake Shepherd\n\nUI:\nGage Thomas\n\nGame Design:\nHadi Rumjahn";
 }
 
 void UiMgr::loadHighScores(bool survived)
@@ -248,13 +248,6 @@ void UiMgr::tick(float dt){
 		{
 			engine->theState = STATE::MAIN_MENU;
 			engine->gfxMgr->loadMenu();
-
-			// LOAD MAIN MENU SOUND
-			engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/workspace/Cries/resources/theme.wav");
-			//load_sound(std::string soundName, std::string filePath);
-
-			//play_sound(std::string soundName);
-			engine->soundMgr->play_song("Layer 1", true);
 
 			loadMenu();//Creates the button
 		}
@@ -345,7 +338,6 @@ void UiMgr::itemSelected(OgreBites::SelectMenu *m){
     {
         std::cout <<"Menu!" << std::endl;
     }
-
 }
 
 void UiMgr::loadMenu()
@@ -356,6 +348,15 @@ void UiMgr::loadMenu()
 	instructions->getOverlayElement()->setPosition(0, 450);
 	instructions->setText(getInstructions());
 	instructions->hide();
+
+	// LOAD MAIN MENU SOUND
+	//engine->soundMgr->load_song("Menu", "resources/Cries - Theme.ogg");
+	engine->soundMgr->load_song("Menu", "sounds/Cries-Theme.wav");
+	//load_sound(std::string soundName, std::string filePath);
+
+	//play_sound(std::string soundName);
+	engine->soundMgr->play_song2D("Menu", true);
+
 }
 
 std::string UiMgr::timeAsString(float time)

@@ -208,4 +208,5 @@ void GfxMgr::loadMenu()
 	material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 
 	rect->setMaterial("MenuScreen");
+
 }

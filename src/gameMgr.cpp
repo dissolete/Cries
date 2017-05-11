@@ -11,11 +11,10 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -400);
+    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -300);
     gameplayTime = 0;
     entityCount = 0;
     grid = 0;
-    endPt = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -40,6 +39,13 @@ void GameMgr::tick(float dt){
 	if(engine->theState == STATE::GAMEPLAY)
 	{
 		gameplayTime += dt;
+
+		if(engine->inputMgr->isMoving)
+		{
+			engine->soundMgr->play_sound2D("Slow Footsteps", true);
+		}
+		else
+			engine->soundMgr->stop_sound("Slow Footsteps");
 	}
 }
 
@@ -104,7 +110,7 @@ void GameMgr::loadLevel(std::string levelFilename)
 	// Load the environment, objects, and characters
 	this->loadEnvironment(levelFilename);
 	this->setupEnvironment();
-	//this->setupSounds();
+	this->setupSounds();
 	this->loadObjects();
 	this->loadCharacters();
 }
@@ -145,7 +151,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
-	createCeiling( gridRowSize*1000, gridColSize*1000 ); //DEBUG THIS LATER
+	createCeiling( gridRowSize*1000, gridColSize*1000 );
 
 	// Setup the grid
 	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
@@ -275,13 +281,13 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 				//readFromFile * objectEntData = objects["C"]; // Currently not used lmao
 				*/
 
-				GridParams * gridParam =  this->grid->getGrid(row, col);
-				if(gridParam) gridParam->notWalkable();
+				//GridParams * gridParam =  this->grid->getGrid(row, col);
+				//if(gridParam) gridParam->notWalkable();
 
 				//engine->entityMgr->CreateEntity(EntityType::ARCH, gridPositionInWorld, 0);
 
 				//objectEntData = NULL;
-				gridParam = NULL;
+				//gridParam = NULL;
 
 				//objectEntData = NULL;
 			}
@@ -299,9 +305,13 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			else if(c == 'H')
 			{
 				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
-			} else if(c == 'E')
+			}
+
+			// Create end arch
+			else if(c == 'E')
 			{
-				endPt = grid->getPos(gridPositionInWorld);
+				engine->entityMgr->CreateEntity(EntityType::ENDARCH, gridPositionInWorld, 0);
+				endPts.push_back(grid->getPos(gridPositionInWorld));
 			}
 		}
 
@@ -337,11 +347,22 @@ void GameMgr::setupEnvironment()
 void GameMgr::setupSounds()
 {
 	// Load Song from file
-	engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
+	//engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
 	//load_sound(std::string soundName, std::string filePath);
 
 	//play_sound(std::string soundName);
-	engine->soundMgr->play_song("Layer 1", true);
+	//engine->soundMgr->play_song2D("Layer 1", true);
+
+	//engine->soundMgr->load_song("Menu Theme", "resources/Cries - Theme.wav");
+
+	engine->soundMgr->stop_song("Menu");
+	engine->soundMgr->load_song("Cycle", "sounds/Cries-Cycle.wav");
+	engine->soundMgr->load_song("Release", "sounds/Cries-Release.wav");
+	engine->soundMgr->load_sound("Slow Footsteps", "sounds/Cries-Slow_Footsteps.wav");
+
+	engine->soundMgr->play_song2D("Cycle", true);
+
+
 }
 
 void GameMgr::loadObjects()
@@ -353,7 +374,7 @@ void GameMgr::loadObjects()
 	engine->gfxMgr->splashNode = engine->gfxMgr->ogreSceneManager->getRootSceneNode()->createChildSceneNode();
 	engine->gfxMgr->splashNode->attachObject(splash);
 	splash->setMaterialName("Material");
-	engine->gfxMgr->splashNode->setScale(10.f, 10.0f, 10.0f);
+	engine->gfxMgr->splashNode->setScale(10.0f, 10.0f, 10.0f);
 	engine->gfxMgr->splashNode->setPosition( 0.0f, 400, -3500);
 	engine->gfxMgr->splashNode->roll(Ogre::Degree(-360));
 	engine->gfxMgr->splashNode->pitch(Ogre::Degree(90));
