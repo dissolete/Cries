@@ -15,7 +15,6 @@ GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
     gameplayTime = 0;
     entityCount = 0;
     grid = 0;
-    endPt = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -312,7 +311,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			else if(c == 'E')
 			{
 				engine->entityMgr->CreateEntity(EntityType::ENDARCH, gridPositionInWorld, 0);
-				endPt = grid->getPos(gridPositionInWorld);
+				endPts.push_back(grid->getPos(gridPositionInWorld));
 			}
 		}
 

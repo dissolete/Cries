@@ -14,6 +14,7 @@
 #include <OgreMeshManager.h>
 #include <OgreMovablePlane.h>
 #include <string>
+#include <vector>
 
 class Grid;
 class GridParams;
@@ -56,7 +57,7 @@ public:
 	float gameplayTime;
 
 	Grid* getGrid() const;
-	GridParams *endPt;
+	std::vector<GridParams *> endPts;
 
 	std::vector<Ogre::SceneNode*> entitySceneNodes;
 
