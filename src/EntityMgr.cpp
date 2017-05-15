@@ -106,18 +106,19 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	if( entityType == EntityType::HEARNO )
 	{
-		//ent->ogreSceneNode->set
+		ent->ogreSceneNode->setScale(1.0f, 1.0f, 1.0f);
 	}
 
 	if( entityType == EntityType::SEENO )
 	{
-		//ent->ogreSceneNode->setScale(1.0f, 2.0f, 2.0f);
+		ent->ogreSceneNode->setScale(1.0f, 1.0f, 1.0f);
+		//ent->ogreSceneNode->
 	}
 
 	if( entityType == EntityType::SPEAKNO )
 	{
-		//ent->ogreSceneNode->setScale(.0f, -2.0f, -2.0f);
-		//ent->ogreSceneNode->setPosition(1.0f, 50.0f, 1.0f);
+		ent->ogreSceneNode->setScale(10.0f, 10.0f, 10.0f);
+		//ent->ogreSceneNode->setPosition(1.0f, 15.0f, 1.0f);
 	}
 
 	// Check material name

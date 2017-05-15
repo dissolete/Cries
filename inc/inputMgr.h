@@ -73,7 +73,7 @@ public:
     const float CROUCH_HEIGHT = 40.0f;
     const float STANDING_HEIGHT = 100.0f;
     float sprintingTime, cooldownTime;
-    const float MAX_SPRINT_TIME = 10.0f;
+    const float MAX_SPRINT_TIME = 30.0f;
     const float MAX_COOLDOWN_TIME = 10.0f;
 
     Ogre::Vector3 priorNormal; // Helpful for calculating wall normals :)
