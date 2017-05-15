@@ -185,6 +185,12 @@ void GfxMgr::tick(float dt){
 		//lightVal = -0.4222(time^2) + 0.95
 		float lightVal = (-0.4222f * (engine->timeSinceLastEvent - 1.5f) * (engine->timeSinceLastEvent - 1.5f)) + 0.95f;
 		ogreSceneManager->setAmbientLight(Ogre::ColourValue(lightVal, lightVal, lightVal));
+	} else if(engine->theState == STATE::GAMEPLAY && engine->omegaOn)
+	{
+		float redVal = Ogre::Math::Abs(Ogre::Math::Sin(engine->gameMgr->gameplayTime));
+		float greenVal = Ogre::Math::Abs(Ogre::Math::Sin(engine->gameMgr->gameplayTime + (Ogre::Math::PI / 3)));
+		float blueVal = Ogre::Math::Abs(Ogre::Math::Sin(engine->gameMgr->gameplayTime + (2 * Ogre::Math::PI / 3)));
+		ogreSceneManager->setAmbientLight(Ogre::ColourValue(redVal, greenVal, blueVal));
 	}
 
 
