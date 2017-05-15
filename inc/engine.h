@@ -47,6 +47,7 @@ public:
 
 	//
 	bool keepRunning;
+	bool omegaOn;
 
 	STATE theState;//Stores the current state that the engine is in
 

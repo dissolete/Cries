@@ -101,6 +101,7 @@ UiMgr::UiMgr(Engine* eng): Mgr(eng){
 	    playerSurvived = false;
 	    instructionButton = 0;
 	    instructions = 0;
+	    omegaButton = 0;
 
 	    //Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -314,8 +315,10 @@ void UiMgr::buttonHit(OgreBites::Button *b){
         mTrayMgr->destroyWidget(b);
         mTrayMgr->destroyWidget(instructions);
         mTrayMgr->destroyWidget(instructionButton);
+        mTrayMgr->destroyWidget(omegaButton);
         instructions = NULL;
         instructionButton = NULL;
+        omegaButton = NULL;
     } else if(b->getName() == "CreditsButton")
     {
     	if(credits->isVisible())
@@ -336,6 +339,9 @@ void UiMgr::buttonHit(OgreBites::Button *b){
     		instructions->setText(getInstructions());
     		instructions->show();
     	}
+    } else if(b->getName() == "OmegaButton")
+    {
+    	engine->omegaOn = !(engine->omegaOn);
     }
 
 }
@@ -365,6 +371,8 @@ void UiMgr::loadMenu()
 	//load_sound(std::string soundName, std::string filePath);
 	engine->soundMgr->loadAudio("Theme", "sounds/Cries - Theme16.wav", true);
 	engine->soundMgr->playAudio("Theme", "Camera1", false);
+
+	omegaButton = mTrayMgr->createButton(OgreBites::TL_TOPRIGHT, "OmegaButton", "Omega Mode");
 
 }
 

@@ -118,7 +118,13 @@ void Pursue::tick(float dt){
 		entity->desiredHeading = atan2(diff.z, diff.x);
 	}*/
 	entity->desiredHeading = atan2(diff.z, diff.x);
-	entity->desiredSpeed = entity->maxSpeed;
+	if(Ogre::Math::Abs(entity->heading - entity->desiredHeading) > Ogre::Math::HALF_PI)
+	{
+		entity->speed = 0;
+		entity->desiredSpeed = 0;
+	} else {
+		entity->desiredSpeed = entity->maxSpeed;
+	}
 }
 
 PursuePath::PursuePath(Entity381 *ent, Ogre::SceneNode *targ) : Command(ent, COMMAND_TYPE::PURSUEPATH)
@@ -147,9 +153,24 @@ void PursuePath::init()
 void PursuePath::tick(float dt)
 {
 	std::cout << "Made it inside PursuePath" << std::endl;
-	if(!path.empty() && path.front() != NULL && path.back() != NULL)
+	//If they share the same space as the player, track the player
+	if(entity->engine->gameMgr->grid->getPos(entity->pos)
+			== entity->engine->gameMgr->grid->getPos(entity->engine->gfxMgr->cameraNode->getPosition()))
 	{
-		std::cout << "Made it inside tick if statement for PursuePath" << std::endl;
+
+		Ogre::Vector3 diff = entity->engine->gfxMgr->cameraNode->getPosition() - entity->pos;
+		entity->desiredHeading = atan2(diff.z, diff.x);
+		if(Ogre::Math::Abs(entity->heading - entity->desiredHeading) > Ogre::Math::HALF_PI)
+		{
+			entity->speed = 0;
+			entity->desiredSpeed = 0;
+		} else {
+			entity->desiredSpeed = entity->maxSpeed;
+		}
+		entity->desiredSpeed = entity->maxSpeed;
+
+	} else if(!path.empty() && path.front() != NULL && path.back() != NULL)
+	{
 		if(theGrid->getPos(target->getPosition()) != path.back())
 		{
 			//Find the new path if the player has moved
@@ -161,6 +182,13 @@ void PursuePath::tick(float dt)
 			//compute offset
 			Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
 			entity->desiredHeading = atan2(diff.z, diff.x);
+			if(Ogre::Math::Abs(entity->heading - entity->desiredHeading) > Ogre::Math::HALF_PI)
+			{
+				entity->speed = 0;
+				entity->desiredSpeed = 0;
+			} else {
+				entity->desiredSpeed = entity->maxSpeed;
+			}
 			entity->desiredSpeed = entity->maxSpeed;
 
 			//Check to see if you have successfully finished the first move point
@@ -174,14 +202,7 @@ void PursuePath::tick(float dt)
 
 bool PursuePath::done()
 {
-	if(path.empty())
-	{
-		entity->speed = 0;
-		return true;
-	} else
-	{
-		return false;
-	}
+	return false;
 }
 
 SearchPath::SearchPath(Entity381 *ent, Ogre::Vector3 location) : Command(ent, COMMAND_TYPE::SEARCHPATH)
@@ -218,7 +239,13 @@ void SearchPath::tick(float dt)
 		//compute offset
 		Ogre::Vector3 diff = theGrid->getPosition(path.front()) - entity->pos;
 		entity->desiredHeading = atan2(diff.z, diff.x);
-		entity->desiredSpeed = entity->maxSpeed;
+		if(Ogre::Math::Abs(entity->heading - entity->desiredHeading) > Ogre::Math::HALF_PI)
+		{
+			entity->speed = 0;
+			entity->desiredSpeed = 0;
+		} else {
+			entity->desiredSpeed = entity->maxSpeed;
+		}
 
 		//Check to see if you have successfully finished the first move point
 		if(theGrid->getPos(entity->ogreSceneNode->getPosition()) == path.front())

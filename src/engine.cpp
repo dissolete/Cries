@@ -18,6 +18,7 @@ Engine::Engine(){
 	keepRunning = true;
 	theState = STATE::SPLASH;
 	timeSinceLastEvent = 0;
+	omegaOn = false;
 
 }
 
