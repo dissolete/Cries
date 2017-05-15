@@ -10,6 +10,7 @@
 #include <UnitAI.h>
 #include <Types.h>
 #include <cmath>
+#include <cstdlib>
 
 unsigned int Entity381::nextId = 0;
 
@@ -115,44 +116,44 @@ bool Entity381::canSee(Ogre::Vector3 player)
 	//Assumes a heading of 0 is East
 	//0.393 is 22.5 degrees in radians
 
-	std::cout << "Heading: " << heading << std::endl;
+	//std::cout << "Heading: " << heading << std::endl;
 	if((heading >= 0.0 && heading < 0.393) || (heading <= 0.0 && heading > -0.393))
 	{
 		lookDir = DIRECTION::EAST;
 
-		std::cout << "East" << std::endl;
+		//std::cout << "East" << std::endl;
 		//1.178 = 67.5 degrees
 	} else if(heading >= 0.393 && heading < 1.178)
 	{
 		lookDir = DIRECTION::SOUTHEAST;
-		std::cout << "SouthEast" << std::endl;
+		//std::cout << "SouthEast" << std::endl;
 		//1.963= 112.5 degrees
 	} else if(heading >= 1.178 && heading < 1.963)
 	{
 		lookDir = DIRECTION::SOUTH;
-		std::cout << "South" << std::endl;
+		//std::cout << "South" << std::endl;
 		//2.749 = 157.5 degrees
 	} else if(heading >= 1.963 && heading < 2.749)
 	{
 		lookDir = DIRECTION::SOUTHWEST;
-		std::cout << "Southwest" << std::endl;
+		//std::cout << "Southwest" << std::endl;
 	} else if((heading >= 2.749 && heading <= 3.14159) || (heading >= -3.14159 && heading <= -2.749))
 	{
 		lookDir = DIRECTION::WEST;
-		std::cout << "West" << std::endl;
+		//std::cout << "West" << std::endl;
 	} else if (heading <= -0.393 && heading > -1.178)
 	{
 		lookDir = DIRECTION::NORTHEAST;
-		std::cout << "NorthEast" << std::endl;
+		//std::cout << "NorthEast" << std::endl;
 	} else if (heading <= -1.178 && heading > -1.963)
 	{
 		lookDir = DIRECTION::NORTH;
-		std::cout << "North" << std::endl;
+		//std::cout << "North" << std::endl;
 	} else
 	{
 		//Must be northwest
 		lookDir = DIRECTION::NORTHWEST;
-		std::cout << "northwest, " << heading << std::endl;
+		//std::cout << "northwest, " << heading << std::endl;
 	}
 
 	//Now search in lookDir for the player
@@ -233,6 +234,12 @@ HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(Entity
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
+
+	// Sounds for this entity
+	eng->soundMgr->createSource("HearNoSource");
+	eng->soundMgr->loadAudio("HearNoScream1", "resources/Cries - Monster Scream 1.wav");
+	eng->soundMgr->loadAudio("HearNoScream2", "resources/Cries - Monster Whine.wav");
+
 }
 
 HearNo::~HearNo(){
@@ -241,12 +248,31 @@ HearNo::~HearNo(){
 
 void HearNo::Tick(float dt)
 {
+	this->engine->soundMgr->setSourceLocation("HearNoSource", this->pos);
+
 	//If the enemy isn't alerted, check to see if it can see the player
 	if(theStatus == Status::WAITING || theStatus == Status::SEARCHING)
 	{
 		if(canSee(engine->gfxMgr->cameraNode->getPosition()))
 		{
 			SetStatus(Status::ALERTED);
+
+			// Randomly select one of the alerted sounds
+			int randNum = rand() % 2;
+			if(randNum == 1)
+			{
+				if(!engine->soundMgr->isSourcePlaying("HearNoSource"))
+				{
+					engine->soundMgr->playAudio("HearNoScream1", "HearNoSource");
+				}
+			}
+			else
+			{
+				if(!engine->soundMgr->isSourcePlaying("HearNoSource"))
+				{
+					engine->soundMgr->playAudio("HearNoScream2", "HearNoSource");
+				}
+			}
 		}
 	} else if(theStatus == Status::ALERTED)
 	{
@@ -268,6 +294,11 @@ SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityTy
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
+
+	// Sounds for this entity
+	eng->soundMgr->createSource("SeeNoSource");
+	eng->soundMgr->loadAudio("SeeNoScream1", "resources/Cries - Monster Scream 2.wav");
+	eng->soundMgr->loadAudio("SeeNoScream2", "resources/Cries - Monster Scream 4.wav");
 }
 
 SeeNo::~SeeNo()
@@ -282,6 +313,23 @@ void SeeNo::Tick(float dt)
 		if(engine->inputMgr->isSprinting && (pos - engine->gfxMgr->cameraNode->getPosition()).length() <= 600)
 		{
 			SetStatus(Status::ALERTED);
+
+			// Randomly select one of the alerted sounds
+			int randNum = rand() % 2;
+			if(randNum == 1)
+			{
+				if(!engine->soundMgr->isSourcePlaying("SeeNoSource"))
+				{
+					engine->soundMgr->playAudio("SeeNoScream1", "SeeNoSource");
+				}
+			}
+			else
+			{
+				if(!engine->soundMgr->isSourcePlaying("SeeNoSource"))
+				{
+					engine->soundMgr->playAudio("SeeNoScream2", "SeeNoSource");
+				}
+			}
 		}
 	} else if(theStatus == Status::ALERTED)
 	{

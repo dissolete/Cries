@@ -41,12 +41,49 @@ void GameMgr::tick(float dt){
 	{
 		gameplayTime += dt;
 
-//		if(engine->inputMgr->isMoving)
-//		{
-//			engine->soundMgr->play_sound2D("Slow Footsteps", true);
-//		}
-//		else
-//			engine->soundMgr->stop_sound("Slow Footsteps");
+		Ogre::Vector3 cameraPos = engine->gfxMgr->cameraNode->getPosition();
+
+		engine->soundMgr->setSourceLocation("Camera1", cameraPos);
+		engine->soundMgr->setSourceLocation("Camera2", cameraPos);
+		engine->soundMgr->setSourceLocation("Camera3", cameraPos);
+		engine->soundMgr->setSourceLocation("Camera4", cameraPos);
+
+		if(!engine->soundMgr->isSourcePlaying("Camera1"))
+		{
+			engine->soundMgr->playAudio("Cycle", "Camera1");
+		}
+
+		if(!engine->soundMgr->isSourcePlaying("Camera2"))
+		{
+			engine->soundMgr->playAudio("Release", "Camera2");
+		}
+
+		// Are we moving?
+		if(engine->inputMgr->isMoving and !engine->inputMgr->isCrouching)
+		{
+			// Are we sprinting?
+			if(engine->inputMgr->isSprinting)
+			{
+				engine->soundMgr->stopSource("Camera3");
+				if(!engine->soundMgr->isSourcePlaying("Camera4"))
+				{
+					engine->soundMgr->playAudio("Footsteps Fast", "Camera4");
+				}
+			}
+			else
+			{
+				engine->soundMgr->stopSource("Camera4");
+				if(!engine->soundMgr->isSourcePlaying("Camera3"))
+				{
+					engine->soundMgr->playAudio("Footsteps Slow", "Camera3");
+				}
+			}
+		}
+		else
+		{
+			engine->soundMgr->stopSource("Camera3");
+			engine->soundMgr->stopSource("Camera4");
+		}
 	}
 }
 
@@ -343,22 +380,34 @@ void GameMgr::setupEnvironment()
  */
 void GameMgr::setupSounds()
 {
-	// Load Song from file
-	//engine->soundMgr->load_song("Layer 1", "/home/hrumjahn/git/Cries/resources/pokemon.wav");
-	//load_sound(std::string soundName, std::string filePath);
 
-	//play_sound(std::string soundName);
-	//engine->soundMgr->play_song2D("Layer 1", true);
+	Ogre::Vector3 cameraPos = engine->gfxMgr->cameraNode->getPosition();
 
-	//engine->soundMgr->load_song("Menu Theme", "resources/Cries - Theme.wav");
+	// Stop the background music playing (it was probably the theme)
+	engine->soundMgr->stopSource("Camera1");
 
-	engine->soundMgr->stop_song("Menu");
-	engine->soundMgr->load_song("Cycle", "resources/Cries - Cycle.ogg");
-	engine->soundMgr->load_song("Release", "resources/Cries - Release.ogg");
-	engine->soundMgr->load_sound("Slow Footsteps", "resources/Cries - Slow Footsteps.ogg");
+	// Caution. This function doesnt check if the source already exists :)
+	engine->soundMgr->createSource("Camera3");
+	engine->soundMgr->createSource("Camera4");
+	engine->soundMgr->createSource("Camera5");
 
-	engine->soundMgr->play_song2D("Cycle", true);
+	engine->soundMgr->setSourceLocation("Camera1", cameraPos);
+	engine->soundMgr->setSourceLocation("Camera2", cameraPos);
+	engine->soundMgr->setSourceLocation("Camera3", cameraPos);
+	engine->soundMgr->setSourceLocation("Camera4", cameraPos);
+	engine->soundMgr->setSourceLocation("Camera5", cameraPos);
 
+	// Load new background music
+	engine->soundMgr->loadAudio("Cycle", "resources/Cries - Cycle16.wav");
+	engine->soundMgr->loadAudio("Release", "resources/Cries - Release16.wav");
+
+	// Load SFX
+	engine->soundMgr->loadAudio("Footsteps Slow", "resources/Cries - FootstepsSlow16.wav");
+	engine->soundMgr->loadAudio("Footsteps Fast", "resources/Cries - FootstepsFast16.wav");
+	engine->soundMgr->loadAudio("Breathing", "resources/Cries - Breathing16.wav");
+
+	engine->soundMgr->playAudio("Cycle", "Camera1");
+	engine->soundMgr->playAudio("Release", "Camera2");
 
 }
 
