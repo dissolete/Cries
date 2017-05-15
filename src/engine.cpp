@@ -70,12 +70,12 @@ void Engine::shutdown(){
 
 void Engine::run(){
 	Ogre::Timer* timer = new Ogre::Timer();
-	std::cout << "Got ogre timer" << std::endl;
+	//std::cout << "Got ogre timer" << std::endl;
 	float oldTime = timer->getMilliseconds()/1000.0f;
-	std::cout << "Time: " << oldTime << std::endl;
+	//std::cout << "Time: " << oldTime << std::endl;
 	float newTime;
 	float dt = 0.001f;
-	std::cout << "Entering while loop" << std::endl;
+	//std::cout << "Entering while loop" << std::endl;
 	while(keepRunning){
 		newTime = timer->getMilliseconds()/1000.0f;
 		dt = newTime - oldTime;

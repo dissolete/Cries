@@ -99,6 +99,8 @@ UiMgr::UiMgr(Engine* eng): Mgr(eng){
 	    creditsButton = 0;
 	    credits = 0;
 	    playerSurvived = false;
+	    instructionButton = 0;
+	    instructions = 0;
 
 	    //Ogre::WindowEventUtilities::addWindowEventListener(engine->gfxMgr->ogreRenderWindow, this);
 }
@@ -159,7 +161,7 @@ void UiMgr::loadGameOver(bool survived)
 
 std::string UiMgr::getCredits()
 {
-	return "Cries\n\nPresented by Code R3d\n\nGage Thomas\n\nJake Shepherd\n\nHadi Rumjahn\n";
+	return "Cries\n\nPresented by Code R3d\n\nGame Producer:\nGage Thomas\n\nArt:\nHadi Rumjahn\n\nPhysics:\nJakeShepherd\n\nAI:\nGage Thomas\n\nGFX:\nGage Thomas\n\nSound:\nJake Shepherd\n\nUI:\nGage Thomas\n\nGame Design:\nHadi Rumjahn";
 }
 
 void UiMgr::loadHighScores(bool survived)
@@ -254,7 +256,14 @@ void UiMgr::tick(float dt){
 		timeMonitor->setCaption(timeAsString(engine->gameMgr->gameplayTime));
 	} else if(engine->theState == STATE::GAMEOVER)
 	{
-
+		engine->soundMgr->stopAllSources();
+	}
+	else if(engine->theState == STATE::MAIN_MENU)
+	{
+		if(!engine->soundMgr->isSourcePlaying("Camera1"))
+		{
+			engine->soundMgr->playAudio("Theme", "Camera1");
+		}
 	}
 }
 
@@ -273,7 +282,7 @@ void UiMgr::windowClosed(Ogre::RenderWindow* rw){
 }
 
 bool UiMgr::keyPressed(const OIS::KeyEvent &arg) {
-	std::cout << "Key Pressed: " << arg.key << std::endl;
+	//std::cout << "Key Pressed: " << arg.key << std::endl;
 	return true;
 }
 bool UiMgr::keyReleased(const OIS::KeyEvent &arg){
@@ -285,7 +294,7 @@ bool UiMgr::mouseMoved(const OIS::MouseEvent &arg){
 	return true;
 }
 bool UiMgr::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-	std::cout << "mouse clicked" << std::endl;
+	//std::cout << "mouse clicked" << std::endl;
 	if (mTrayMgr->injectMouseDown(arg, id)) return true;
 	    /* normal mouse processing here... */
 	return true;
@@ -299,10 +308,14 @@ bool UiMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 void UiMgr::buttonHit(OgreBites::Button *b){
     if(b->getName()=="NewGame")
     {
-        std::cout <<"New Game pressed" << std::endl;
+        //std::cout <<"New Game pressed" << std::endl;
         engine->theState = STATE::GAMEPLAY;
         engine->loadLevel();
         mTrayMgr->destroyWidget(b);
+        mTrayMgr->destroyWidget(instructions);
+        mTrayMgr->destroyWidget(instructionButton);
+        instructions = NULL;
+        instructionButton = NULL;
     } else if(b->getName() == "CreditsButton")
     {
     	if(credits->isVisible())
@@ -313,6 +326,16 @@ void UiMgr::buttonHit(OgreBites::Button *b){
     		credits->setText(getCredits());
     		credits->show();
     	}
+    } else if(b->getName() == "InstructionButton")
+    {
+    	if(instructions->isVisible())
+    	{
+    		instructions->hide();
+    	} else
+    	{
+    		instructions->setText(getInstructions());
+    		instructions->show();
+    	}
     }
 
 }
@@ -320,21 +343,28 @@ void UiMgr::buttonHit(OgreBites::Button *b){
 void UiMgr::itemSelected(OgreBites::SelectMenu *m){
     if(m->getName()=="MyMenu")
     {
-        std::cout <<"Menu!" << std::endl;
+        //std::cout <<"Menu!" << std::endl;
     }
 }
 
 void UiMgr::loadMenu()
 {
 	mTrayMgr->createButton(OgreBites::TL_BOTTOMRIGHT, "NewGame", "New Game");
+	instructionButton = mTrayMgr->createButton(OgreBites::TL_BOTTOMLEFT, "InstructionButton", "Instructions");
+	instructions = mTrayMgr->createTextBox(OgreBites::TL_NONE, "Instructions", "Instructions", 300, 200);
+	instructions->getOverlayElement()->setPosition(0, 450);
+	instructions->setText(getInstructions());
+	instructions->hide();
 
 	// LOAD MAIN MENU SOUND
-	//engine->soundMgr->load_song("Menu", "resources/Cries - Theme.ogg");
-	engine->soundMgr->load_song("Menu", "sounds/Cries-Theme.wav");
-	//load_sound(std::string soundName, std::string filePath);
+	engine->soundMgr->createSource("Camera1");
+	engine->soundMgr->createSource("Camera2");
 
-	//play_sound(std::string soundName);
-	engine->soundMgr->play_song2D("Menu", true);
+	engine->soundMgr->setSourceLocation("Camera1", engine->gfxMgr->cameraNode->getPosition());
+
+	//load_sound(std::string soundName, std::string filePath);
+	engine->soundMgr->loadAudio("Theme", "resources/Cries - Theme16.wav", true);
+	engine->soundMgr->playAudio("Theme", "Camera1", false);
 
 }
 
@@ -356,4 +386,9 @@ std::string UiMgr::timeAsString(float time)
 	result += std::to_string(seconds);
 
 	return result;
+}
+
+std::string UiMgr::getInstructions()
+{
+	return "WASD: Movement\nMouse: Look around\nShift: Sprint\nLeft Ctrl: Crouch";
 }

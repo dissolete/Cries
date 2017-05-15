@@ -67,6 +67,9 @@ InputMgr::InputMgr(Engine *engine) : Mgr(engine){
 
 	priorNormal = Ogre::Vector3::ZERO;
 
+	sprintingTime = 0;
+	cooldownTime = MAX_COOLDOWN_TIME;
+
 }
 
 InputMgr::~InputMgr(){ // before gfxMgr destructor
@@ -213,6 +216,10 @@ bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 			break;
 		case 0x39:
 			addition = ' ';
+			break;
+		default:
+			addition = '\t';
+
 			break;
 		}
 
@@ -444,6 +451,33 @@ void InputMgr::UpdateCamera(float dt){
 		 isSprinting = false;
 		 isCrouching = false;
 	 }
+
+	 if(isSprinting)
+	 {
+		 sprintingTime += dt;
+	 }
+	 // We can only sprint for 10 seconds cause the character is a whimp
+	 if(sprintingTime >= MAX_SPRINT_TIME)
+	 {
+		 if(!engine->soundMgr->isSourcePlaying("Camera5"))
+		 {
+			 engine->soundMgr->playAudio("Breathing", "Camera5");
+		 }
+
+		 isSprinting = false;
+
+		 // Undo the move multiplier
+		 move = 100.0f;
+
+		 // Begin cooldown
+		 cooldownTime -= dt;
+
+		 if(cooldownTime <= 0)
+		 {
+			 sprintingTime = 0;
+			 cooldownTime = MAX_COOLDOWN_TIME;
+		 }
+	 }
 	//Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
 
 	//std::cerr << lookVector.x << ", " << lookVector.y << ", " << lookVector.z << std::endl;
@@ -563,10 +597,18 @@ void InputMgr::UpdateCamera(float dt){
 	engine->gfxMgr->cameraNode->setPosition(newPos);
 
 	//If the player has reached the endpt
-	if(engine->gameMgr->grid->getPos(newPos) == engine->gameMgr->endPt)
+	/*if(engine->gameMgr->grid->getPos(newPos) == engine->gameMgr->endPt)
 	{
 		engine->theState = STATE::GAMEOVER;
 		engine->uiMgr->loadGameOver(true);
+	}*/
+	for(int index = 0; index < engine->gameMgr->endPts.size(); index++)
+	{
+		if(engine->gameMgr->endPts[index] == engine->gameMgr->grid->getPos(newPos))
+		{
+			engine->theState = STATE::GAMEOVER;
+			engine->uiMgr->loadGameOver(true);
+		}
 	}
 
 }

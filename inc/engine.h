@@ -16,7 +16,7 @@ class InputMgr;
 #include <gameMgr.h>
 #include <Types.h>
 #include <UiMgr.h>
-#include <soundMgr.h>
+#include <SoundMgr.h>
 #include <Grid.h>
 
 class EntityMgr;
