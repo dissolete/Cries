@@ -217,6 +217,8 @@ bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 		case 0x39:
 			addition = ' ';
 			break;
+		default:
+			break;
 		}
 
 		//Check for capitalization
