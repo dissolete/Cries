@@ -67,6 +67,9 @@ InputMgr::InputMgr(Engine *engine) : Mgr(engine){
 
 	priorNormal = Ogre::Vector3::ZERO;
 
+	sprintingTime = 0;
+	cooldownTime = MAX_COOLDOWN_TIME;
+
 }
 
 InputMgr::~InputMgr(){ // before gfxMgr destructor
@@ -216,6 +219,7 @@ bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 			break;
 		default:
 			addition = '\t';
+
 			break;
 		}
 
@@ -446,6 +450,33 @@ void InputMgr::UpdateCamera(float dt){
 	 {
 		 isSprinting = false;
 		 isCrouching = false;
+	 }
+
+	 if(isSprinting)
+	 {
+		 sprintingTime += dt;
+	 }
+	 // We can only sprint for 10 seconds cause the character is a whimp
+	 if(sprintingTime >= MAX_SPRINT_TIME)
+	 {
+		 if(!engine->soundMgr->isSourcePlaying("Camera5"))
+		 {
+			 engine->soundMgr->playAudio("Breathing", "Camera5");
+		 }
+
+		 isSprinting = false;
+
+		 // Undo the move multiplier
+		 move = 100.0f;
+
+		 // Begin cooldown
+		 cooldownTime -= dt;
+
+		 if(cooldownTime <= 0)
+		 {
+			 sprintingTime = 0;
+			 cooldownTime = MAX_COOLDOWN_TIME;
+		 }
 	 }
 	//Ogre::Vector3 lookVector = engine->gfxMgr->ogreCamera->getCameraToViewportRay(0.5, 0.5).getDirection().normalisedCopy();
 

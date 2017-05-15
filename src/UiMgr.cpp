@@ -256,7 +256,14 @@ void UiMgr::tick(float dt){
 		timeMonitor->setCaption(timeAsString(engine->gameMgr->gameplayTime));
 	} else if(engine->theState == STATE::GAMEOVER)
 	{
-
+		engine->soundMgr->stopAllSources();
+	}
+	else if(engine->theState == STATE::MAIN_MENU)
+	{
+		if(!engine->soundMgr->isSourcePlaying("Camera1"))
+		{
+			engine->soundMgr->playAudio("Theme", "Camera1");
+		}
 	}
 }
 
@@ -275,7 +282,7 @@ void UiMgr::windowClosed(Ogre::RenderWindow* rw){
 }
 
 bool UiMgr::keyPressed(const OIS::KeyEvent &arg) {
-	std::cout << "Key Pressed: " << arg.key << std::endl;
+	//std::cout << "Key Pressed: " << arg.key << std::endl;
 	return true;
 }
 bool UiMgr::keyReleased(const OIS::KeyEvent &arg){
@@ -287,7 +294,7 @@ bool UiMgr::mouseMoved(const OIS::MouseEvent &arg){
 	return true;
 }
 bool UiMgr::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-	std::cout << "mouse clicked" << std::endl;
+	//std::cout << "mouse clicked" << std::endl;
 	if (mTrayMgr->injectMouseDown(arg, id)) return true;
 	    /* normal mouse processing here... */
 	return true;
@@ -301,7 +308,7 @@ bool UiMgr::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id){
 void UiMgr::buttonHit(OgreBites::Button *b){
     if(b->getName()=="NewGame")
     {
-        std::cout <<"New Game pressed" << std::endl;
+        //std::cout <<"New Game pressed" << std::endl;
         engine->theState = STATE::GAMEPLAY;
         engine->loadLevel();
         mTrayMgr->destroyWidget(b);
@@ -336,7 +343,7 @@ void UiMgr::buttonHit(OgreBites::Button *b){
 void UiMgr::itemSelected(OgreBites::SelectMenu *m){
     if(m->getName()=="MyMenu")
     {
-        std::cout <<"Menu!" << std::endl;
+        //std::cout <<"Menu!" << std::endl;
     }
 }
 
@@ -350,12 +357,14 @@ void UiMgr::loadMenu()
 	instructions->hide();
 
 	// LOAD MAIN MENU SOUND
-	//engine->soundMgr->load_song("Menu", "resources/Cries - Theme.ogg");
-	engine->soundMgr->load_song("Menu", "sounds/Cries-Theme.wav");
-	//load_sound(std::string soundName, std::string filePath);
+	engine->soundMgr->createSource("Camera1");
+	engine->soundMgr->createSource("Camera2");
 
-	//play_sound(std::string soundName);
-	engine->soundMgr->play_song2D("Menu", true);
+	engine->soundMgr->setSourceLocation("Camera1", engine->gfxMgr->cameraNode->getPosition());
+
+	//load_sound(std::string soundName, std::string filePath);
+	engine->soundMgr->loadAudio("Theme", "resources/Cries - Theme16.wav", true);
+	engine->soundMgr->playAudio("Theme", "Camera1", false);
 
 }
 
