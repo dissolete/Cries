@@ -367,7 +367,7 @@ Ogre::Vector3 Grid::getPosition( int row, int col )
 {
 	Ogre::Vector3 position;
 	position.z = (row * GRID_MULT) - (this->rowNum * GRID_MULT)/2.0; //+ GRID_MULT/2.0;
-	position.y = 0;
+	position.y = 5;
 	position.x = (col * GRID_MULT) - (this->colNum * GRID_MULT)/2.0; //+ GRID_MULT/2.0;
 
 	return position;

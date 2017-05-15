@@ -369,7 +369,7 @@ void UiMgr::loadMenu()
 	engine->soundMgr->setSourceLocation("Camera1", engine->gfxMgr->cameraNode->getPosition());
 
 	//load_sound(std::string soundName, std::string filePath);
-	engine->soundMgr->loadAudio("Theme", "resources/Cries - Theme16.wav", true);
+	engine->soundMgr->loadAudio("Theme", "sounds/Cries - Theme16.wav", true);
 	engine->soundMgr->playAudio("Theme", "Camera1", false);
 
 	omegaButton = mTrayMgr->createButton(OgreBites::TL_TOPRIGHT, "OmegaButton", "Omega Mode");
