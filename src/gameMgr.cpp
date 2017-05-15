@@ -41,12 +41,12 @@ void GameMgr::tick(float dt){
 	{
 		gameplayTime += dt;
 
-		if(engine->inputMgr->isMoving)
+		/*if(engine->inputMgr->isMoving)
 		{
 			engine->soundMgr->play_sound2D("Slow Footsteps", true);
 		}
 		else
-			engine->soundMgr->stop_sound("Slow Footsteps");
+			engine->soundMgr->stop_sound("Slow Footsteps");*/
 	}
 }
 
