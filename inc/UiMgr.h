@@ -77,6 +77,7 @@ public:
 	OgreBites::TextBox *credits;
 	OgreBites::Button *instructionButton;
 	OgreBites::TextBox *instructions;
+	OgreBites::Button *omegaButton;
 	bool playerSurvived;
 };
 
