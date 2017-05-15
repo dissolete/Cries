@@ -11,11 +11,10 @@
 
 GameMgr::GameMgr(Engine *engine): Mgr(engine), entitySceneNodes(){
 	floor = Ogre::Plane(Ogre::Vector3::UNIT_Y, 0);
-    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -400);
+    ceiling = Ogre::Plane(-Ogre::Vector3::UNIT_Y, -300);
     gameplayTime = 0;
     entityCount = 0;
     grid = 0;
-    endPt = 0;
 }
 
 GameMgr::~GameMgr(){
@@ -189,7 +188,7 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 	createGround( gridRowSize*1000, gridColSize*1000, groundMaterial);
 
 	// Create Ceiling
-	createCeiling( gridRowSize*100, gridColSize*100 ); //DEBUG THIS LATER
+	createCeiling( gridRowSize*1000, gridColSize*1000 );
 
 	// Setup the grid
 	this->grid = new Grid( engine->gfxMgr->ogreSceneManager, gridRowSize, gridColSize, engine);
@@ -343,9 +342,13 @@ void GameMgr::loadEnvironment(std::string levelFilename)
 			else if(c == 'H')
 			{
 				engine->entityMgr->CreateEntity(EntityType::HEARNO, gridPositionInWorld, 0);
-			} else if(c == 'E')
+			}
+
+			// Create end arch
+			else if(c == 'E')
 			{
-				endPt = grid->getPos(gridPositionInWorld);
+				engine->entityMgr->CreateEntity(EntityType::ENDARCH, gridPositionInWorld, 0);
+				endPts.push_back(grid->getPos(gridPositionInWorld));
 			}
 		}
 

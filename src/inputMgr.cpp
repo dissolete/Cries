@@ -218,6 +218,8 @@ bool InputMgr::keyPressed(const OIS::KeyEvent &arg) {
 			addition = ' ';
 			break;
 		default:
+			addition = '\t';
+
 			break;
 		}
 
@@ -595,10 +597,18 @@ void InputMgr::UpdateCamera(float dt){
 	engine->gfxMgr->cameraNode->setPosition(newPos);
 
 	//If the player has reached the endpt
-	if(engine->gameMgr->grid->getPos(newPos) == engine->gameMgr->endPt)
+	/*if(engine->gameMgr->grid->getPos(newPos) == engine->gameMgr->endPt)
 	{
 		engine->theState = STATE::GAMEOVER;
 		engine->uiMgr->loadGameOver(true);
+	}*/
+	for(int index = 0; index < engine->gameMgr->endPts.size(); index++)
+	{
+		if(engine->gameMgr->endPts[index] == engine->gameMgr->grid->getPos(newPos))
+		{
+			engine->theState = STATE::GAMEOVER;
+			engine->uiMgr->loadGameOver(true);
+		}
 	}
 
 }

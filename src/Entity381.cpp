@@ -230,7 +230,7 @@ HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(Entity
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
-	this->maxSpeed = 70;
+	this->maxSpeed = 100;
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
@@ -290,7 +290,7 @@ SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityTy
 	this->meshfile = "See-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
-	this->maxSpeed = 70;
+	this->maxSpeed = 100;
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
@@ -348,7 +348,7 @@ SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(Enti
 	this->meshfile = "Speak-No.mesh";
 	this->acceleration = 5.0f;
 	this->turnRate = 1.0f;
-	this->maxSpeed = 70;
+	this->maxSpeed = 100;
 
 	collShape = COLLISION_SHAPE::CIRCULAR;
 	collisionRange = 50.0f;
@@ -434,6 +434,19 @@ void Logo::Tick(float dt)
 	Entity381::Tick(dt);
 }
 
+EndArch::EndArch(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::ENDARCH, pos, heading, eng){
+	this->meshfile = "Angel_Archway_2x4.mesh";
+}
+
+EndArch::~EndArch()
+{
+//
+}
+
+void EndArch::Tick(float dt)
+{
+	Entity381::Tick(dt);
+}
 
 
 
