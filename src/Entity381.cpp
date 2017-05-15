@@ -228,7 +228,7 @@ bool Entity381::collides(Entity381 *other)
 
 HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::HEARNO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
-	this->acceleration = 5.0f;
+	this->acceleration = 10.0f;
 	this->turnRate = 1.0f;
 	this->maxSpeed = 100;
 
@@ -237,8 +237,8 @@ HearNo::HearNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(Entity
 
 	// Sounds for this entity
 	eng->soundMgr->createSource("HearNoSource");
-	eng->soundMgr->loadAudio("HearNoScream1", "resources/Cries - Monster Scream 1.wav");
-	eng->soundMgr->loadAudio("HearNoScream2", "resources/Cries - Monster Whine.wav");
+	eng->soundMgr->loadAudio("HearNoScream1", "sounds/Cries - Monster Scream 1.wav");
+	eng->soundMgr->loadAudio("HearNoScream2", "sounds/Cries - Monster Whine.wav");
 
 }
 
@@ -288,7 +288,7 @@ void HearNo::Tick(float dt)
 
 SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SEENO, pos, heading, eng){
 	this->meshfile = "See-No.mesh";
-	this->acceleration = 5.0f;
+	this->acceleration = 10.0f;
 	this->turnRate = 1.0f;
 	this->maxSpeed = 100;
 
@@ -297,8 +297,8 @@ SeeNo::SeeNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityTy
 
 	// Sounds for this entity
 	eng->soundMgr->createSource("SeeNoSource");
-	eng->soundMgr->loadAudio("SeeNoScream1", "resources/Cries - Monster Scream 2.wav");
-	eng->soundMgr->loadAudio("SeeNoScream2", "resources/Cries - Monster Scream 4.wav");
+	eng->soundMgr->loadAudio("SeeNoScream1", "sounds/Cries - Monster Scream 2.wav");
+	eng->soundMgr->loadAudio("SeeNoScream2", "sounds/Cries - Monster Scream 4.wav");
 }
 
 SeeNo::~SeeNo()
@@ -346,7 +346,7 @@ void SeeNo::Tick(float dt)
 
 SpeakNo::SpeakNo(Ogre::Vector3 pos, float heading, Engine *eng) : Entity381(EntityType::SPEAKNO, pos, heading, eng){
 	this->meshfile = "Speak-No.mesh";
-	this->acceleration = 5.0f;
+	this->acceleration = 10.0f;
 	this->turnRate = 1.0f;
 	this->maxSpeed = 100;
 

@@ -26,7 +26,7 @@ void GameMgr::init(){
 }
 
 void GameMgr::loadLevel(){
-	this->loadLevel("level001.txt");
+	this->loadLevel("level002.txt");
 
 }
 
@@ -401,13 +401,13 @@ void GameMgr::setupSounds()
 	engine->soundMgr->setSourceLocation("Camera5", cameraPos);
 
 	// Load new background music
-	engine->soundMgr->loadAudio("Cycle", "resources/Cries - Cycle16.wav");
-	engine->soundMgr->loadAudio("Release", "resources/Cries - Release16.wav");
+	engine->soundMgr->loadAudio("Cycle", "sounds/Cries - Cycle16.wav");
+	engine->soundMgr->loadAudio("Release", "sounds/Cries - Release16.wav");
 
 	// Load SFX
-	engine->soundMgr->loadAudio("Footsteps Slow", "resources/Cries - FootstepsSlow16.wav");
-	engine->soundMgr->loadAudio("Footsteps Fast", "resources/Cries - FootstepsFast16.wav");
-	engine->soundMgr->loadAudio("Breathing", "resources/Cries - Breathing16.wav");
+	engine->soundMgr->loadAudio("Footsteps Slow", "sounds/Cries - FootstepsSlow16.wav");
+	engine->soundMgr->loadAudio("Footsteps Fast", "sounds/Cries - FootstepsFast16.wav");
+	engine->soundMgr->loadAudio("Breathing", "sounds/Cries - Breathing16.wav");
 
 	engine->soundMgr->playAudio("Cycle", "Camera1");
 	engine->soundMgr->playAudio("Release", "Camera2");

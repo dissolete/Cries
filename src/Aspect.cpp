@@ -80,7 +80,7 @@ void Physics::Tick(float dt){
 	}
 	Ogre::Vector3 diff = entity->pos - entity->engine->gfxMgr->cameraNode->getPosition();
 	diff.y = 0;//Don't count height differences
-	if(diff.length() < 20 && (entity->entityType == EntityType::SEENO ||
+	if(diff.length() < 175 && (entity->entityType == EntityType::SEENO ||
 			entity->entityType == EntityType::SPEAKNO || entity->entityType == EntityType::HEARNO))
 	{
 		std::cout << "Game over distance reached" << std::endl;

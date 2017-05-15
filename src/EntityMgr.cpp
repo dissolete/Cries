@@ -111,12 +111,13 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	if( entityType == EntityType::SEENO )
 	{
-		//ent->ogreSceneNode->yaw(Ogre::Radian(ent->heading + Ogre::Math::PI/2));
+		//ent->ogreSceneNode->setScale(1.0f, 2.0f, 2.0f);
 	}
 
 	if( entityType == EntityType::SPEAKNO )
 	{
-		ent->ogreSceneNode->setScale(10.0f, 20.0f, 10.0f);
+		//ent->ogreSceneNode->setScale(.0f, -2.0f, -2.0f);
+		//ent->ogreSceneNode->setPosition(1.0f, 50.0f, 1.0f);
 	}
 
 	// Check material name
@@ -128,7 +129,8 @@ Entity381* EntityMgr::CreateEntity(EntityType entityType, Ogre::Vector3 position
 
 	if( entityType == EntityType::ENDARCH )
 	{
-		ent->ogreSceneNode->setScale( 25.0f, 25.0f, 25.0f );
+		ent->ogreSceneNode->setScale( 3.0f, 3.0f, 3.0f );
+		//ent->ogreSceneNode->yaw(Ogre::Radian(-90.0f));
 	}
 
 	entities.push_front(ent);
